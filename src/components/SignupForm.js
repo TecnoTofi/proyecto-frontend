@@ -11,9 +11,15 @@ class SignupForm extends Component{
             userPassword: '',
             userDocument: '',
             userPhone: '',
+            userFirstStreet: '',
+            userSecondStreet: '',
+            userDoorNumber: '',
             companyName: '',
             companyRut: '',
             companyPhone: '',
+            companyFirstStreet: '',
+            companySecondStreet: '',
+            companyDoorNumber: '',
             category: 0,
             role: 0
         }
@@ -57,13 +63,20 @@ class SignupForm extends Component{
                 <input type='text' name='userEmail' onChange={this.onChange} placeholder='Email' />
                 <br />
                 <label ref='userPassword'>Contraseña: </label>
-                <input type='text' name='userPassword' onChange={this.onChange} placeholder='Contraseña' />
+                <input type='password' name='userPassword' onChange={this.onChange} placeholder='Contraseña' />
                 <br />
                 <label ref='userDocument'>Documento: </label>
                 <input type='text' name='userDocument' onChange={this.onChange} placeholder='Documento' />
                 <br />
                 <label ref='userPhone'>Telefono: </label>
                 <input type='text' name='userPhone' onChange={this.onChange} placeholder='Telefono' />
+                <br />
+                <label ref='userAddress'>Domicilio: </label>
+                <input type='text' name='userFirstStreet' onChange={this.onChange} placeholder='Primera calle' />
+                <br />
+                <input type='text' name='userSecondStreet' onChange={this.onChange} placeholder='Segunda calle' />
+                <br />
+                <input type='text' name='userDoorNumber' onChange={this.onChange} placeholder='Numero de puerta' />
                 <br />
                 <label ref='companyName'>Nombre de la empresa: </label>
                 <input type='text' name='companyName' onChange={this.onChange} placeholder='Nombre de la empresa' />
@@ -74,9 +87,16 @@ class SignupForm extends Component{
                 <label ref='companyPhone'>Telefono de la empresa: </label>
                 <input type='text' name='companyPhone' onChange={this.onChange} placeholder='Telefono de la empresa' />
                 <br />
+                <label ref='companyAddress'>Direccion de la empresa: </label>
+                <input type='text' name='companyFirstStreet' onChange={this.onChange} placeholder='Primera calle' />
+                <br />
+                <input type='text' name='companySecondStreet' onChange={this.onChange} placeholder='Segunda calle' />
+                <br />
+                <input type='text' name='companyDoorNumber' onChange={this.onChange} placeholder='Numero de puerta' />
+                <br />
                 <label ref='category'>Tipo de empresa: </label>
                 <select onChange={this.onChange} value={this.state.typeSelected} name='category'>
-                    <option value='' disabled>Seleccione...</option>
+                    <option value='' >Seleccione...</option>
                     {companyTypes.map(type => <option key={type.id} value={type.id}>{type.name}</option>)}
                 </select>
                 <br />

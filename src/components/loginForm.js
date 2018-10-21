@@ -18,10 +18,10 @@ class LoginForm extends Component{
         return(
             <form ref='loginUsuarios'>
                 <label ref='userEmail'>Email: </label>
-                <input type='text' ref='userEmail' placeholder='Email' />
+                <input type='text' name='userEmail' placeholder='Email' />
                 <br />
                 <label ref='userPassword'>Contraseña: </label>
-                <input type='text' ref='userPassword' placeholder='Contraseña' />
+                <input type='password' name='userPassword' placeholder='Contraseña' />
                 <br />
                 <button onClick={this.login}>Iniciar sesion</button>
             </form>
