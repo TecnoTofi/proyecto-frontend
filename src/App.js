@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import RegisterForm from './components/registerForm';
-import LoginForm from './components/loginForm';
+import RegisterForm from './components/SignupForm';
+import LoginForm from './components/LoginForm';
 
 const ipServidor = 'localhost';
 const port = 3000;
@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    fetch(`http://${ipServidor}:${port}/api/empresas/types`)
+    fetch(`http://${ipServidor}:${port}/api/companies/types`)
       .then(res => {
         res.json()
           .then(data => {
@@ -28,7 +28,7 @@ class App extends Component {
           })
       });
 
-      fetch(`http://${ipServidor}:${port}/api/user/types`)
+      fetch(`http://${ipServidor}:${port}/api/users/types`)
       .then(res => {
         res.json()
           .then(data => {
@@ -37,19 +37,19 @@ class App extends Component {
       });
   }
 
-  registroUsuarioEmpresa(registerData){
-    let request = new Request(`http://${ipServidor}:${port}/api/register`, {
+  registroUsuarioEmpresa(signupdata){
+    let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json'}),
-      body: JSON.stringify(registerData)
+      body: JSON.stringify(signupdata)
     });
 
     fetch(request)
       .then((res) => {
-          res.json()
-              .then(data => {
-                  console.log(data);
-              });
+        res.json()
+          .then(data => {
+            console.log(data);
+          })
       });
   }
 
