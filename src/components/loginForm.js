@@ -5,25 +5,35 @@ class LoginForm extends Component{
 
     constructor(props){
         super(props);
+        this.state = {
+            userEmail: '',
+            userPassword: ''
+        };
 
-        this.login = this.login.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    login(event){
+    onChange(e){
+        this.setState({[e.target.name]: e.target.value});
+    }
+
+    onSubmit(event){
         event.preventDefault();
-        alert('llegue');
+
+        this.props.onClick(this.state);
     }
     
     render(){
         return(
             <form ref='loginUsuarios'>
                 <label ref='userEmail'>Email: </label>
-                <input type='text' name='userEmail' placeholder='Email' />
+                <input type='text' name='userEmail' onChange={this.onChange} placeholder='Email' />
                 <br />
                 <label ref='userPassword'>Contraseña: </label>
-                <input type='password' name='userPassword' placeholder='Contraseña' />
+                <input type='password' name='userPassword' onChange={this.onChange} placeholder='Contraseña' />
                 <br />
-                <button onClick={this.login}>Iniciar sesion</button>
+                <button onClick={this.onSubmit}>Iniciar sesion</button>
             </form>
         );
     }

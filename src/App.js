@@ -54,7 +54,19 @@ class App extends Component {
   }
 
   login(loginData){
-    
+    let request = new Request(`http://${ipServidor}:${port}/api/auth/login`, {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json'}),
+      body: JSON.stringify(loginData)
+    });
+
+    fetch(request)
+      .then((res) => {
+        res.json()
+          .then(data => {
+            console.log(data);
+          })
+      })
   }
 
   render() {
@@ -62,7 +74,7 @@ class App extends Component {
       <div className="App">
         <RegisterForm companyTypes={this.state.companyTypes} userTypes={this.state.userTypes} onClick={this.registroUsuarioEmpresa}/>
         <br />
-        <LoginForm />
+        <LoginForm onClick={this.login} />
       </div>
     );
   }
