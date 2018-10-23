@@ -56,15 +56,19 @@ class App extends Component {
   login(loginData){
     let request = new Request(`http://${ipServidor}:${port}/api/auth/login`, {
       method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json'}),
+      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+      credentials: 'include',
       body: JSON.stringify(loginData)
     });
 
     fetch(request)
       .then((res) => {
+        console.log(res);
+        console.log(res.cookie);
         res.json()
           .then(data => {
             console.log(data);
+            console.log(document.cookie);
           })
       })
   }
