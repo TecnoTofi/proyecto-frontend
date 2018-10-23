@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import RegisterForm from './components/SignupForm';
 import LoginForm from './components/LoginForm';
+// import axios from "axios";
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 
 const ipServidor = 'localhost';
 const port = 3000;
@@ -57,20 +61,28 @@ class App extends Component {
     let request = new Request(`http://${ipServidor}:${port}/api/auth/login`, {
       method: 'POST',
       headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-      credentials: 'include',
+      credentials: 'same-origin',
       body: JSON.stringify(loginData)
     });
 
     fetch(request)
       .then((res) => {
-        console.log(res);
-        console.log(res.cookie);
         res.json()
           .then(data => {
-            console.log(data);
-            console.log(document.cookie);
+            cookies.set('access_token', data.token, { path: '/' });
           })
       })
+
+      // axios({
+      //   method: "POST",
+      //   url: "http://localhost:3000/api/auth/login",
+      //   data: loginData
+      // })
+      //   .then(response => {
+      //     console.log(response);
+      //     console.log(response.data.token)
+      //   })
+      //   .catch(error => console.log(error.response));
   }
 
   render() {
