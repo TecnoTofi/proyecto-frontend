@@ -19,7 +19,7 @@ class CompanyList extends Component{
                 <h1>Lista de empresas</h1>
                 <br />
                 <div>
-                    {companies.map(company => <div>{company.name}</div>)}
+                    {companies.map(company => <div key={company.id}>{company.name}</div>)}
                 </div>  
             </div>
         );
