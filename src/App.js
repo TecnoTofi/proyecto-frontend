@@ -51,9 +51,9 @@ class App extends Component {
       });
       fetch(`http://${ipServidor}:${port}/api/companies`)
       // , {
-        // method: 'GET',
-        // headers: new Headers({ 'Content-Type': 'application/json', 'Token': cookies.get('access_token')}),
-        // credentials: 'same-origin'
+      //   method: 'GET',
+      //   headers: new Headers({ 'Content-Type': 'application/json', 'Token': cookies.get('access_token')}),
+      //   credentials: 'same-origin'
       // })
       .then(res => {
         res.json()
