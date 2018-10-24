@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import RegisterForm from './components/SignupForm';
 import LoginForm from './components/LoginForm';
+import CompanyList from './components/companyList';
 // import axios from "axios";
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -16,7 +17,8 @@ class App extends Component {
     super(props);
     this.state = {
       companyTypes: [],
-      userTypes: []
+      userTypes: [],
+      companies:[]
     }
 
     this.registroUsuarioEmpresa = this.registroUsuarioEmpresa.bind(this);
@@ -37,6 +39,13 @@ class App extends Component {
         res.json()
           .then(data => {
             this.setState({userTypes: data});
+          })
+      });
+      fetch(`http://${ipServidor}:${port}/api/companies`)
+      .then(res => {
+        res.json()
+          .then(data => {
+            this.setState({companies: data});
           })
       });
   }
@@ -91,6 +100,8 @@ class App extends Component {
         <RegisterForm companyTypes={this.state.companyTypes} userTypes={this.state.userTypes} onClick={this.registroUsuarioEmpresa}/>
         <br />
         <LoginForm onClick={this.login} />
+        <br />
+        <CompanyList companies={this.state.companies} />
       </div>
     );
   }
