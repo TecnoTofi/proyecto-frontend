@@ -1,0 +1,50 @@
+.App{
+    background-color: chocolate;
+}
+.nav{
+    background-color: black;
+    padding: 20px;
+
+}
+.contenedorApp{
+background-color:antiquewhite;
+}
+.RegistroApp{
+background-color: darkgrey;
+padding: 10px;
+}
+.LoginApp{
+background-color: darkgrey;
+padding: 10px;
+}
+.ListadoApp{
+background-color: darkgrey;
+padding: 10px;
+}
+.container{
+width: 100%;
+background-color: black;
+}
+.row{
+width: 25%;
+text-align: center;
+border: 1px solid darkgray;
+}
+.card{
+background-color: black;
+margin: 2px;
+}
+.card-header{
+background-color: darkgrey;
+
+}
+.card-body{
+background-color: darkgray
+
+}
+.h3{
+background-color: black;
+}
+.p{
+background-color: black;
+}
