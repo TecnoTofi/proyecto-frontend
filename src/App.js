@@ -26,7 +26,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    fetch(`http://${ipServidor}:${port}/api/companies/types`)
+    fetch(`http://${ipServidor}:${port}/api/company/category`)
       .then(res => {
         res.json()
           .then(data => {
@@ -34,14 +34,14 @@ class App extends Component {
           })
       });
 
-      fetch(`http://${ipServidor}:${port}/api/users/types`)
+      fetch(`http://${ipServidor}:${port}/api/user/role`)
       .then(res => {
         res.json()
           .then(data => {
             this.setState({userTypes: data});
           })
       });
-      fetch(`http://${ipServidor}:${port}/api/companies`)
+      fetch(`http://${ipServidor}:${port}/api/company`)
       .then(res => {
         res.json()
           .then(data => {
@@ -51,10 +51,32 @@ class App extends Component {
   }
 
   registroUsuarioEmpresa(signupdata){
+
+    const userData = {
+      userName: signupdata.userName,
+      userEmail: signupdata.userEmail,
+      userPassword: signupdata.userPassword,
+      userDocument: signupdata.userDocument,
+      userPhone: signupdata.userPhone,
+      userFirstStreet: signupdata.userFirstStreet,
+      userSecondStreet: signupdata.userSecondStreet,
+      userDoorNumber: signupdata.userDoorNumber,
+      role: signupdata.role
+    };
+    const companyData = {
+      companyName: signupdata.companyName,
+      companyRut: signupdata.companyRut,
+      companyPhone: signupdata.companyPhone,
+      companyFirstStreet: signupdata.companyFirstStreet,
+      companySecondStreet: signupdata.companySecondStreet,
+      companyDoorNumber: signupdata.companyDoorNumber,
+      category: signupdata.category
+    };  
+
     let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json'}),
-      body: JSON.stringify(signupdata)
+      body: JSON.stringify({userData, companyData})
     });
 
     fetch(request)
@@ -80,18 +102,7 @@ class App extends Component {
           .then(data => {
             cookies.set('access_token', data.token, { path: '/' });
           })
-      })
-
-      // axios({
-      //   method: "POST",
-      //   url: "http://localhost:3000/api/auth/login",
-      //   data: loginData
-      // })
-      //   .then(response => {
-      //     console.log(response);
-      //     console.log(response.data.token)
-      //   })
-      //   .catch(error => console.log(error.response));
+      });
   }
 
   render() {
