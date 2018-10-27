@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class ProductForm extends Component{
 
@@ -30,17 +32,26 @@ class ProductForm extends Component{
         return(
             <form ref='productForm'>
                 <label ref='productName'>Nombre del producto: </label>
-                <input type='text' name='productName' onChange={this.onChange} placeholder='Name' />
+                <TextField
+                    name='productName'
+                    placeholder='Agua 1.5 Litros'
+                    onChange={this.onChange}
+                />
                 <br />
                 <label ref='productCode'>Codigo del producto: </label>
-                <input type='text' name='productCode' onChange={this.onChange} placeholder='Codigo' />
+                <TextField
+                    name='productCode'
+                    placeholder='HX23G8'
+                    onChange={this.onChange}
+                />
                 <br />
                 <label ref='category'>Tipo de producto: </label>
                 <select onChange={this.onChange} value={this.state.typeSelected} name='category'>
                     <option value='' >Seleccione...</option>
                     {categories.map(type => <option key={type.id} value={type.id}>{type.name}</option>)}
                 </select>
-                <button onClick={this.onSubmit}>Registrar</button>
+                <br />
+                <Button variant='contained' color='primary' onClick={this.onSubmit}>Aceptar</Button>
             </form>
         );
     }

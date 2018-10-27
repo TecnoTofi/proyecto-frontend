@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class LoginForm extends Component{
 
@@ -28,12 +30,24 @@ class LoginForm extends Component{
         return(
             <form ref='loginUsuarios'>
                 <label ref='userEmail'>Email: </label>
-                <input type='email' name='userEmail' onChange={this.onChange} placeholder='Email' />
+                <TextField
+                    // style={{padding: 24}}    
+                    name='userEmail'
+                    placeholder='example@email.com'
+                    // margin='normal'
+                    onChange={this.onChange}
+                />
                 <br />
                 <label ref='userPassword'>Contraseña: </label>
-                <input type='password' name='userPassword' onChange={this.onChange} placeholder='Contraseña' />
+                <TextField
+                    name='userPassword'
+                    type='password'
+                    placeholder='pa$$w0rd!'
+                    // margin='normal'
+                    onChange={this.onChange}
+                />
                 <br />
-                <button onClick={this.onSubmit}>Iniciar sesion</button>
+                <Button variant='contained' color='primary' onClick={this.onSubmit}>Aceptar</Button>
             </form>
         );
     }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class CompanyProductForm extends Component{
 
@@ -34,10 +36,19 @@ class CompanyProductForm extends Component{
         return(
             <form ref='companyProductForm'>
                 <label ref='productName'>Nombre del producto: </label>
-                <input type='text' name='productName' onChange={this.onChange} placeholder='Name' />
+                <TextField
+                    name='productName'
+                    placeholder='Agua 1.5 Litros'
+                    onChange={this.onChange}
+                />
                 <br />
                 <label ref='productDescription'>Descripcion del producto: </label>
-                <input type='text' name='productDescription' onChange={this.onChange} placeholder='Description' />
+                <TextField
+                    // type='Multi-line'
+                    name='productDescription'
+                    placeholder='Botella de agua gasificada de 1.5 Litros no retornable.'
+                    onChange={this.onChange}
+                />
                 <br />
                 <label ref='companyId'>Compania: </label>
                 <select onChange={this.onChange} value={this.state.typeSelected} name='companyId'>
@@ -51,13 +62,21 @@ class CompanyProductForm extends Component{
                     {products.map(type => <option key={type.id} value={type.id}>{type.name}</option>)}
                 </select>
                 <br />
-                <label ref='productPrice'>Precio: </label>
-                <input type='text' name='productPrice' onChange={this.onChange} placeholder='Precio' />
+                <label ref='productPrice'>Precio: $</label>
+                <TextField
+                    name='productPrice'
+                    placeholder='30'
+                    onChange={this.onChange}
+                />
                 <br />
                 <label ref='productStock'>Stock: </label>
-                <input type='text' name='productStock' onChange={this.onChange} placeholder='Stock' />
+                <TextField
+                    name='productStock'
+                    placeholder='500'
+                    onChange={this.onChange}
+                />
                 <br />
-                <button onClick={this.onSubmit}>Registrar</button>
+                <Button variant='contained' color='primary' onClick={this.onSubmit}>Aceptar</Button>
             </form>
         );
     }
