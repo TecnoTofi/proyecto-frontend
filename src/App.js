@@ -3,7 +3,9 @@ import './App.css';
 import RegisterForm from './components/SignupForm';
 import LoginForm from './components/LoginForm';
 import CompanyList from './components/companyList';
-// import axios from "axios";
+import ProductForm from './components/productForm';
+import CompanyProductForm from './components/companyProductForm';
+//Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -18,7 +20,9 @@ class App extends Component {
     this.state = {
       companyTypes: [],
       userTypes: [],
-      companies:[]
+      companies:[],
+      productCategory:[],
+      products:[]
     }
 
     this.registroUsuarioEmpresa = this.registroUsuarioEmpresa.bind(this);
@@ -46,6 +50,22 @@ class App extends Component {
         res.json()
           .then(data => {
             this.setState({companies: data});
+          })
+      });
+
+      fetch(`http://${ipServidor}:${port}/api/product`)
+      .then(res => {
+        res.json()
+          .then(data => {
+            this.setState({products: data});
+          })
+      });
+
+      fetch(`http://${ipServidor}:${port}/api/product/category`)
+      .then(res => {
+        res.json()
+          .then(data => {
+            this.setState({productCategory: data});
           })
       });
   }
@@ -101,6 +121,39 @@ class App extends Component {
         res.json()
           .then(data => {
             cookies.set('access_token', data.token, { path: '/' });
+            console.log(data);
+          })
+      });
+  }
+
+  registroProducto(productdata){
+    let request = new Request(`http://${ipServidor}:${port}/api/product`, {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json'}),
+      body: JSON.stringify(productdata)
+    });
+
+    fetch(request)
+      .then((res) => {
+        res.json()
+          .then(data => {
+            console.log(data);
+          })
+      });
+  }
+
+  registroEmpresaProducto(productdata){
+    let request = new Request(`http://${ipServidor}:${port}/api/product/company`, {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json'}),
+      body: JSON.stringify(productdata)
+    });
+
+    fetch(request)
+      .then((res) => {
+        res.json()
+          .then(data => {
+            console.log(data);
           })
       });
   }
@@ -122,6 +175,14 @@ class App extends Component {
         </div>
         <div className="ListadoApp">
          <CompanyList companies={this.state.companies} />
+        </div>
+        <div className="RegistroProduct">
+         <ProductForm categories={this.state.productCategory} onClick={this.registroProducto}/>
+        </div>
+        <br />
+        <br />
+        <div className="RegistroCompanyProduct">
+         <CompanyProductForm products={this.state.products} companies={this.state.companies} onClick={this.registroEmpresaProducto} />
         </div>
        </div>
       </div>

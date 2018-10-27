@@ -28,7 +28,7 @@ class LoginForm extends Component{
         return(
             <form ref='loginUsuarios'>
                 <label ref='userEmail'>Email: </label>
-                <input type='text' name='userEmail' onChange={this.onChange} placeholder='Email' />
+                <input type='email' name='userEmail' onChange={this.onChange} placeholder='Email' />
                 <br />
                 <label ref='userPassword'>Contraseña: </label>
                 <input type='password' name='userPassword' onChange={this.onChange} placeholder='Contraseña' />
