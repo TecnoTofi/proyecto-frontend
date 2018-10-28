@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
-import '../App.css';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import SelectSignup from './SelectSignup';
 
-class SignupForm extends Component{
+export default class SignupForm extends React.Component{
 
     constructor(props){
         super(props);
         this.state = {
+            open: false,
             userName: '',
             userEmail: '',
             userPassword: '',
@@ -28,150 +33,186 @@ class SignupForm extends Component{
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onSelectChange = this.onSelectChange.bind(this);
     }
 
-    onSubmit(e){
-        e.preventDefault();
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
 
-        let companyType = this.props.companyTypes.find(type => {
-            // eslint-disable-next-line
-            return type.id == this.state.category;
-        });
-
-        let userRole = this.props.userTypes.find(type => {
-            // eslint-disable-next-line
-            return type.name == companyType.name;
-        });
-
-        this.setState({role: userRole.id}, () => {
-            this.props.onClick(this.state);
-        });
-    }
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     onChange(e){
         this.setState({[e.target.name]: e.target.value});
     }
 
+    onSelectChange(tipo){
+        let type = Number(tipo);
+        this.setState({category: type}, () => {
+            this.setState({role: type});
+        });
+    }
+
+    onSubmit(e){
+        e.preventDefault();
+        this.props.onClick(this.state);
+        this.handleClose();
+    }
+
     render(){
 
-        let companyTypes = this.props.companyTypes;
-
         return(
-            <form ref='registerForm'>
-                <label ref='userName'>Nombre completo: </label>
+
+            <div>
+                <Button color='inherit' onClick={this.handleClickOpen}>Registrarse</Button>
+                <Dialog
+                open={this.state.open}
+                onClose={this.handleClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">Registro de usuario - empresa</DialogTitle>
+                <DialogContent>
                 <TextField
+                    autoFocus
+                    margin='dense'
+                    id='userName'
                     name='userName'
-                    placeholder='Juan Perez'
+                    label='Nombre completo'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userEmail'>Email: </label>
                 <TextField
-                    type='email'
+                    margin='dense'
+                    id='userEmail'
                     name='userEmail'
-                    placeholder='example@email.com'
+                    label='Direccion de Email'
+                    type='email'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userPassword'>Contraseña: </label>
                 <TextField
-                    type='password'
+                    margin='dense'
+                    id='userPassword'
                     name='userPassword'
-                    placeholder='pa$$w0rd!'
+                    label='Contraseña'
+                    type='password'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userDocument'>Documento: </label>
                 <TextField
+                    margin='dense'
+                    id='userDocument'
                     name='userDocument'
-                    placeholder='37682937'
+                    label='Documento de identidad'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userPhone'>Telefono: </label>
                 <TextField
+                    margin='dense'
+                    id='userPhone'
                     name='userPhone'
-                    placeholder='26009999'
+                    label='Telefono personal'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userAddress'>Domicilio: </label>
-                <br />
-                <label ref='userAddress'>Primer calle: </label>
                 <TextField
+                    margin='dense'
+                    id='userFirstStreet'
                     name='userFirstStreet'
-                    placeholder='Av. Brasil'
+                    label='Calle principal'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userAddress'>Segunda calle: </label>
                 <TextField
+                    margin='dense'
+                    id='userSecondStreet'
                     name='userSecondStreet'
-                    placeholder='Benito Blanco'
+                    label='Calle secundaria'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userAddress'>Numero de puerta: </label>
                 <TextField
+                    margin='dense'
+                    id='userDoorNumber'
                     name='userDoorNumber'
-                    placeholder='123'
+                    label='Numero de puerta'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='companyName'>Nombre de la empresa: </label>
                 <TextField
+                    margin='dense'
+                    id='companyName'
                     name='companyName'
-                    placeholder='Mi Empresa'
+                    label='Nombre de la empresa'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='companyRut'>RUT: </label>
                 <TextField
+                    margin='dense'
+                    id='companyRut'
                     name='companyRut'
-                    placeholder='123456789012'
+                    label='RUT de la empresa'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='companyPhone'>Telefono de la empresa: </label>
                 <TextField
+                    margin='dense'
+                    id='companyPhone'
                     name='companyPhone'
-                    placeholder='26009999'
+                    label='Telefono de la empresa'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='companyAddress'>Direccion de la empresa: </label>
-                <br />
-                <label ref='userAddress'>Primer calle: </label>
                 <TextField
+                    margin='dense'
+                    id='companyFirstStreet'
                     name='companyFirstStreet'
-                    placeholder='Av. Brasil'
+                    label='Calle principal'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userAddress'>Segunda calle: </label>
                 <TextField
+                    margin='dense'
+                    id='companySecondStreet'
                     name='companySecondStreet'
-                    placeholder='Benito Blanco'
+                    label='Calle secundaria'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='userAddress'>Numero de puerta: </label>
                 <TextField
+                    margin='dense'
+                    id='companyDoorNumber'
                     name='companyDoorNumber'
-                    placeholder='123'
+                    label='Numero de puerta'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='category'>Tipo de empresa: </label>
-                <select onChange={this.onChange} value={this.state.typeSelected} name='category'>
-                    <option value='' >Seleccione...</option>
-                    {companyTypes.map(type => <option key={type.id} value={type.id}>{type.name}</option>)}
-                </select>
-                <br />
-                <Button variant='contained' color='primary' onClick={this.onSubmit}>Aceptar</Button>
-            </form>
+                <SelectSignup companyTypes={this.props.companyTypes} onChange={this.onSelectChange} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                    Cancelar
+                    </Button>
+                    <Button onClick={this.onSubmit} color="primary">
+                    Aceptar
+                    </Button>
+                </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 }
-
-export default SignupForm;

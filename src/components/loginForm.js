@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
-import '../App.css';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-class LoginForm extends Component{
+export default class FormDialog extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
+            open: false,
             userEmail: '',
             userPassword: ''
         };
@@ -16,41 +20,66 @@ class LoginForm extends Component{
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
     onChange(e){
         this.setState({[e.target.name]: e.target.value});
     }
 
-    onSubmit(event){
-        event.preventDefault();
+    onSubmit(e){
+        e.preventDefault();
 
-        this.props.onClick(this.state);
+        this.props.onClick(this.state.userEmail, this.state.userPassword)
+        this.handleClose();
     }
-    
-    render(){
-        return(
-            <form ref='loginUsuarios'>
-                <label ref='userEmail'>Email: </label>
-                <TextField
-                    // style={{padding: 24}}    
-                    name='userEmail'
-                    placeholder='example@email.com'
-                    // margin='normal'
-                    onChange={this.onChange}
-                />
-                <br />
-                <label ref='userPassword'>Contraseña: </label>
-                <TextField
-                    name='userPassword'
-                    type='password'
-                    placeholder='pa$$w0rd!'
-                    // margin='normal'
-                    onChange={this.onChange}
-                />
-                <br />
-                <Button variant='contained' color='primary' onClick={this.onSubmit}>Aceptar</Button>
-            </form>
-        );
-    }
+
+  render() {
+    return (
+      <div>
+        <Button color='inherit' onClick={this.handleClickOpen}>Iniciar Sesion</Button>
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Inicio de sesion</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin='dense'
+              id='userEmail'
+              name='userEmail'
+              label='Direccion de Email'
+              type='email'
+              fullWidth
+              onChange={this.onChange}
+            />
+            <TextField
+                margin='dense'
+                id='userPassword'
+                name='userPassword'
+                label='Contaseña'
+                type='password'
+                fullWidth
+                onChange={this.onChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={this.onSubmit} color="primary">
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
 }
-
-export default LoginForm;

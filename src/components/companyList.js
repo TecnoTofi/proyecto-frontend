@@ -28,7 +28,7 @@ class CompanyList extends Component{
                         />
                         <Grid container spacing={24} style={{padding: 24}}>
                             {this.props.companies.map(company => (
-                                <Grid item xs={12} sm={6} lg={4} xl={3}>
+                                <Grid item key={company.id} xs={12} sm={6} lg={4} xl={3}>
                                     <Company company={company} />
                                 </Grid>
                             ))}
@@ -38,32 +38,6 @@ class CompanyList extends Component{
             </div>
         );
     }
-
-    // render(){
-    //     const companies = this.props.companies.map((company) =>{
-    //       return(
-    //               <div className="card" key={company.id}>
-    //                   <div className="card-header">
-    //                   <h3>{company.name}</h3>
-    //                   </div>
-    //                   <div className="card-body">
-    //                   <p>{company.rut}-{company.phone}-{company.categoryId}</p>
-    //                   </div>
-    //               </div>
-    //       )
-    //     });
-    //     return(
-    //         <div ref="listadoEmpresa" >
-    //             <h1>Lista de empresas</h1>
-    //             <br />
-    //             <div className="container">
-    //              <div className="row">
-    //              {companies}
-    //              </div>   
-    //             </div>  
-    //         </div>
-    //     );
-    // }
 }
 
 export default CompanyList;

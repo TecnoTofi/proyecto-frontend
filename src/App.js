@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './App.css';
+import { Header, Footer } from './components/layouts/';
 import NavBar from './components/NavBar';
 import RegisterForm from './components/SignupForm';
 import LoginForm from './components/LoginForm';
 import CompanyList from './components/CompanyList';
 import ProductForm from './components/ProductForm';
 import CompanyProductForm from './components/CompanyProductForm';
+
+import Prueba from './components/prueba';
+
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -34,7 +38,7 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            console.log(`Info de CompanyCategory obtenida : ${data}`);
+            // console.log(`Info de CompanyCategory obtenida : ${data}`);
             this.setState({companyTypes: data});
           })
           .catch(err => {
@@ -42,11 +46,11 @@ class App extends Component {
           });
       });
 
-      fetch(`http://${ipServidor}:${port}/api/user/role`)
+      fetch(`http://${ipServidor}:${port}/api/user/role/signup`)
       .then(res => {
         res.json()
           .then(data => {
-            console.log(`Info de Role obtenida : ${data}`);
+            // console.log(`Info de Role obtenida : ${data}`);
             this.setState({userTypes: data});
           })
           .catch(err => {
@@ -57,7 +61,7 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            console.log(`Info de Company obtenida : ${data}`);
+            // console.log(`Info de Company obtenida : ${data}`);
             this.setState({companies: data});
           })
           .catch(err => {
@@ -69,7 +73,7 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            console.log(`Info de Product obtenida : ${data}`);
+            // console.log(`Info de Product obtenida : ${data}`);
             this.setState({products: data});
           })
           .catch(err => {
@@ -81,7 +85,7 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            console.log(`Info de ProductCategory obtenida : ${data}`);
+            // console.log(`Info de ProductCategory obtenida : ${data}`);
             this.setState({productCategory: data});
           })
           .catch(err => {
@@ -131,12 +135,12 @@ class App extends Component {
       });
   }
 
-  login(loginData){
+  login(userEmail, userPassword){
     let request = new Request(`http://${ipServidor}:${port}/api/auth/login`, {
       method: 'POST',
       headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
       credentials: 'same-origin',
-      body: JSON.stringify(loginData)
+      body: JSON.stringify({userEmail, userPassword})
     });
 
     fetch(request)
@@ -192,33 +196,34 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-      <NavBar />
-       {/* <navigator className="Nav">
-        <a href="">Login |</a>
-        <a href="">Registro |</a>
-        <a href="">Listado de empresas</a>
-       </navigator> */}
-       <div className="ContenedorApp">
-        <div className="RegistroApp">
-         {/* <RegisterForm companyTypes={this.state.companyTypes} userTypes={this.state.userTypes} onClick={this.registroUsuarioEmpresa}/> */}
-        </div>  
-        <div className="LoginApp">
-         <LoginForm onClick={this.login} />
+      <Fragment>
+      {/* <Prueba /> */}
+        <Header 
+          login={this.login} 
+          signup={this.registroUsuarioEmpresa} 
+          companyTypes={this.state.companyTypes} 
+          userTypes={this.state.userTypes}
+        />
+        <div>
+          <div>
+            {/* <RegisterForm companyTypes={this.state.companyTypes} userTypes={this.state.userTypes} onClick={this.registroUsuarioEmpresa}/> */}
+          </div>  
+          <div>
+            {/* <LoginForm onClick={this.login} /> */}
+          </div>
+          <div>
+          {/* <CompanyList companies={this.state.companies} /> */}
+          </div>
+          <div>
+            {/* <ProductForm categories={this.state.productCategory} onClick={this.registroProducto}/> */}
+          </div>
+          <br />
+          <div>
+            {/* <CompanyProductForm products={this.state.products} companies={this.state.companies} onClick={this.registroEmpresaProducto} /> */}
+          </div>
         </div>
-        <div className="ListadoApp">
-         {/* <CompanyList companies={this.state.companies} /> */}
-        </div>
-        <div className="RegistroProduct">
-         {/* <ProductForm categories={this.state.productCategory} onClick={this.registroProducto}/> */}
-        </div>
-        <br />
-        <br />
-        <div className="RegistroCompanyProduct">
-         {/* <CompanyProductForm products={this.state.products} companies={this.state.companies} onClick={this.registroEmpresaProducto} /> */}
-        </div>
-       </div>
-      </div>
+        <Footer />
+      </Fragment>
     );
   }
 }
