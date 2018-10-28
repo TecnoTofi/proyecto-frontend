@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/core/icons/menu';
+import MenuIcon from '@material-ui/icons/Menu';
 import LoginForm from '../LoginForm';
-import Signiup from '../SignupForm';
+import SignupForm from '../SignupForm';
 
 const styles = {
   root: {
@@ -29,17 +29,26 @@ function ButtonAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
             <MenuIcon />
-          </IconButton> */}
+          </IconButton>
           <Typography variant="h6" color="inherit" className={classes.grow}>
             NuestraApp
           </Typography>
-          <LoginForm onClick={props.login} />
-            <Signiup onClick={props.signup}
-                companyTypes={props.companyTypes} 
-                userTypes={props.userTypes}
-            />
+          {props.logged ? (
+            <Fragment>
+              <Button color="inherit">{props.loggedUser.userName}</Button>
+              <Button color="inherit" onClick={props.logout}>Cerrar sesion</Button>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <LoginForm onClick={props.login} />
+              <SignupForm onClick={props.signup}
+                  companyTypes={props.companyTypes} 
+                  userTypes={props.userTypes}
+              />
+            </Fragment>
+          )}
         </Toolbar>
       </AppBar>
     </div>

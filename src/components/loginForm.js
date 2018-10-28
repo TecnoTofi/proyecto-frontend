@@ -15,37 +15,32 @@ export default class FormDialog extends React.Component {
             userEmail: '',
             userPassword: ''
         };
-
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    handleClickOpen = () => {
-        this.setState({ open: true });
-    };
+    handleToggle = () => {
+      this.setState({
+        open: !this.state.open
+      });
+    }
 
-    handleClose = () => {
-        this.setState({ open: false });
-    };
-
-    onChange(e){
+    onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     }
 
-    onSubmit(e){
+    onSubmit = (e) =>{
         e.preventDefault();
 
         this.props.onClick(this.state.userEmail, this.state.userPassword)
-        this.handleClose();
+        this.handleToggle();
     }
 
   render() {
     return (
       <div>
-        <Button color='inherit' onClick={this.handleClickOpen}>Iniciar Sesion</Button>
+        <Button color='inherit' onClick={this.handleToggle}>Iniciar Sesion</Button>
         <Dialog
           open={this.state.open}
-          onClose={this.handleClose}
+          onClose={this.handleToggle}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Inicio de sesion</DialogTitle>
@@ -71,10 +66,10 @@ export default class FormDialog extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
+            <Button onClick={this.handleToggle} color="primary">
               Cancelar
             </Button>
-            <Button onClick={this.onSubmit} color="primary">
+            <Button onClick={this.onSubmit} color="primary" variant='raised'>
               Aceptar
             </Button>
           </DialogActions>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import SelectForm from './SelectForm';
 
 class CompanyProductForm extends Component{
 
@@ -15,64 +16,67 @@ class CompanyProductForm extends Component{
             productPrice:0,
             productStock: 0,
         };
-
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onChange(e){
+    onSelectChange = (tipo) => {
+        this.setState({category: Number(tipo)});
+    }
+
+    onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     }
 
-    onSubmit(event){
+    onSubmit = (event) => {
         event.preventDefault();
 
         this.props.onClick(this.state);
     }
     
     render(){
-        let companies = this.props.companies;
-        let products = this.props.products;
         return(
             <form ref='companyProductForm'>
-                <label ref='productName'>Nombre del producto: </label>
                 <TextField
+                    autoFocus
+                    margin='dense'
+                    id='productName'
                     name='productName'
-                    placeholder='Agua 1.5 Litros'
+                    label='Nombre del producto'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='productDescription'>Descripcion del producto: </label>
                 <TextField
-                    // type='Multi-line'
+                    margin='normal'
+                    id='productDescription'
                     name='productDescription'
-                    placeholder='Botella de agua gasificada de 1.5 Litros no retornable.'
+                    label='Descripcion del producto'
+                    fullWidth
+                    multiline
+                    rowsMax="4"
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='companyId'>Compania: </label>
-                <select onChange={this.onChange} value={this.state.typeSelected} name='companyId'>
-                    <option value='' >Seleccione...</option>
-                    {companies.map(type => <option key={type.id} value={type.id}>{type.name}</option>)}
-                </select>
-                <br />
-                <label ref='productId'>Producto: </label>
-                <select onChange={this.onChange} value={this.state.typeSelected} name='productId'>
-                    <option value='' >Seleccione...</option>
-                    {products.map(type => <option key={type.id} value={type.id}>{type.name}</option>)}
-                </select>
-                <br />
-                <label ref='productPrice'>Precio: $</label>
+                <SelectForm
+                        content={this.props.products}
+                        onChange={this.onSelectChange}
+                        label={'Productos'}
+                        helper={'Seleccione el producto'}
+                />
                 <TextField
+                    margin='dense'
+                    id='productPrice'
                     name='productPrice'
-                    placeholder='30'
+                    label='Precio'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
-                <br />
-                <label ref='productStock'>Stock: </label>
                 <TextField
+                    margin='dense'
+                    id='productStock'
                     name='productStock'
-                    placeholder='500'
+                    label='Stock'
+                    type='text'
+                    fullWidth
                     onChange={this.onChange}
                 />
                 <br />

@@ -16,6 +16,7 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
+    width: 500+'%',
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
@@ -40,7 +41,7 @@ class SimpleSelect extends React.Component {
       <form className={classes.root} autoComplete="off">
        
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="type-helper">Tipo de empresa</InputLabel>
+          <InputLabel htmlFor="type-helper">{this.props.label}</InputLabel>
           <Select
             name='category'
             value={this.state.category}
@@ -50,9 +51,9 @@ class SimpleSelect extends React.Component {
             <MenuItem value="">
               <em>Seleccione</em>
             </MenuItem>
-            {this.props.companyTypes.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
+            {this.props.content.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
           </Select>
-          <FormHelperText>Seleccione el tipo de empresa</FormHelperText>
+          <FormHelperText>{this.props.helper}</FormHelperText>
         </FormControl>
         
       </form>

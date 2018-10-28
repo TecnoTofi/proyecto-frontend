@@ -1,14 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
 import { Header, Footer } from './components/layouts/';
-import NavBar from './components/NavBar';
-import RegisterForm from './components/SignupForm';
-import LoginForm from './components/LoginForm';
 import CompanyList from './components/CompanyList';
 import ProductForm from './components/ProductForm';
 import CompanyProductForm from './components/CompanyProductForm';
-
-import Prueba from './components/prueba';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -22,15 +17,21 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      logged: false,
+      loggedUser: {
+        userType: '',
+        userName: '',
+        userEmail: '',
+        userId: 0,
+        userCompanyName: '',
+        userCompanyId: 0
+      },
       companyTypes: [],
       userTypes: [],
       companies:[],
       productCategory:[],
       products:[]
     }
-
-    this.registroUsuarioEmpresa = this.registroUsuarioEmpresa.bind(this);
-    this.login = this.login.bind(this);
   }
 
   componentDidMount(){
@@ -94,7 +95,7 @@ class App extends Component {
       });
   }
 
-  registroUsuarioEmpresa(signupdata){
+  registroUsuarioEmpresa = (signupdata) => {
 
     const userData = {
       userName: signupdata.userName,
@@ -135,7 +136,7 @@ class App extends Component {
       });
   }
 
-  login(userEmail, userPassword){
+  login = (userEmail, userPassword) => {
     let request = new Request(`http://${ipServidor}:${port}/api/auth/login`, {
       method: 'POST',
       headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
@@ -148,10 +149,53 @@ class App extends Component {
         res.json()
           .then(data => {
             cookies.set('access_token', data.token, { path: '/' });
+            
+            this.setState({
+              logged: true,
+              loggedUser: {
+                userType: data.userData.userType,
+                userName: data.userData.userName,
+                userEmail: data.userData.userEmail,
+                userId: data.userData.userId,
+                userCompanyName: data.userData.userCompanyName,
+                userCompanyId: data.userData.userCompanyId
+              }
+            });
             console.log(data);
           })
           .catch(err => {
             console.log(`Error al enviar inicio de sesion : ${err}`);
+          });
+      });
+  }
+
+  logout = () => {
+    let request = new Request(`http://${ipServidor}:${port}/api/auth/logout`, {
+      method: 'POST',
+      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+      credentials: 'same-origin'
+    });
+
+    fetch(request)
+      .then((res) => {
+        res.json()
+          .then(data => {
+            
+            this.setState({
+              logged: false,
+              loggedUser: {
+                userType: '',
+                userName: '',
+                userEmail: '',
+                userId: 0,
+                userCompanyName: '',
+                userCompanyId: 0
+              }
+            });
+            console.log(data);
+          })
+          .catch(err => {
+            console.log(`Error al enviar cierre de sesion : ${err}`);
           });
       });
   }
@@ -197,22 +241,20 @@ class App extends Component {
   render() {
     return (
       <Fragment>
-      {/* <Prueba /> */}
         <Header 
-          login={this.login} 
-          signup={this.registroUsuarioEmpresa} 
-          companyTypes={this.state.companyTypes} 
+          logged={this.state.logged}
+          loggedUser={this.state.loggedUser}
+          login={this.login}
+          logout={this.logout}
+          signup={this.registroUsuarioEmpresa}
+          companyTypes={this.state.companyTypes}
           userTypes={this.state.userTypes}
         />
         <div>
           <div>
-            {/* <RegisterForm companyTypes={this.state.companyTypes} userTypes={this.state.userTypes} onClick={this.registroUsuarioEmpresa}/> */}
-          </div>  
-          <div>
-            {/* <LoginForm onClick={this.login} /> */}
-          </div>
-          <div>
-          {/* <CompanyList companies={this.state.companies} /> */}
+          {this.state.logged ? (
+            <CompanyList companies={this.state.companies} />
+          ) : null}
           </div>
           <div>
             {/* <ProductForm categories={this.state.productCategory} onClick={this.registroProducto}/> */}
