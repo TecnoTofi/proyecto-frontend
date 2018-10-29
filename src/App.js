@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import './App.css';
 import { Header, Footer } from './components/layouts/';
 import CompanyList from './components/CompanyList';
-import ProductForm from './components/ProductForm';
-import CompanyProductForm from './components/CompanyProductForm';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -96,6 +93,8 @@ class App extends Component {
   }
 
   registroUsuarioEmpresa = (signupdata) => {
+    
+    console.log(signupdata.companyImage);
 
     const userData = {
       userName: signupdata.userName,
@@ -115,7 +114,8 @@ class App extends Component {
       companyFirstStreet: signupdata.companyFirstStreet,
       companySecondStreet: signupdata.companySecondStreet,
       companyDoorNumber: signupdata.companyDoorNumber,
-      category: signupdata.category
+      category: signupdata.category,
+      companyImage: signupdata.companyImage
     };  
 
     let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
@@ -249,19 +249,17 @@ class App extends Component {
           signup={this.registroUsuarioEmpresa}
           companyTypes={this.state.companyTypes}
           userTypes={this.state.userTypes}
+          categories={this.state.productCategory}
+          registrarProducto={this.registroProducto}
+          products={this.state.products}
+          companies={this.state.companies}
+          registroEmpresaProducto={this.registroEmpresaProducto}
         />
         <div>
           <div>
           {this.state.logged ? (
             <CompanyList companies={this.state.companies} />
           ) : null}
-          </div>
-          <div>
-            {/* <ProductForm categories={this.state.productCategory} onClick={this.registroProducto}/> */}
-          </div>
-          <br />
-          <div>
-            {/* <CompanyProductForm products={this.state.products} companies={this.state.companies} onClick={this.registroEmpresaProducto} /> */}
           </div>
         </div>
         <Footer />

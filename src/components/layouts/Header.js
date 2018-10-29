@@ -9,10 +9,12 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import LoginForm from '../LoginForm';
 import SignupForm from '../SignupForm';
+import ProductForm from '../ProductForm';
+import AssociateForm from '../AssociateForm';
 
 const styles = {
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   grow: {
     flexGrow: 1,
@@ -37,6 +39,15 @@ function ButtonAppBar(props) {
           </Typography>
           {props.logged ? (
             <Fragment>
+              <ProductForm 
+                categories={props.categories} 
+                onClick={props.registrarProducto}
+              />
+              <AssociateForm 
+                products={props.products} 
+                companies={props.companies} 
+                onClick={props.registroEmpresaProducto}
+              />
               <Button color="inherit">{props.loggedUser.userName}</Button>
               <Button color="inherit" onClick={props.logout}>Cerrar sesion</Button>
             </Fragment>

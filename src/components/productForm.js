@@ -3,17 +3,29 @@ import '../App.css';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import SelectType from './SelectForm';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-class ProductForm extends Component{
+
+export default class ProductForm extends Component{
 
     constructor(props){
         super(props);
         this.state = {
+            open: false,
             productName: '',
             productCode: '',
             category: 0,
         };
     }
+
+    handleToggle = () => {
+        this.setState({
+          open: !this.state.open
+        });
+      }
 
     onSelectChange = (tipo) => {
         this.setState({category: Number(tipo)});
@@ -29,38 +41,59 @@ class ProductForm extends Component{
         this.props.onClick(this.state);
     }
     
+    onEnterPress = (e) => {
+        if(e.key === 'Enter') this.onSubmit(e);
+    }
+
     render(){
         return(
-            <form ref='productForm'>
-                <TextField
-                    autoFocus
-                    margin='dense'
-                    id='productName'
-                    name='productName'
-                    label='Nombre del producto'
-                    type='text'
-                    fullWidth
-                    onChange={this.onChange}
-                />
-                <TextField
-                    margin='dense'
-                    id='productCode'
-                    name='productCode'
-                    label='Codigo del producto'
-                    type='text'
-                    fullWidth
-                    onChange={this.onChange}
-                />
-                <SelectType
-                        content={this.props.categories}
-                        onChange={this.onSelectChange}
-                        label={'Tipo de producto'}
-                        helper={'Seleccione el tipo de producto'}
+            <div>
+            <Button color='inherit' onClick={this.handleToggle}>Nuevo producto</Button>
+            <Dialog
+                open={this.state.open}
+                onClose={this.handleToggle}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">Nuevo producto</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin='dense'
+                        id='productName'
+                        name='productName'
+                        label='Nombre del producto'
+                        type='text'
+                        fullWidth
+                        onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
-                <Button variant='contained' color='primary' onClick={this.onSubmit}>Aceptar</Button>
-            </form>
+                    <TextField
+                        margin='dense'
+                        id='productCode'
+                        name='productCode'
+                        label='Codigo del producto'
+                        type='text'
+                        fullWidth
+                        onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
+                    />
+                    <SelectType
+                            content={this.props.categories}
+                            onChange={this.onSelectChange}
+                            label={'Tipo de producto'}
+                            helper={'Seleccione el tipo de producto'}
+                        />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleToggle} color="primary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={this.onSubmit} color="primary" variant='contained'>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 }
-
-export default ProductForm;

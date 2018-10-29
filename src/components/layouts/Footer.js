@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography';
 const styles = {
   root: {
     flexGrow: 1,
+    position: 'fixed',
+    bottom: 0,
+    width: 100+'%'
   },
   grow: {
     flexGrow: 1,

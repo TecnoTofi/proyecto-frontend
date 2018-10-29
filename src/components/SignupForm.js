@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,8 +6,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import SelectSignup from './SelectForm';
+import UploadImage from './uploadImage';
 
-export default class SignupForm extends React.Component{
+export default class SignupForm extends Component{
 
     constructor(props){
         super(props);
@@ -28,7 +29,8 @@ export default class SignupForm extends React.Component{
             companySecondStreet: '',
             companyDoorNumber: '',
             category: 0,
-            role: 0
+            role: 0, 
+            companyImage: null
         }
     }
 
@@ -52,7 +54,17 @@ export default class SignupForm extends React.Component{
     onSubmit = (e) => {
         e.preventDefault();
         this.props.onClick(this.state);
-        this.handleClose();
+        this.handleToggle();
+    }
+
+    onImageUpload = (image) => {
+        this.setState({
+            companyImage: image
+        })
+    }
+
+    onEnterPress = (e) => {
+        if(e.key === 'Enter') this.onSubmit(e);
     }
 
     render(){
@@ -77,6 +89,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -86,6 +99,7 @@ export default class SignupForm extends React.Component{
                         type='email'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -95,6 +109,7 @@ export default class SignupForm extends React.Component{
                         type='password'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -104,6 +119,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -113,6 +129,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -122,6 +139,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -131,6 +149,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -140,6 +159,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -149,6 +169,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -158,6 +179,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -167,6 +189,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -176,6 +199,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -185,6 +209,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <TextField
                         margin='dense'
@@ -194,6 +219,7 @@ export default class SignupForm extends React.Component{
                         type='text'
                         fullWidth
                         onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
                     />
                     <SelectSignup 
                         content={this.props.companyTypes}
@@ -201,13 +227,14 @@ export default class SignupForm extends React.Component{
                         label={'Tipo de empresa'}
                         helper={'Seleccione el tipo de empresa'}
                     />
+                    <UploadImage onImageUpload={this.onImageUpload} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleToggle} color="primary">
-                    Cancelar
+                        Cancelar
                     </Button>
-                    <Button onClick={this.onSubmit} color="primary" variant='raised'>
-                    Aceptar
+                    <Button onClick={this.onSubmit} color="primary" variant='contained'>
+                        Aceptar
                     </Button>
                 </DialogActions>
                 </Dialog>

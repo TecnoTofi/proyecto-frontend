@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default class FormDialog extends React.Component {
+export default class FormDialog extends Component {
 
     constructor(props){
         super(props);
@@ -34,6 +34,10 @@ export default class FormDialog extends React.Component {
         this.handleToggle();
     }
 
+    onEnterPress = (e) => {
+      if(e.key === 'Enter') this.onSubmit(e);
+    }
+
   render() {
     return (
       <div>
@@ -54,6 +58,7 @@ export default class FormDialog extends React.Component {
               type='email'
               fullWidth
               onChange={this.onChange}
+              onKeyPress={this.onEnterPress}
             />
             <TextField
                 margin='dense'
@@ -63,13 +68,14 @@ export default class FormDialog extends React.Component {
                 type='password'
                 fullWidth
                 onChange={this.onChange}
+                onKeyPress={this.onEnterPress}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleToggle} color="primary">
               Cancelar
             </Button>
-            <Button onClick={this.onSubmit} color="primary" variant='raised'>
+            <Button onClick={this.onSubmit} color="primary" variant='contained'>
               Aceptar
             </Button>
           </DialogActions>

@@ -13,11 +13,12 @@ const Company = (props) => {
                 <Card>
                     {/* <CardMedia
                         style={{height: 0, paddingTop: '56.25%'}}
-                        image={props.company.image}
-                    >
-                    </CardMedia> */}
+                        component="img"
+                        image={props.company.companyImage}
+                        title={props.company.name}
+                    /> */}
                     <CardContent>
-                        <Typography gutterBottom variant='headline' component='h2'>
+                        <Typography gutterBottom variant='h5' component='h2'>
                             {props.company.name}
                         </Typography>
                     </CardContent>
