@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { Header, Footer } from './components/layouts/';
 import CompanyList from './components/CompanyList';
+import axios from 'axios';
+import jfd from 'json-form-data';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -93,47 +95,50 @@ class App extends Component {
   }
 
   registroUsuarioEmpresa = (signupdata) => {
-    
-    console.log(signupdata.companyImage);
 
-    const userData = {
-      userName: signupdata.userName,
-      userEmail: signupdata.userEmail,
-      userPassword: signupdata.userPassword,
-      userDocument: signupdata.userDocument,
-      userPhone: signupdata.userPhone,
-      userFirstStreet: signupdata.userFirstStreet,
-      userSecondStreet: signupdata.userSecondStreet,
-      userDoorNumber: signupdata.userDoorNumber,
-      role: signupdata.role
-    };
-    const companyData = {
-      companyName: signupdata.companyName,
-      companyRut: signupdata.companyRut,
-      companyPhone: signupdata.companyPhone,
-      companyFirstStreet: signupdata.companyFirstStreet,
-      companySecondStreet: signupdata.companySecondStreet,
-      companyDoorNumber: signupdata.companyDoorNumber,
-      category: signupdata.category,
-      companyImage: signupdata.companyImage
-    };  
+    const request = new FormData();
+    //user
+    request.set('userName', signupdata.userName);
+    request.set('userEmail', signupdata.userEmail);
+    request.set('userPassword', signupdata.userPassword);
+    request.set('userDocument', signupdata.userDocument);
+    request.set('userPhone', signupdata.userPhone);
+    request.set('userFirstStreet', signupdata.userFirstStreet);
+    request.set('userSecondStreet', signupdata.userSecondStreet);
+    request.set('userDoorNumber', signupdata.userDoorNumber);
+    request.set('role', signupdata.role);
+    //company
+    request.set('companyName', signupdata.companyName);
+    request.set('companyRut', signupdata.companyRut);
+    request.set('companyPhone', signupdata.companyPhone);
+    request.set('companyFirstStreet', signupdata.companyFirstStreet);
+    request.set('companySecondStreet', signupdata.companySecondStreet);
+    request.set('companyDoorNumber', signupdata.companyDoorNumber);
+    request.set('category', signupdata.category);
+    //image
+    request.append('companyImage', signupdata.companyImage, signupdata.companyImage.name);
 
-    let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json'}),
-      body: JSON.stringify({userData, companyData})
-    });
-
-    fetch(request)
-      .then((res) => {
-        res.json()
-          .then(data => {
-            console.log(data);
-          })
-          .catch(err => {
-            console.log(`Error al enviar registro de usuario : ${err}`);
-          });
+    axios.post(`http://${ipServidor}:${port}/api/auth/signup`, request)
+      .then(res => {
+        console.log(res);
       });
+
+    // let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
+    //   method: 'POST',
+    //   headers: new Headers({ 'Content-Type': 'application/json'}),
+    //   body: JSON.stringify({userData, companyData})
+    // });
+
+    // fetch(request)
+    //   .then((res) => {
+    //     res.json()
+    //       .then(data => {
+    //         console.log(data);
+    //       })
+    //       .catch(err => {
+    //         console.log(`Error al enviar registro de usuario : ${err}`);
+    //       });
+    //   });
   }
 
   login = (userEmail, userPassword) => {

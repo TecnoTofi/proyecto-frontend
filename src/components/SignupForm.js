@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import SelectSignup from './SelectForm';
-import UploadImage from './uploadImage';
+import UploadImage from './UploadImage';
 
 export default class SignupForm extends Component{
 
