@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { Header, Footer } from './components/layouts/';
 import CompanyList from './components/CompanyList';
 import axios from 'axios';
-import jfd from 'json-form-data';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -61,8 +60,15 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            // console.log(`Info de Company obtenida : ${data}`);
-            this.setState({companies: data});
+            // for(let comp in data){
+            //   comp.imagePath = `${ipServidor}:${port}/${comp.imagePath}`;
+            // }
+            let companias = data.map(comp => {
+              comp.imagePath = `${ipServidor}:${port}/${comp.imagePath}`;
+              return comp;
+            })
+            // console.log(companias);
+            this.setState({companies: companias});
           })
           .catch(err => {
             console.log(`Error al buscar Company : ${err}`);

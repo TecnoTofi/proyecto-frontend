@@ -20,17 +20,17 @@ const styles = {
 
 function ImgMediaCard(props) {
   const { classes } = props;
+  console.log(props.company.imagePath);
   return (
     <Card className={classes.card}>
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="Contemplative Reptile"
+          alt={props.company.name}
           className={classes.media}
           height="140"
-        //   image={props.company.companyImage}
-          image={props.company.image}
-          title="Contemplative Reptile"
+          src={props.company.imagePath}
+          title={props.company.name}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
