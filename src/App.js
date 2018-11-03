@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Header, Footer } from './components/layouts/';
-import CompanyList from './components/CompanyList';
+import List from './components/List';
 import axios from 'axios';
 
 //Incluimos modulo para manejo de cookie
@@ -265,7 +265,7 @@ class App extends Component {
         <div>
           <div>
           {this.state.logged ? (
-            <CompanyList companies={this.state.companies} flag='companias'/>
+            <List listado={this.state.companies} flag='companias'/>
           ) : null}
           </div>
         </div>

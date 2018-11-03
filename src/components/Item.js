@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -25,28 +25,40 @@ function ImgMediaCard(props) {
       <CardActionArea>
         <CardMedia
           component="img"
-          alt={props.company.name}
+          alt={props.item.name}
           className={classes.media}
           height="140"
-          src={`${props.company.imagePath}`}
-          title={props.company.name}
+          src={`${props.item.imagePath}`}
+          title={props.item.name}
           
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {props.company.name}
+            {props.item.name}
           </Typography>
           {/* <Typography component="p">
+          {props.item.description}
           </Typography> */}
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          Detalles
-        </Button>
-        <Button size="small" color="primary">
-          Productos
-        </Button>
+      {props.flag === 'companias' ? (
+        <Fragment >
+          <Button size="small" color="primary">
+            Detalles
+          </Button>
+          <Button size="small" color="primary">
+            Productos
+          </Button>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <Button size="small" color="primary">
+            Ver
+          </Button>
+        </Fragment>
+      )}
+        
       </CardActions>
     </Card>
   );
