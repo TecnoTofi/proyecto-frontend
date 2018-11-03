@@ -1,7 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import 'typeface-roboto';
 import { Header, Footer } from './components/layouts/';
 import List from './components/List';
 import axios from 'axios';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -245,9 +249,22 @@ class App extends Component {
       });
   }
 
+  mostrarCompanias = () => {
+    return <List listado={this.state.companies} flag='companias'/>;
+  }
+
+  mostrarProductos = () => {
+    return <List listado={this.state.products} flag='productos'/>;
+  }
+
+  mostrarPerfil = () => {
+    return <Profile />
+  }
+
   render() {
     return (
-      <Fragment>
+      <BrowserRouter>
+        <Fragment>
         <Header 
           logged={this.state.logged}
           loggedUser={this.state.loggedUser}
@@ -262,15 +279,39 @@ class App extends Component {
           companies={this.state.companies}
           registroEmpresaProducto={this.registroEmpresaProducto}
         />
-        <div>
-          <div>
-          {this.state.logged ? (
-            <List listado={this.state.companies} flag='companias'/>
-          ) : null}
-          </div>
-        </div>
+        <Switch>
+          <Route path='/' component={Dashboard} exact />
+          <Route path='/companies' component={this.mostrarCompanias} />
+          <Route path='/products' component={this.mostrarProductos} />
+          <Route path='/profile' component={this.mostrarPerfil} />
+        </Switch>
         <Footer />
-      </Fragment>
+        </Fragment>
+      </BrowserRouter>
+      // <Fragment>
+        // <Header 
+        //   logged={this.state.logged}
+        //   loggedUser={this.state.loggedUser}
+        //   login={this.login}
+        //   logout={this.logout}
+        //   signup={this.registroUsuarioEmpresa}
+        //   companyTypes={this.state.companyTypes}
+        //   userTypes={this.state.userTypes}
+        //   categories={this.state.productCategory}
+        //   registrarProducto={this.registroProducto}
+        //   products={this.state.products}
+        //   companies={this.state.companies}
+        //   registroEmpresaProducto={this.registroEmpresaProducto}
+        // />
+      //   <div>
+      //     <div>
+      //     {this.state.logged ? (
+      //       <List listado={this.state.companies} flag='companias'/>
+      //     ) : null}
+      //     </div>
+      //   </div>
+      //   <Footer />
+      // </Fragment>
     );
   }
 }

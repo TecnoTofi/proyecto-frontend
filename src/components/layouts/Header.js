@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react';
+import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,11 +11,20 @@ import SignupForm from '../SignupForm';
 import Drawer from '../Drawer';
 import UserIcon from '@material-ui/icons/AccountCircle';
 import LogoutIcon from '@material-ui/icons/Clear'
+import HomeIcon from '@material-ui/icons/Home';
+import StoresIcon from '@material-ui/icons/Store';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ProductsIcon from '@material-ui/icons/Fastfood';
+
+import { NavLink } from 'react-router-dom';
 
 const styles = {
   root: {
     flexGrow: 1,
-    // width: 100+'%'
+    // width: 100+'%',
+    // left: 0,
+    // top: 0,
+    // position: 'fixed'
   },
   grow: {
     flexGrow: 1,
@@ -23,6 +33,9 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  link: {
+    color: 'inherit'
+  }
 };
 
 function ButtonAppBar(props) {
@@ -43,8 +56,20 @@ function ButtonAppBar(props) {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             NuestraApp
           </Typography>
+          <NavLink to='/' className={classes.link}>
+            <Button color="inherit"><HomeIcon />Dashboard</Button>
+          </NavLink>
+          <NavLink to='/companies' className={classes.link}>
+            <Button color="inherit"><StoresIcon />Empresas</Button>
+          </NavLink>
+          <NavLink to='/products' className={classes.link}>
+            <Button color="inherit"><ProductsIcon />Productos</Button>
+          </NavLink>
           {props.logged ? (
             <Fragment>
+              <NavLink to='/products' className={classes.link}>
+                <Button color="inherit"><ShoppingCartIcon />Carrito</Button>
+              </NavLink>
               <Button color="inherit"><UserIcon />{props.loggedUser.userName}</Button>
               <Button color="inherit" onClick={props.logout}><LogoutIcon />Cerrar sesion</Button>
             </Fragment>

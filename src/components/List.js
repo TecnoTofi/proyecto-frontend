@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import 'typeface-roboto';
 import '../App.css';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -28,6 +29,7 @@ class List extends Component{
                 {filteredList ? (
                     <div>
                         <TextField
+                            margin='dense'
                             name='searchName'
                             placeholder='Nombre empresa'
                             onChange={this.onSearchNameChange}

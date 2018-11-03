@@ -1,4 +1,5 @@
 import React from 'react';
+import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,6 +11,7 @@ const styles = {
     flexGrow: 1,
     position: 'fixed',
     bottom: 0,
+    // left: 0,
     width: 100+'%'
   },
   grow: {
