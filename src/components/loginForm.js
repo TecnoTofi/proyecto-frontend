@@ -5,6 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import isEmail from 'validator/lib/isEmail';
 
 export default class FormDialog extends Component {
 
@@ -13,13 +14,19 @@ export default class FormDialog extends Component {
         this.state = {
             open: false,
             userEmail: '',
-            userPassword: ''
-        };
+            userPassword: '',
+            userEmailError: '',
+            userPasswordError: ''
+        };        
     }
 
     handleToggle = () => {
       this.setState({
-        open: !this.state.open
+        open: !this.state.open,
+        userEmail: '',
+        userPassword: '',
+        userEmailError: '',
+        userPasswordError: ''
       });
     }
 
@@ -27,13 +34,50 @@ export default class FormDialog extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
+    validate = () => {
+      let isError = false;
+      const errors = {
+        userEmailError: '',
+        userPasswordError: ''
+      };
+
+      if(!this.state.userEmail){
+        isError = true;
+        errors.userEmailError = 'Debe ingresar un email';
+      }
+      else if(!isEmail(this.state.userEmail)){
+        isError = true;
+        errors.userEmailError = 'Debe ser un email valido';
+      }
+
+      if(!this.state.userPassword){
+        isError = true;
+        errors.userPasswordError = 'Debe ingresar una contraseña';
+      }
+      else if(this.state.userPassword.length < 8){
+        isError = true;
+        errors.userPasswordError = 'Debe tener al menos 8 caracteres';
+      }
+
+      this.setState({
+        ...this.state,
+        ...errors
+      });
+
+      return isError;
+    };
+
     onSubmit = (e) =>{
         e.preventDefault();
+        
+        const error = this.validate();
 
-        this.props.onClick(this.state.userEmail, this.state.userPassword)
-        this.handleToggle();
+        if (!error){
+          this.props.onClick(this.state.userEmail, this.state.userPassword)
+          this.handleToggle();
+        }      
     }
-
+  
     onEnterPress = (e) => {
       if(e.key === 'Enter') this.onSubmit(e);
     }
@@ -57,6 +101,9 @@ export default class FormDialog extends Component {
               label='Direccion de Email'
               type='email'
               fullWidth
+              required
+              helperText={this.state.userEmailError}
+              error={this.state.userEmailError ? true : false}
               onChange={this.onChange}
               onKeyPress={this.onEnterPress}
             />
@@ -67,6 +114,9 @@ export default class FormDialog extends Component {
                 label='Contaseña'
                 type='password'
                 fullWidth
+                required
+                helperText={this.state.userPasswordError}
+                error={this.state.userPasswordError ? true : false}
                 onChange={this.onChange}
                 onKeyPress={this.onEnterPress}
             />
@@ -75,7 +125,7 @@ export default class FormDialog extends Component {
             <Button onClick={this.handleToggle} color="primary">
               Cancelar
             </Button>
-            <Button onClick={this.onSubmit} color="primary" variant='contained'>
+            <Button className="btnAceptar" onClick={this.onSubmit} color="primary" variant='contained'>
               Aceptar
             </Button>
           </DialogActions>

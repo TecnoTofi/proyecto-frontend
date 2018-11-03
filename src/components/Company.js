@@ -29,8 +29,9 @@ function ImgMediaCard(props) {
           alt={props.company.name}
           className={classes.media}
           height="140"
-          src={props.company.imagePath}
+          src={`${props.company.imagePath}`}
           title={props.company.name}
+          
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">

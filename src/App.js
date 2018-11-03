@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Header, Footer } from './components/layouts/';
 import CompanyList from './components/CompanyList';
 import axios from 'axios';
+import Drawer from './components/Drawer';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -60,11 +61,8 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            // for(let comp in data){
-            //   comp.imagePath = `${ipServidor}:${port}/${comp.imagePath}`;
-            // }
             let companias = data.map(comp => {
-              comp.imagePath = `${ipServidor}:${port}/${comp.imagePath}`;
+              comp.imagePath = `http://${ipServidor}:${port}/${comp.imagePath}`;
               return comp;
             })
             // console.log(companias);
@@ -269,7 +267,7 @@ class App extends Component {
         <div>
           <div>
           {this.state.logged ? (
-            <CompanyList companies={this.state.companies} />
+            <CompanyList companies={this.state.companies} flag='companias'/>
           ) : null}
           </div>
         </div>

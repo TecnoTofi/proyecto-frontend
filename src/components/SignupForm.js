@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import SelectSignup from './SelectForm';
 import UploadImage from './UploadImage';
+import Validator from 'validator';
 
 export default class SignupForm extends Component{
 
@@ -30,13 +31,234 @@ export default class SignupForm extends Component{
             companyDoorNumber: '',
             category: 0,
             role: 0, 
-            companyImage: null
+            companyImage: null,
+            userNameError: '',
+            userEmailError: '',
+            userPasswordError: '',
+            userDocumentError: '',
+            userPhoneError: '',
+            userFirstStreetError: '',
+            userSecondStreetError: '',
+            userDoorNumberError: '',
+            companyNameError: '',
+            companyRutError: '',
+            companyPhoneError: '',
+            companyFirstStreetError: '',
+            companySecondStreetError: '',
+            companyDoorNumberError: '',
+            categoryError: '',
+            roleError: ''
         }
     }
 
+    validate = () => {
+        let isError = false;
+        const errors = {
+            userNameError: '',
+            userEmailError: '',
+            userPasswordError: '',
+            userDocumentError: '',
+            userPhoneError: '',
+            userFirstStreetError: '',
+            userSecondStreetError: '',
+            userDoorNumberError: '',
+            companyNameError: '',
+            companyRutError: '',
+            companyPhoneError: '',
+            companyFirstStreetError: '',
+            companySecondStreetError: '',
+            companyDoorNumberError: '',
+            categoryError: '',
+            roleError: ''
+        };
+
+        if(!this.state.userName){
+            isError = true;
+            errors.userNameError = 'Debe ingresar un nombre';
+        }
+        // else if(!Validator.isAlpha(this.state.userName)){
+        //     isError = true;
+        //     errors.userNameError = 'El nombre no puede contener numeros';
+        // }
+
+        if (!this.state.userEmail) {
+            isError = true;
+          errors.userEmailError = "Debe ingresar un email";
+        }
+        else if(!Validator.isEmail(this.state.userEmail)){
+            isError = true;
+            errors.userEmailError = 'Debe ser un email valido';
+        }
+
+        if (!this.state.userPassword) {
+            isError = true;
+            errors.userPasswordError ='Debe ingresar una contraseña';
+        }
+        else if(this.state.userPassword.length < 8){
+            isError = true;
+            errors.userPasswordError ='Debe tener al menos 8 caracteres';
+        }
+
+        if(!this.state.userDocument){
+            isError = true;
+            errors.userDocumentError='Debe ingresar un documento';
+        }
+        else if(!Validator.isNumeric(this.state.userDocument)){
+            isError = true;
+            errors.userDocumentError='Debe contener unicamente numeros';
+        }
+        else if(!Validator.isLength(this.state.userDocument, {min: 7, max: 8})){
+            isError = true;
+            errors.userDocumentError='Debe tener 7 u 8 caracteres';
+        }
+
+        if(!this.state.userPhone){
+            isError = true;
+            errors.userPhoneError='Debe ingresar un telefono personal';
+        }
+        else if(!Validator.isNumeric(this.state.userPhone)){
+            isError = true;
+            errors.userPhoneError='Debe contener unicamente numeros';
+        }
+        else if(!Validator.isLength(this.state.userPhone, {min: 7, max: 15})){
+            isError = true;
+            errors.userPhoneError='Debe tener entre 7 y 15 caracteres';
+        }
+
+        if(this.state.userFirstStreet && !Validator.isLength(this.state.userFirstStreet, {min: 3, max: 30})){
+            isError = true;
+            errors.userFirstStreetError='Debe tener entre 3 y 30 caracteres';
+        }
+
+        if(this.state.userSecondStreet && !Validator.isLength(this.state.userSecondStreet, {min: 3, max: 30})){
+            isError = true;
+            errors.userSecondStreetError='Debe tener entre 3 y 30 caracteres';
+        }
+
+        if(this.state.userDoorNumber && !Validator.isAlphanumeric(this.state.userDoorNumber)){
+            isError = true;
+            errors.userDoorNumberError='Debe contener unicamente numeros y letras';
+        }
+        
+        if(!this.state.companyName){
+            isError = true;
+            errors.companyNameError='Debe ingresar un nombre';
+        }
+        else if(!Validator.isLength(this.state.companyName, {min: 3, max: 30})){
+            isError = true;
+            errors.companyNameError='Debe tener entre 3 y 30 caracteres';
+        }
+        // else if(!Validator.isAlphanumeric(this.state.companyName)){
+        //     isError = true;
+        //     errors.companyNameError='Debe contener unicamente numeros y letras';
+        // }
+        
+        if(!this.state.companyRut){
+            isError = true;
+            errors.companyRutError='Debe ingresar un RUT';
+        }
+        else if(!Validator.isNumeric(this.state.companyRut)){
+            isError = true;
+            errors.companyRutError='Debe contener unicamente numeros';
+        }
+        else if(this.state.companyRut.length !== 12){
+            isError = true;
+            errors.companyRutError='Debe tener 12 caracteres';
+        }
+
+        if(!this.state.companyPhone){
+            isError = true;
+            errors.companyPhoneError='Debe ingresar un telefo de la empresa';
+        }
+        else if(!Validator.isNumeric(this.state.companyPhone)){
+            isError = true;
+            errors.companyPhoneError='Debe contener unicamente numeros';
+        }
+
+        if(!this.state.companyFirstStreet){
+            isError = true;
+            errors.companyFirstStreetError='Debe ingresar la direccion de la empresa';
+        }
+        else if(!Validator.isLength(this.state.userSecondStreet, {min: 3, max: 30})){
+            isError = true;
+            errors.companyFirstStreetError='Debe tener entre 3 y 30 caracteres';
+        }
+
+        if(!this.state.companySecondStreet){
+            isError = true;
+            errors.companySecondStreetError='Debe ingresar la direccion de la empresa';
+        }
+        else if(!Validator.isLength(this.state.companySecondStreet, {min: 3, max: 30})){
+            isError = true;
+            errors.companySecondStreetError='Debe tener entre 3 y 30 caracteres';
+        }
+
+        if(!this.state.companyDoorNumber){
+            isError = true;
+            errors.companyDoorNumberError='Debe ingresar la direccion de la empresa';
+        }
+        else if(!Validator.isAlphanumeric(this.state.companyDoorNumber)){
+            isError = true;
+            errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
+        }
+
+        // if(!role){
+        //     errors.userFirstStreet="El rol no puede ser nulo";
+        // }
+        // if(!category){
+        //     errors.category="Debe seleccionar una categoria";
+        // }
+        // if(!imageName || imageName.length <= 30){
+        //     errors.imageName="El nombre de la calle principal debe ser menor que 30 caracteres";
+        // }
+        // if(!imagePath || imagePath.length <= 30){
+        //     errors.imagePath="";
+        // } 
+
+        this.setState({
+            ...this.state,
+            ...errors
+        });
+
+        return isError;
+      };
+
     handleToggle = () => {
         this.setState({
-          open: !this.state.open
+            open: !this.state.open,
+            userName: '',
+            userEmail: '',
+            userPassword: '',
+            userDocument: '',
+            userPhone: '',
+            userFirstStreet: '',
+            userSecondStreet: '',
+            userDoorNumber: '',
+            companyName: '',
+            companyRut: '',
+            companyPhone: '',
+            companyFirstStreet: '',
+            companySecondStreet: '',
+            companyDoorNumber: '',
+            category: 0,
+            role: 0, 
+            companyImage: null,
+            userNameError: '',
+            userEmailError: '',
+            userPasswordError: '',
+            userDocumentError: '',
+            userPhoneError: '',
+            userFirstStreetError: '',
+            userSecondStreetError: '',
+            userDoorNumberError: '',
+            companyNameError: '',
+            companyRutError: '',
+            companyPhoneError: '',
+            companyFirstStreetError: '',
+            companySecondStreetError: '',
+            companyDoorNumberError: '',
+            categoryError: '',
+            roleError: ''
         });
       }
 
@@ -53,8 +275,13 @@ export default class SignupForm extends Component{
 
     onSubmit = (e) => {
         e.preventDefault();
-        this.props.onClick(this.state);
-        this.handleToggle();
+
+        const error = this.validate();
+
+        if (!error){
+            this.props.onClick(this.state);
+            this.handleToggle();
+        }
     }
 
     onImageUpload = (image) => {
@@ -68,7 +295,6 @@ export default class SignupForm extends Component{
     }
 
     render(){
-
         return(
 
             <div>
@@ -88,6 +314,9 @@ export default class SignupForm extends Component{
                         label='Nombre completo'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.userNameError}
+                        error={this.state.userNameError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -98,6 +327,9 @@ export default class SignupForm extends Component{
                         label='Direccion de Email'
                         type='email'
                         fullWidth
+                        required
+                        helperText={this.state.userEmailError}
+                        error={this.state.userEmailError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -108,6 +340,9 @@ export default class SignupForm extends Component{
                         label='Contraseña'
                         type='password'
                         fullWidth
+                        required
+                        helperText={this.state.userPasswordError}
+                        error={this.state.userPasswordError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -118,6 +353,9 @@ export default class SignupForm extends Component{
                         label='Documento de identidad'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.userDocumentError}
+                        error={this.state.userDocumentError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -128,6 +366,8 @@ export default class SignupForm extends Component{
                         label='Telefono personal'
                         type='text'
                         fullWidth
+                        helperText={this.state.userPhoneError}
+                        error={this.state.userPhoneError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -138,6 +378,8 @@ export default class SignupForm extends Component{
                         label='Calle principal'
                         type='text'
                         fullWidth
+                        helperText={this.state.userFirstStreetError}
+                        error={this.state.userFirstStreetError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -148,6 +390,8 @@ export default class SignupForm extends Component{
                         label='Calle secundaria'
                         type='text'
                         fullWidth
+                        helperText={this.state.userSecondStreetError}
+                        error={this.state.userSecondStreetError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -158,6 +402,8 @@ export default class SignupForm extends Component{
                         label='Numero de puerta'
                         type='text'
                         fullWidth
+                        helperText={this.state.userDoorNumberError}
+                        error={this.state.userDoorNumberError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -168,6 +414,9 @@ export default class SignupForm extends Component{
                         label='Nombre de la empresa'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.companyNameError}
+                        error={this.state.companyNameError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -178,6 +427,9 @@ export default class SignupForm extends Component{
                         label='RUT de la empresa'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.companyRutError}
+                        error={this.state.companyRutError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -188,6 +440,9 @@ export default class SignupForm extends Component{
                         label='Telefono de la empresa'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.companyPhoneError}
+                        error={this.state.companyPhoneError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -198,6 +453,9 @@ export default class SignupForm extends Component{
                         label='Calle principal'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.companyFirstStreetError}
+                        error={this.state.companyFirstStreetError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -208,6 +466,9 @@ export default class SignupForm extends Component{
                         label='Calle secundaria'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.companySecondStreetError}
+                        error={this.state.companySecondStreetError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -218,6 +479,9 @@ export default class SignupForm extends Component{
                         label='Numero de puerta'
                         type='text'
                         fullWidth
+                        required
+                        helperText={this.state.companyDoorNumberError}
+                        error={this.state.companyDoorNumberError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
