@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { Header, Footer } from './components/layouts/';
 import CompanyList from './components/CompanyList';
 import axios from 'axios';
-import Drawer from './components/Drawer';
 
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
@@ -65,7 +64,6 @@ class App extends Component {
               comp.imagePath = `http://${ipServidor}:${port}/${comp.imagePath}`;
               return comp;
             })
-            // console.log(companias);
             this.setState({companies: companias});
           })
           .catch(err => {
@@ -170,7 +168,7 @@ class App extends Component {
                 userCompanyId: data.userData.userCompanyId
               }
             });
-            console.log(data);
+            // console.log(data);
           })
           .catch(err => {
             console.log(`Error al enviar inicio de sesion : ${err}`);

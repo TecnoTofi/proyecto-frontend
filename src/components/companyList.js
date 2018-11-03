@@ -8,18 +8,24 @@ class CompanyList extends Component{
 
     constructor(props){
         super(props);
-
-        this.onSearchNameChange = this.onSearchNameChange.bind(this);
+        this.state = {
+            searchName: ''
+        }
     }
 
-    onSearchNameChange(e){
-
-    }
+    onSearchNameChange = (e) => {
+        this.setState({
+            searchName: e.target.value
+        });
+    };
 
     render(){
+        let filteredCompanies = this.props.companies.filter((comp) => {
+            return comp.name.indexOf(this.state.searchName) !== -1;
+        });
         return(
             <div>
-                {this.props.companies ? (
+                {filteredCompanies ? (
                     <div>
                         <TextField
                             name='searchName'
@@ -27,7 +33,7 @@ class CompanyList extends Component{
                             onChange={this.onSearchNameChange}
                         />
                         <Grid container spacing={24} style={{padding: 24}}>
-                            {this.props.companies.map(company => (
+                            {filteredCompanies.map(company => (
                                 <Grid item key={company.id} xs={12} sm={6} lg={4} xl={3}>
                                     <Company company={company} />
                                 </Grid>

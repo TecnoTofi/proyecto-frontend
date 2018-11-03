@@ -20,7 +20,6 @@ const styles = {
 
 function ImgMediaCard(props) {
   const { classes } = props;
-  console.log(props.company.imagePath);
   return (
     <Card className={classes.card}>
       <CardActionArea>

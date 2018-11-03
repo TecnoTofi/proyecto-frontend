@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import SelectSignup from './SelectForm';
 import UploadImage from './UploadImage';
 import Validator from 'validator';
+import SignupIcon from '@material-ui/icons/PersonAdd'
 
 export default class SignupForm extends Component{
 
@@ -298,7 +299,7 @@ export default class SignupForm extends Component{
         return(
 
             <div>
-                <Button color='inherit' onClick={this.handleToggle}>Registrarse</Button>
+                <Button color='inherit' onClick={this.handleToggle}><SignupIcon />Registrarse</Button>
                 <Dialog
                 open={this.state.open}
                 onClose={this.handleToggle}

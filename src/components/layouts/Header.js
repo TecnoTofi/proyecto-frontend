@@ -7,13 +7,14 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import LoginForm from '../LoginForm';
 import SignupForm from '../SignupForm';
-import ProductForm from '../ProductForm';
-import AssociateForm from '../AssociateForm';
 import Drawer from '../Drawer';
+import UserIcon from '@material-ui/icons/AccountCircle';
+import LogoutIcon from '@material-ui/icons/Clear'
 
 const styles = {
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    // width: 100+'%'
   },
   grow: {
     flexGrow: 1,
@@ -31,24 +32,21 @@ function ButtonAppBar(props) {
       <AppBar position="static">
         <Toolbar>
           {props.logged ? (
-            <Drawer />
+            <Drawer 
+              categories={props.categories} 
+              onClickProduct={props.registrarProducto}
+              products={props.products} 
+              companies={props.companies} 
+              onClickAssociate={props.registroEmpresaProducto}
+            />
           ) : null}
           <Typography variant="h6" color="inherit" className={classes.grow}>
             NuestraApp
           </Typography>
           {props.logged ? (
             <Fragment>
-              <ProductForm 
-                categories={props.categories} 
-                onClick={props.registrarProducto}
-              />
-              <AssociateForm 
-                products={props.products} 
-                companies={props.companies} 
-                onClick={props.registroEmpresaProducto}
-              />
-              <Button color="inherit">{props.loggedUser.userName}</Button>
-              <Button color="inherit" onClick={props.logout}>Cerrar sesion</Button>
+              <Button color="inherit"><UserIcon />{props.loggedUser.userName}</Button>
+              <Button color="inherit" onClick={props.logout}><LogoutIcon />Cerrar sesion</Button>
             </Fragment>
           ) : (
             <Fragment>

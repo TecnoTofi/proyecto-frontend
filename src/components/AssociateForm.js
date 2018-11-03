@@ -7,6 +7,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import AssociateIcon from '@material-ui/icons/Queue';
 
 export default class AssociateForm extends Component{
 
@@ -41,6 +45,7 @@ export default class AssociateForm extends Component{
         event.preventDefault();
 
         this.props.onClick(this.state);
+        this.handleToggle();
     }
 
     onEnterPress = (e) => {
@@ -50,7 +55,13 @@ export default class AssociateForm extends Component{
     render(){
         return(
             <div>
-            <Button color='inherit' onClick={this.handleToggle}>Asociar producto</Button>
+            {/* <Button color='inherit' onClick={this.handleToggle}>Asociar producto</Button> */}
+                <ListItem button onClick={this.handleToggle}>
+                    <ListItemIcon>
+                        <AssociateIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Asociar producto' />
+                </ListItem>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleToggle}

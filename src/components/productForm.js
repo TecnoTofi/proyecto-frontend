@@ -7,6 +7,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import AddIcon from '@material-ui/icons/AddBox';
 
 
 export default class ProductForm extends Component{
@@ -39,6 +43,7 @@ export default class ProductForm extends Component{
         event.preventDefault();
 
         this.props.onClick(this.state);
+        this.handleToggle();
     }
     
     onEnterPress = (e) => {
@@ -48,7 +53,12 @@ export default class ProductForm extends Component{
     render(){
         return(
             <div>
-            <Button color='inherit' onClick={this.handleToggle}>Nuevo producto</Button>
+            <ListItem button onClick={this.handleToggle}>
+                <ListItemIcon>
+                    <AddIcon />
+                </ListItemIcon>
+                <ListItemText primary='Nuevo producto' />
+            </ListItem>
             <Dialog
                 open={this.state.open}
                 onClose={this.handleToggle}

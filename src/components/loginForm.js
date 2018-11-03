@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import isEmail from 'validator/lib/isEmail';
+import LoginIcon from '@material-ui/icons/LockOpen'
 
 export default class FormDialog extends Component {
 
@@ -85,7 +86,7 @@ export default class FormDialog extends Component {
   render() {
     return (
       <div>
-        <Button color='inherit' onClick={this.handleToggle}>Iniciar Sesion</Button>
+        <Button color='inherit' onClick={this.handleToggle}><LoginIcon />Iniciar Sesion</Button>
         <Dialog
           open={this.state.open}
           onClose={this.handleToggle}
