@@ -67,10 +67,12 @@ function ButtonAppBar(props) {
           </NavLink>
           {props.logged ? (
             <Fragment>
-              <NavLink to='/products' className={classes.link}>
+              <NavLink to='/carrito' className={classes.link}>
                 <Button color="inherit"><ShoppingCartIcon />Carrito</Button>
               </NavLink>
-              <Button color="inherit"><UserIcon />{props.loggedUser.userName}</Button>
+              <NavLink to='/profile' className={classes.link}>
+                <Button color="inherit"><UserIcon />{props.loggedUser.userName}</Button>
+              </NavLink>
               <Button color="inherit" onClick={props.logout}><LogoutIcon />Cerrar sesion</Button>
             </Fragment>
           ) : (

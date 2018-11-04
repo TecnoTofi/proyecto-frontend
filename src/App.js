@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
+import Carrito from './components/Carrito';
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -301,6 +302,10 @@ class App extends Component {
     return <Profile />
   }
 
+  mostrarCarrito = () => {
+    return <Carrito />
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -324,6 +329,7 @@ class App extends Component {
           <Route path='/companies' component={this.mostrarCompanias} />
           <Route path='/products' component={this.mostrarProductos} />
           <Route path='/profile' component={this.mostrarPerfil} />
+          <Route path='/carrito' component={this.mostrarCarrito} />
         </Switch>
         <Footer />
         </Fragment>
