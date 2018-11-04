@@ -12,6 +12,14 @@ import SelectSignup from './SelectForm';
 import UploadImage from './UploadImage';
 import Validator from 'validator';
 import SignupIcon from '@material-ui/icons/PersonAdd'
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 
 const styles = theme => ({
     leftIcon: {
@@ -57,7 +65,8 @@ class SignupForm extends Component{
             companySecondStreetError: '',
             companyDoorNumberError: '',
             categoryError: '',
-            companyImageError: ''
+            companyImageError: '',
+            showPassword: false
         }
     }
 
@@ -217,7 +226,7 @@ class SignupForm extends Component{
             errors.categoryError="Debe seleccionar el tipo de empresa";
         }
         
-        if(this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
+        if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
             isError = true;
             errors.imageName="Debe subir una imagen JPEG, JPG o PNG";
         }
@@ -343,7 +352,7 @@ class SignupForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    <TextField
+                    {/* <TextField
                         margin='dense'
                         id='userPassword'
                         name='userPassword'
@@ -355,7 +364,28 @@ class SignupForm extends Component{
                         error={this.state.userPasswordError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
-                    />
+                    /> */}
+                    <FormControl className={(classes.margin, classes.textField)} fullWidth>
+                        <InputLabel htmlFor="adornment-password">Contaseña</InputLabel>
+                        <Input
+                            id="userPassword"
+                            name='userPassword'
+                            type={this.state.showPassword ? 'text' : 'password'}
+                            value={this.state.password}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                            endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                aria-label="Toggle password visibility"
+                                onClick={this.handleClickShowPassword}
+                                >
+                                {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                            }
+                        />
+                    </FormControl>
                     <TextField
                         margin='dense'
                         id='userDocument'
@@ -498,6 +528,7 @@ class SignupForm extends Component{
                     <SelectSignup 
                         content={this.props.companyTypes}
                         onChange={this.onSelectChange}
+                        selectError={this.state.categoryError}
                         label={'Tipo de empresa'}
                         helper={'Seleccione el tipo de empresa'}
                     />

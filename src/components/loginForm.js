@@ -10,11 +10,24 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import isEmail from 'validator/lib/isEmail';
 import LoginIcon from '@material-ui/icons/LockOpen'
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 const styles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit
-  }
+  },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    flexBasis: 200,
+  },
 });
 
 class LoginForm extends Component {
@@ -26,7 +39,8 @@ class LoginForm extends Component {
             userEmail: '',
             userPassword: '',
             userEmailError: '',
-            userPasswordError: ''
+            userPasswordError: '',
+            showPassword: false
         };        
     }
 
@@ -92,6 +106,10 @@ class LoginForm extends Component {
       if(e.key === 'Enter') this.onSubmit(e);
     }
 
+    handleClickShowPassword = () => {
+      this.setState(state => ({ showPassword: !state.showPassword }));
+    };
+
   render() {
     const { classes } = this.props;
     return (
@@ -120,11 +138,12 @@ class LoginForm extends Component {
               onChange={this.onChange}
               onKeyPress={this.onEnterPress}
             />
-            <TextField
+            {/* <TextField
                 margin='dense'
                 id='userPassword'
                 name='userPassword'
                 label='Contaseña'
+                // type={this.state.showPassword ? 'text' : 'password'}
                 type='password'
                 fullWidth
                 required
@@ -132,7 +151,28 @@ class LoginForm extends Component {
                 error={this.state.userPasswordError ? true : false}
                 onChange={this.onChange}
                 onKeyPress={this.onEnterPress}
-            />
+            /> */}
+            <FormControl className={(classes.margin, classes.textField)} fullWidth>
+              <InputLabel htmlFor="adornment-password">Contaseña</InputLabel>
+              <Input
+                id="userPassword"
+                name='userPassword'
+                type={this.state.showPassword ? 'text' : 'password'}
+                value={this.state.password}
+                onChange={this.onChange}
+                onKeyPress={this.onEnterPress}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="Toggle password visibility"
+                      onClick={this.handleClickShowPassword}
+                    >
+                      {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleToggle} color="primary">

@@ -41,12 +41,14 @@ class SimpleSelect extends React.Component {
     return (
       <form className={classes.root} autoComplete="off">
        
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.formControl} error={this.props.selectError ? true : false}>
           <InputLabel htmlFor="type-helper">{this.props.label}</InputLabel>
           <Select
             name='category'
             value={this.state.category}
             onChange={this.handleChange}
+            // helperText={this.props.selectError}
+            // error={this.props.selectError ? true : false}
             input={<Input name="type" id="type-helper" />}
           >
             <MenuItem value="">
@@ -54,9 +56,8 @@ class SimpleSelect extends React.Component {
             </MenuItem>
             {this.props.content.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
           </Select>
-          <FormHelperText>{this.props.helper}</FormHelperText>
+          <FormHelperText>{this.props.selectError ? this.props.selectError : this.props.helper}</FormHelperText>
         </FormControl>
-        
       </form>
     );
   }
