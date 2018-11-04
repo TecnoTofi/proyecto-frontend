@@ -6,7 +6,6 @@ import axios from 'axios';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
-
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -37,6 +36,47 @@ class App extends Component {
   }
 
   componentDidMount(){
+
+    let token = cookies.get('access_token');
+    if(token){
+      let requestAuth = new Request(`http://${ipServidor}:${port}/api/auth`, {
+        method: 'POST',
+        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+        credentials: 'same-origin',
+        body: JSON.stringify({token: token})
+      })
+      
+      fetch(requestAuth)
+        .then(res => {
+          res.json()
+            .then(data => {
+              if(res.status === 200){
+                cookies.set('access_token', data.token, { path: '/' });
+            
+                this.setState({
+                  logged: true,
+                  loggedUser: {
+                    userType: data.userData.userType,
+                    userName: data.userData.userName,
+                    userEmail: data.userData.userEmail,
+                    userId: data.userData.userId,
+                    userCompanyName: data.userData.userCompanyName,
+                    userCompanyId: data.userData.userCompanyId
+                  }
+                });
+              }
+              
+              // console.log(data);
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  
     fetch(`http://${ipServidor}:${port}/api/company/category`)
       .then(res => {
         res.json()
@@ -172,7 +212,6 @@ class App extends Component {
                 userCompanyId: data.userData.userCompanyId
               }
             });
-            // console.log(data);
           })
           .catch(err => {
             console.log(`Error al enviar inicio de sesion : ${err}`);
@@ -203,6 +242,7 @@ class App extends Component {
                 userCompanyId: 0
               }
             });
+            cookies.remove('access_token', { path: '/' })
             console.log(data);
           })
           .catch(err => {

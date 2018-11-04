@@ -127,7 +127,7 @@ class SwipeableTemporaryDrawer extends React.Component {
             tabIndex={0}
             role="button"
             // onClick={this.toggleDrawer()}
-            onKeyDown={this.toggleDrawer()}
+            // onKeyDown={this.toggleDrawer()}
           >
             {sideList}
           </div>
