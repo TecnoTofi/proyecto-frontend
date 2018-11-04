@@ -57,7 +57,7 @@ class SignupForm extends Component{
             companySecondStreetError: '',
             companyDoorNumberError: '',
             categoryError: '',
-            roleError: ''
+            companyImageError: ''
         }
     }
 
@@ -79,7 +79,7 @@ class SignupForm extends Component{
             companySecondStreetError: '',
             companyDoorNumberError: '',
             categoryError: '',
-            roleError: ''
+            companyImageError: ''
         };
 
         if(!this.state.userName){
@@ -211,19 +211,16 @@ class SignupForm extends Component{
             isError = true;
             errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
         }
-
-        // if(!role){
-        //     errors.userFirstStreet="El rol no puede ser nulo";
-        // }
-        // if(!category){
-        //     errors.category="Debe seleccionar una categoria";
-        // }
-        // if(!imageName || imageName.length <= 30){
-        //     errors.imageName="El nombre de la calle principal debe ser menor que 30 caracteres";
-        // }
-        // if(!imagePath || imagePath.length <= 30){
-        //     errors.imagePath="";
-        // } 
+        
+        if(this.state.category === 0 || this.state.role === 0){
+            isError = true;
+            errors.categoryError="Debe seleccionar el tipo de empresa";
+        }
+        
+        if(this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
+            isError = true;
+            errors.imageName="Debe subir una imagen JPEG, JPG o PNG";
+        }
 
         this.setState({
             ...this.state,
@@ -268,7 +265,7 @@ class SignupForm extends Component{
             companySecondStreetError: '',
             companyDoorNumberError: '',
             categoryError: '',
-            roleError: ''
+            companyImageError: ''
         });
       }
 
@@ -285,10 +282,11 @@ class SignupForm extends Component{
 
     onSubmit = (e) => {
         e.preventDefault();
-
+        console.log('entre a registro, mando a validar');
         const error = this.validate();
 
         if (!error){
+            console.log('se valido bien, mando a registrar');
             this.props.onClick(this.state);
             this.handleToggle();
         }

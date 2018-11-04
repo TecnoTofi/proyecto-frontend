@@ -142,6 +142,8 @@ class App extends Component {
   }
 
   registroUsuarioEmpresa = (signupdata) => {
+    console.log('llego a registro en app');
+    console.log(signupdata);
 
     const request = new FormData();
     //user
@@ -200,19 +202,24 @@ class App extends Component {
       .then((res) => {
         res.json()
           .then(data => {
-            cookies.set('access_token', data.token, { path: '/' });
+            if(res.status === 200){
+              cookies.set('access_token', data.token, { path: '/' });
             
-            this.setState({
-              logged: true,
-              loggedUser: {
-                userType: data.userData.userType,
-                userName: data.userData.userName,
-                userEmail: data.userData.userEmail,
-                userId: data.userData.userId,
-                userCompanyName: data.userData.userCompanyName,
-                userCompanyId: data.userData.userCompanyId
-              }
-            });
+              this.setState({
+                logged: true,
+                loggedUser: {
+                  userType: data.userData.userType,
+                  userName: data.userData.userName,
+                  userEmail: data.userData.userEmail,
+                  userId: data.userData.userId,
+                  userCompanyName: data.userData.userCompanyName,
+                  userCompanyId: data.userData.userCompanyId
+                }
+              });
+            }
+            else{
+              console.log(data.message);
+            }
           })
           .catch(err => {
             console.log(`Error al enviar inicio de sesion : ${err}`);

@@ -12,9 +12,6 @@ import isEmail from 'validator/lib/isEmail';
 import LoginIcon from '@material-ui/icons/LockOpen'
 
 const styles = theme => ({
-  link: {
-    color: 'inherit'
-  },
   leftIcon: {
     marginRight: theme.spacing.unit
   }
