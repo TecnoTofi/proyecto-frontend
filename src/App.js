@@ -42,9 +42,9 @@ class App extends Component {
     if(token){
       let requestAuth = new Request(`http://${ipServidor}:${port}/api/auth`, {
         method: 'POST',
-        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
         credentials: 'same-origin',
-        body: JSON.stringify({token: token})
+        body: JSON.stringify({message: 'AuthToken'})
       })
       
       fetch(requestAuth)
@@ -259,42 +259,73 @@ class App extends Component {
       });
   }
 
-  registroProducto(productdata){
-    let request = new Request(`http://${ipServidor}:${port}/api/product`, {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json'}),
-      body: JSON.stringify(productdata)
-    });
+  registroProducto = (productData) => {
 
-    fetch(request)
-      .then((res) => {
-        res.json()
-          .then(data => {
-            console.log(data);
-          })
-          .catch(err => {
-            console.log(`Error enviar registro de producto : ${err}`);
-          });
+    let token = cookies.get('access_token');
+    if(token){
+
+      let requestBody = {
+        productName: productData.productName,
+        productCode: productData.productCode,
+        category: productData.category
+      }
+
+      let request = new Request(`http://${ipServidor}:${port}/api/product`, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
+        body: JSON.stringify(requestBody)
       });
+  
+      fetch(request)
+        .then((res) => {
+          res.json()
+            .then(data => {
+              console.log(data);
+            })
+            .catch(err => {
+              console.log(`Error enviar registro de producto : ${err}`);
+            });
+        });
+    }
+    else{
+      console.log('No hay token');
+    }
   }
 
-  registroEmpresaProducto(productdata){
-    let request = new Request(`http://${ipServidor}:${port}/api/product/company`, {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json'}),
-      body: JSON.stringify(productdata)
-    });
+  registroEmpresaProducto = (productData) => {
 
-    fetch(request)
-      .then((res) => {
-        res.json()
-          .then(data => {
-            console.log(data);
-          })
-          .catch(err => {
-            console.log(`Error al enviar registro de productoEmpresa : ${err}`);
-          });
+    let token = cookies.get('access_token');
+    if(token){
+
+      let requestBody = {
+        companyId: this.state.loggedUser.userCompanyId,
+        productId: productData.productId,
+        productName: productData.productName,
+        productDescription: productData.productDescription,
+        productPrice: productData.productPrice,
+        productStock: productData.productStock,
+      }
+
+      let request = new Request(`http://${ipServidor}:${port}/api/product/company`, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
+        body: JSON.stringify(requestBody)
       });
+  
+      fetch(request)
+        .then((res) => {
+          res.json()
+            .then(data => {
+              console.log(data);
+            })
+            .catch(err => {
+              console.log(`Error al enviar registro de productoEmpresa : ${err}`);
+            });
+        });
+    }
+    else{
+      console.log('No hay token')
+    }
   }
 
   mostrarCompanias = () => {

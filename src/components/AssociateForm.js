@@ -19,7 +19,6 @@ export default class AssociateForm extends Component{
         super(props);
         this.state = {
             open: false,
-            companyId:0,
             productId:0,
             productName: '',
             productDescription: '',
@@ -34,8 +33,8 @@ export default class AssociateForm extends Component{
         });
     }
 
-    onSelectChange = (tipo) => {
-        this.setState({category: Number(tipo)});
+    onSelectChange = (value) => {
+        this.setState({productId: Number(value)});
     }
 
     onChange = (e) => {
