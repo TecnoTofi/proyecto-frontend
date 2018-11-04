@@ -18,7 +18,7 @@ import ProductsIcon from '@material-ui/icons/Fastfood';
 
 import { NavLink } from 'react-router-dom';
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
     // width: 100+'%',
@@ -35,8 +35,11 @@ const styles = {
   },
   link: {
     color: 'inherit'
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
   }
-};
+});
 
 function ButtonAppBar(props) {
   const { classes } = props;
@@ -53,27 +56,29 @@ function ButtonAppBar(props) {
               onClickAssociate={props.registroEmpresaProducto}
             />
           ) : null}
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            NuestraApp
-          </Typography>
+          {/* <NavLink to='/' className={classes.link}> */}
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+              NuestraApp
+            </Typography>
+          {/* </NavLink> */}
           <NavLink to='/' className={classes.link}>
-            <Button color="inherit"><HomeIcon />Dashboard</Button>
+            <Button color="inherit"><HomeIcon className={classes.leftIcon} />Dashboard</Button>
           </NavLink>
           <NavLink to='/companies' className={classes.link}>
-            <Button color="inherit"><StoresIcon />Empresas</Button>
+            <Button color="inherit"><StoresIcon className={classes.leftIcon} />Empresas</Button>
           </NavLink>
           <NavLink to='/products' className={classes.link}>
-            <Button color="inherit"><ProductsIcon />Productos</Button>
+            <Button color="inherit"><ProductsIcon className={classes.leftIcon} />Productos</Button>
           </NavLink>
           {props.logged ? (
             <Fragment>
               <NavLink to='/carrito' className={classes.link}>
-                <Button color="inherit"><ShoppingCartIcon />Carrito</Button>
+                <Button color="inherit"><ShoppingCartIcon className={classes.leftIcon} />Carrito</Button>
               </NavLink>
               <NavLink to='/profile' className={classes.link}>
-                <Button color="inherit"><UserIcon />{props.loggedUser.userName}</Button>
+                <Button color="inherit"><UserIcon className={classes.leftIcon} />{props.loggedUser.userName}</Button>
               </NavLink>
-              <Button color="inherit" onClick={props.logout}><LogoutIcon />Cerrar sesion</Button>
+              <Button color="inherit" onClick={props.logout}><LogoutIcon className={classes.leftIcon} />Cerrar sesion</Button>
             </Fragment>
           ) : (
             <Fragment>

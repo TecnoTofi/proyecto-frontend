@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import 'typeface-roboto';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,7 +11,16 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import isEmail from 'validator/lib/isEmail';
 import LoginIcon from '@material-ui/icons/LockOpen'
 
-export default class FormDialog extends Component {
+const styles = theme => ({
+  link: {
+    color: 'inherit'
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit
+  }
+});
+
+class LoginForm extends Component {
 
     constructor(props){
         super(props);
@@ -85,9 +96,12 @@ export default class FormDialog extends Component {
     }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <Button color='inherit' onClick={this.handleToggle}><LoginIcon />Iniciar Sesion</Button>
+        <Button color='inherit' onClick={this.handleToggle}>
+          <LoginIcon className={classes.leftIcon} />Iniciar Sesion
+        </Button>
         <Dialog
           open={this.state.open}
           onClose={this.handleToggle}
@@ -136,3 +150,9 @@ export default class FormDialog extends Component {
     );
   }
 }
+
+LoginForm.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(LoginForm);

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import 'typeface-roboto';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,7 +13,13 @@ import UploadImage from './UploadImage';
 import Validator from 'validator';
 import SignupIcon from '@material-ui/icons/PersonAdd'
 
-export default class SignupForm extends Component{
+const styles = theme => ({
+    leftIcon: {
+        marginRight: theme.spacing.unit
+    }
+});
+
+class SignupForm extends Component{
 
     constructor(props){
         super(props);
@@ -297,10 +305,12 @@ export default class SignupForm extends Component{
     }
 
     render(){
+        const { classes } = this.props;
         return(
-
             <div>
-                <Button color='inherit' onClick={this.handleToggle}><SignupIcon />Registrarse</Button>
+                <Button color='inherit' onClick={this.handleToggle}>
+                    <SignupIcon className={classes.leftIcon} />Registrarse
+                </Button>
                 <Dialog
                 open={this.state.open}
                 onClose={this.handleToggle}
@@ -508,3 +518,9 @@ export default class SignupForm extends Component{
         );
     }
 }
+
+SignupForm.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(SignupForm);
