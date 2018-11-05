@@ -34,7 +34,8 @@ const styles = theme => ({
     marginRight: 20,
   },
   link: {
-    color: 'inherit'
+    color: 'inherit',
+    textDecoration: 'none'
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
@@ -56,11 +57,11 @@ function ButtonAppBar(props) {
               onClickAssociate={props.registroEmpresaProducto}
             />
           ) : null}
-          {/* <NavLink to='/' className={classes.link}> */}
             <Typography variant="h6" color="inherit" className={classes.grow}>
+            <NavLink to='/' className={classes.link}>
               NuestraApp
+              </NavLink>
             </Typography>
-          {/* </NavLink> */}
           <NavLink to='/' className={classes.link}>
             <Button color="inherit"><HomeIcon className={classes.leftIcon} />Dashboard</Button>
           </NavLink>

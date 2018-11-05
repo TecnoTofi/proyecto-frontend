@@ -348,28 +348,28 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Fragment>
-        <Header 
-          logged={this.state.logged}
-          loggedUser={this.state.loggedUser}
-          login={this.login}
-          logout={this.logout}
-          signup={this.registroUsuarioEmpresa}
-          companyTypes={this.state.companyTypes}
-          userTypes={this.state.userTypes}
-          categories={this.state.productCategory}
-          registrarProducto={this.registroProducto}
-          products={this.state.products}
-          companies={this.state.companies}
-          registroEmpresaProducto={this.registroEmpresaProducto}
-        />
-        <Switch>
-          <Route path='/' component={Dashboard} exact />
-          <Route path='/companies' component={this.mostrarCompanias} />
-          <Route path='/products' component={this.mostrarProductos} />
-          <Route path='/profile' component={this.mostrarPerfil} />
-          <Route path='/carrito' component={this.mostrarCarrito} />
-        </Switch>
-        <Footer />
+          <Header 
+            logged={this.state.logged}
+            loggedUser={this.state.loggedUser}
+            login={this.login}
+            logout={this.logout}
+            signup={this.registroUsuarioEmpresa}
+            companyTypes={this.state.companyTypes}
+            userTypes={this.state.userTypes}
+            categories={this.state.productCategory}
+            registrarProducto={this.registroProducto}
+            products={this.state.products}
+            companies={this.state.companies}
+            registroEmpresaProducto={this.registroEmpresaProducto}
+          />
+          <Switch>
+            <Route path='/' component={Dashboard} exact />
+            <Route path='/companies' component={this.mostrarCompanias} />
+            <Route path='/products' component={this.mostrarProductos} />
+            <Route path='/profile' component={this.mostrarPerfil} />
+            <Route path='/carrito' component={this.mostrarCarrito} />
+          </Switch>
+          <Footer />
         </Fragment>
       </BrowserRouter>
       // <Fragment>
