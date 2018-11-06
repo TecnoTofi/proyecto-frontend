@@ -29,6 +29,7 @@ class App extends Component {
         userCompanyId: 0
       },
       companyTypes: [],
+      companyCategories: [],
       userTypes: [],
       companies:[],
       productCategory:[],
@@ -78,12 +79,24 @@ class App extends Component {
         });
     }
   
-    fetch(`http://${ipServidor}:${port}/api/company/category`)
+    fetch(`http://${ipServidor}:${port}/api/company/type`)
       .then(res => {
         res.json()
           .then(data => {
             // console.log(`Info de CompanyCategory obtenida : ${data}`);
             this.setState({companyTypes: data});
+          })
+          .catch(err => {
+            console.log(`Error al buscar CompanyType : ${err}`);
+          });
+      });
+
+      fetch(`http://${ipServidor}:${port}/api/company/category`)
+      .then(res => {
+        res.json()
+          .then(data => {
+            // console.log(`Info de CompanyCategory obtenida : ${data}`);
+            this.setState({companyCategories: data});
           })
           .catch(err => {
             console.log(`Error al buscar CompanyCategory : ${err}`);
@@ -142,7 +155,6 @@ class App extends Component {
   }
 
   registroUsuarioEmpresa = (signupdata) => {
-    console.log('llego a registro en app');
     console.log(signupdata);
 
     const request = new FormData();
@@ -163,7 +175,10 @@ class App extends Component {
     request.set('companyFirstStreet', signupdata.companyFirstStreet);
     request.set('companySecondStreet', signupdata.companySecondStreet);
     request.set('companyDoorNumber', signupdata.companyDoorNumber);
-    request.set('category', signupdata.category);
+    request.set('companyType', signupdata.companyType);
+    request.set('companyCategory', signupdata.companyCategory);
+    request.set('companyDescription', signupdata.companyDescription);
+
     //image
     request.append('companyImage', signupdata.companyImage, signupdata.companyImage.name);
 
@@ -292,7 +307,7 @@ class App extends Component {
     }
   }
 
-  registroEmpresaProducto = (productData) => {
+  asociarProducto = (productData) => {
 
     let token = cookies.get('access_token');
     if(token){
@@ -329,7 +344,11 @@ class App extends Component {
   }
 
   mostrarCompanias = () => {
-    return <List listado={this.state.companies} flag='companias'/>;
+    return <List
+      listado={this.state.companies}
+      flag='companias'
+      tipos={this.state.companyCategories}
+    />;
   }
 
   mostrarProductos = () => {
@@ -355,12 +374,13 @@ class App extends Component {
             logout={this.logout}
             signup={this.registroUsuarioEmpresa}
             companyTypes={this.state.companyTypes}
+            companyCategories={this.state.companyCategories}
             userTypes={this.state.userTypes}
             categories={this.state.productCategory}
             registrarProducto={this.registroProducto}
             products={this.state.products}
             companies={this.state.companies}
-            registroEmpresaProducto={this.registroEmpresaProducto}
+            registroEmpresaProducto={this.asociarProducto}
           />
           <Switch>
             <Route path='/' component={Dashboard} exact />

@@ -26,12 +26,12 @@ const styles = theme => ({
 
 class SimpleSelect extends React.Component {
   state = {
-    category: ''
+    type: ''
   };
 
   handleChange = event => {
     this.setState({[event.target.name]: event.target.value}, () => {
-      this.props.onChange(this.state.category);
+      this.props.onChange(this.state.type);
     });
   };
 
@@ -44,8 +44,8 @@ class SimpleSelect extends React.Component {
         <FormControl className={classes.formControl} error={this.props.selectError ? true : false}>
           <InputLabel htmlFor="type-helper">{this.props.label}</InputLabel>
           <Select
-            name='category'
-            value={this.state.category}
+            name='type'
+            value={this.state.type}
             onChange={this.handleChange}
             // helperText={this.props.selectError}
             // error={this.props.selectError ? true : false}

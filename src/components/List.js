@@ -4,13 +4,15 @@ import '../App.css';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Item from './Item';
+import SelectMultiple from './SelectMultiple';
 
 class List extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            searchName: ''
+            searchName: '',
+            selectedCategory: []
         }
     }
 
@@ -20,10 +22,25 @@ class List extends Component{
         });
     };
 
+    handleSelectMultipleChange = (seleccionados) => {
+        let selectedCategory = seleccionados.map(selected => {
+            return selected.id;
+        })
+        this.setState({selectedCategory: selectedCategory});
+    }
+
     render(){
         let filteredList = this.props.listado.filter((item) => {
             return item.name.indexOf(this.state.searchName) !== -1;
         });
+
+        if(this.state.selectedCategory.length > 0){
+            filteredList = filteredList.filter(item => {
+                let res = this.state.selectedCategory.includes(Number(item.categoryId));
+                return res;
+            });
+        }   
+
         return(
             <div>
                 {filteredList ? (
@@ -33,6 +50,11 @@ class List extends Component{
                             name='searchName'
                             placeholder='Nombre empresa'
                             onChange={this.onSearchNameChange}
+                        />
+                        <SelectMultiple
+                            flagType={this.props.flag}
+                            content={this.props.tipos}
+                            onChange={this.handleSelectMultipleChange}
                         />
                         <Grid container spacing={24} style={{padding: 24}}>
                             {filteredList.map(item => (

@@ -41,14 +41,16 @@ class SignupForm extends Component{
             userFirstStreet: '',
             userSecondStreet: '',
             userDoorNumber: '',
+            role: 0, 
             companyName: '',
             companyRut: '',
             companyPhone: '',
             companyFirstStreet: '',
             companySecondStreet: '',
             companyDoorNumber: '',
-            category: 0,
-            role: 0, 
+            companyType: 0,
+            companyDescription:'',
+            companyCategory: '',
             companyImage: null,
             userNameError: '',
             userEmailError: '',
@@ -64,7 +66,9 @@ class SignupForm extends Component{
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            categoryError: '',
+            companyTypeError: '',
+            companyCategoryError: '',
+            companyDescriptionError:'',
             companyImageError: '',
             showPassword: false
         }
@@ -87,18 +91,24 @@ class SignupForm extends Component{
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            categoryError: '',
-            companyImageError: ''
+            companyTypeError: '',
+            companyImageError: '',
+            companyDescriptionError:'',
+            companyCategoryError: ''
         };
 
         if(!this.state.userName){
             isError = true;
             errors.userNameError = 'Debe ingresar un nombre';
         }
-        // else if(!Validator.isAlpha(this.state.userName)){
-        //     isError = true;
-        //     errors.userNameError = 'El nombre no puede contener numeros';
-        // }
+        else if(!/^[a-zA-Z ]+$/.test(this.state.userName)){
+            isError = true;
+            errors.userNameError = 'El nombre no puede contener numeros';
+        }
+        else if(!Validator.isLength(this.state.userName, {min: 3, max: 50})){
+            isError = true;
+            errors.userNameError='Debe tener 3 y 50 caracteres';
+        }
 
         if (!this.state.userEmail) {
             isError = true;
@@ -167,10 +177,10 @@ class SignupForm extends Component{
             isError = true;
             errors.companyNameError='Debe tener entre 3 y 30 caracteres';
         }
-        // else if(!Validator.isAlphanumeric(this.state.companyName)){
-        //     isError = true;
-        //     errors.companyNameError='Debe contener unicamente numeros y letras';
-        // }
+         else if(!/^\w+(\s\w+)*$/.test(this.state.companyName)){
+             isError = true;
+             errors.companyNameError='Debe contener unicamente numeros y letras';
+        }
         
         if(!this.state.companyRut){
             isError = true;
@@ -183,6 +193,14 @@ class SignupForm extends Component{
         else if(this.state.companyRut.length !== 12){
             isError = true;
             errors.companyRutError='Debe tener 12 caracteres';
+        }
+        if(!this.state.companyDescription){
+            isError = true;
+            errors.companyDescriptionError='Debe ingresar una descripcion';
+        }
+        else if(!Validator.isLength(this.state.companyDescription, {min: 3, max: 100})){
+            isError = true;
+            errors.companyDescriptionError='Debe tener entre 3 y 100 caracteres';
         }
 
         if(!this.state.companyPhone){
@@ -221,9 +239,9 @@ class SignupForm extends Component{
             errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
         }
         
-        if(this.state.category === 0 || this.state.role === 0){
+        if(this.state.companyType === 0 || this.state.role === 0){
             isError = true;
-            errors.categoryError="Debe seleccionar el tipo de empresa";
+            errors.companyTypeError="Debe seleccionar el tipo de empresa";
         }
         
         if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
@@ -250,15 +268,17 @@ class SignupForm extends Component{
             userFirstStreet: '',
             userSecondStreet: '',
             userDoorNumber: '',
+            role: 0,
             companyName: '',
             companyRut: '',
             companyPhone: '',
             companyFirstStreet: '',
             companySecondStreet: '',
             companyDoorNumber: '',
-            category: 0,
-            role: 0, 
+            companyType: 0,
             companyImage: null,
+            companyDescription:'',
+            companyCategory: '',
             userNameError: '',
             userEmailError: '',
             userPasswordError: '',
@@ -273,8 +293,10 @@ class SignupForm extends Component{
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            categoryError: '',
-            companyImageError: ''
+            companyTypeError: '',
+            companyImageError: '',
+            companyDescriptionError:'',
+            companyCategoryError: ''
         });
       }
 
@@ -282,20 +304,23 @@ class SignupForm extends Component{
         this.setState({[e.target.name]: e.target.value});
     }
 
-    onSelectChange = (tipo) => {
+    onSelectTypeChange = (tipo) => {
         let type = Number(tipo);
-        this.setState({category: type}, () => {
+        this.setState({companyType: type}, () => {
             this.setState({role: type});
         });
     }
 
+    onSelectCategoryChange = (tipo) => {
+        let type = Number(tipo);
+        this.setState({companyCategory: type});
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
-        console.log('entre a registro, mando a validar');
         const error = this.validate();
 
         if (!error){
-            console.log('se valido bien, mando a registrar');
             this.props.onClick(this.state);
             this.handleToggle();
         }
@@ -366,7 +391,7 @@ class SignupForm extends Component{
                         onKeyPress={this.onEnterPress}
                     /> */}
                     <FormControl className={(classes.margin, classes.textField)} fullWidth>
-                        <InputLabel htmlFor="adornment-password">Contaseña</InputLabel>
+                        <InputLabel htmlFor="adornment-password">Contraseña</InputLabel>
                         <Input
                             id="userPassword"
                             name='userPassword'
@@ -475,6 +500,19 @@ class SignupForm extends Component{
                     />
                     <TextField
                         margin='dense'
+                        id='companyDescription'
+                        name='companyDescription'
+                        label='Descripcion de la empresa'
+                        type='text'
+                        fullWidth
+                        required
+                        helperText={this.state.companyDescriptionError}
+                        error={this.state.companyDescriptionError ? true : false}
+                        onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
+                    />
+                    <TextField
+                        margin='dense'
                         id='companyPhone'
                         name='companyPhone'
                         label='Telefono de la empresa'
@@ -527,10 +565,17 @@ class SignupForm extends Component{
                     />
                     <SelectSignup 
                         content={this.props.companyTypes}
-                        onChange={this.onSelectChange}
-                        selectError={this.state.categoryError}
+                        onChange={this.onSelectTypeChange}
+                        selectError={this.state.companyTypeError}
                         label={'Tipo de empresa'}
                         helper={'Seleccione el tipo de empresa'}
+                    />
+                    <SelectSignup 
+                        content={this.props.companyCategories}
+                        onChange={this.onSelectCategoryChange}
+                        selectError={this.state.companyCategoryError}
+                        label={'Rubro de la empresa'}
+                        helper={'Seleccione el rubro de la empresa'}
                     />
                     <UploadImage onImageUpload={this.onImageUpload} />
                 </DialogContent>

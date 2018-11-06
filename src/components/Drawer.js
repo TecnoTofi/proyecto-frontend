@@ -83,7 +83,7 @@ class SwipeableTemporaryDrawer extends React.Component {
             categories={this.props.categories} 
             onClick={this.props.onClickProduct}
           />
-          <AssociateForm 
+          <AssociateForm
             products={this.props.products} 
             companies={this.props.companies} 
             onClick={this.props.onClickAssociate}
