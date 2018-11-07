@@ -18,7 +18,7 @@ import WorstFiveIcon from '@material-ui/icons/TrendingDown';
 import HistorialIcon from '@material-ui/icons/Assignment';
 import GraficoIcon from '@material-ui/icons/Assessment';
 import CamionIcon from '@material-ui/icons/LocalShipping';
-
+import { NavLink } from 'react-router-dom';
 import ProductForm from './ProductForm';
 import AssociateForm from './AssociateForm';
 
@@ -33,6 +33,10 @@ const styles = {
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
+  },
+  link: {
+    color: 'inherit',
+    textDecoration: 'none'
   },
 };
 
@@ -53,10 +57,12 @@ class SwipeableTemporaryDrawer extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List>
-          <ListItem button>
-              <ListItemIcon><UserIcon /></ListItemIcon>
-              <ListItemText primary='Mi perfil' />
-          </ListItem>
+          <NavLink to='/profile' className={classes.link}>
+            <ListItem button>
+                <ListItemIcon><UserIcon /></ListItemIcon>
+                <ListItemText primary='Mi perfil' />
+            </ListItem>
+          </NavLink>
           <ListItem button>
               <ListItemIcon><WalletIcon /></ListItemIcon>
               <ListItemText primary='Mis metodos de pago' />

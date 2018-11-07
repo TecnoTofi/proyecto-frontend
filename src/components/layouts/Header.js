@@ -58,8 +58,8 @@ function ButtonAppBar(props) {
             />
           ) : null}
             <Typography variant="h6" color="inherit" className={classes.grow}>
-            <NavLink to='/' className={classes.link}>
-              NuestraApp
+              <NavLink to='/' className={classes.link}>
+                NuestraApp
               </NavLink>
             </Typography>
           <NavLink to='/' className={classes.link}>
