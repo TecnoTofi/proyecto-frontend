@@ -134,7 +134,11 @@ class App extends Component {
         res.json()
           .then(data => {
             // console.log(`Info de Product obtenida : ${data}`);
-            this.setState({products: data});
+            let productos = data.map(prod => {
+              prod.imagePath = `http://${ipServidor}:${port}/${prod.imagePath}`;
+              return prod;
+            })
+            this.setState({products: productos});
           })
           .catch(err => {
             console.log(`Error al buscar Product : ${err}`);
@@ -185,6 +189,9 @@ class App extends Component {
     axios.post(`http://${ipServidor}:${port}/api/auth/signup`, request)
       .then(res => {
         console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
       });
 
     // let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
@@ -279,28 +286,56 @@ class App extends Component {
     let token = cookies.get('access_token');
     if(token){
 
-      let requestBody = {
-        productName: productData.productName,
-        productCode: productData.productCode,
-        category: productData.category
-      }
-
-      let request = new Request(`http://${ipServidor}:${port}/api/product`, {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-        body: JSON.stringify(requestBody)
-      });
-  
-      fetch(request)
-        .then((res) => {
-          res.json()
-            .then(data => {
-              console.log(data);
-            })
-            .catch(err => {
-              console.log(`Error enviar registro de producto : ${err}`);
-            });
+      const request = new FormData();
+      
+      request.set('name', productData.productName);
+      request.set('code', productData.productCode);
+      request.set('categories', productData.categories);
+      
+      request.append('image', productData.productImage, productData.productImage.name);
+      console.log(productData.productImage);
+      let instance = axios.create({
+                        baseURL: `http://${ipServidor}:${port}/api/product`,
+                        method: 'post',
+                        headers: {token: token},
+                        data: request
+                      });
+      instance()
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
         });
+
+      
+      // productName: '',
+      // productCode: '',
+      // category: [],
+      // productImage: null,
+
+      // let requestBody = {
+      //   productName: productData.productName,
+      //   productCode: productData.productCode,
+      //   category: productData.category
+      // }
+
+      // let request = new Request(`http://${ipServidor}:${port}/api/product`, {
+      //   method: 'POST',
+      //   headers: new Headers({ 'Content-Type': 'application/json', token: token}),
+      //   body: JSON.stringify(requestBody)
+      // });
+  
+      // fetch(request)
+      //   .then((res) => {
+      //     res.json()
+      //       .then(data => {
+      //         console.log(data);
+      //       })
+      //       .catch(err => {
+      //         console.log(`Error enviar registro de producto : ${err}`);
+      //       });
+      //   });
     }
     else{
       console.log('No hay token');
@@ -352,7 +387,11 @@ class App extends Component {
   }
 
   mostrarProductos = () => {
-    return <List listado={this.state.products} flag='productos'/>;
+    return <List 
+    listado={this.state.products}
+    flag='productos'
+    tipos={this.state.productCategory}
+    />;
   }
 
   mostrarPerfil = () => {

@@ -36,8 +36,8 @@ function MediaControlCard(props) {
     <Card className={classes.card} elevation={0}>
         <CardMedia
             className={classes.cover}
-            image="/static/images/cards/live-from-space.jpg"
-            title="Live from space album cover"
+            image={props.product.imagePath}
+            title={props.product.name}
         />
         <div className={classes.details}>
             <CardContent className={classes.content}>

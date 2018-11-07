@@ -53,6 +53,7 @@ class List extends Component{
                         />
                         <SelectMultiple
                             flagType={this.props.flag}
+                            flagForm={false}
                             content={this.props.tipos}
                             onChange={this.handleSelectMultipleChange}
                         />

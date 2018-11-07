@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import 'typeface-roboto';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import SelectType from './SelectForm';
+import SelectMultiple from './SelectMultiple';
+import UploadImage from './UploadImage';
+// import SelectType from './SelectForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,7 +14,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/AddBox';
 import Validator from 'validator';
-import InputLabel from '@material-ui/core/InputLabel';
+// import InputLabel from '@material-ui/core/InputLabel';
 
 
 export default class ProductForm extends Component{
@@ -23,11 +25,12 @@ export default class ProductForm extends Component{
             open: false,
             productName: '',
             productCode: '',
-            category: [],
-            productNameError:'',
-            productCodeError:'',
-            categoryError:0,
-
+            categories: [],
+            productImage: null,
+            productNameError: '',
+            productCodeError: '',
+            categoriesError: '',
+            productImageError: ''
         };
     }
 
@@ -36,32 +39,39 @@ export default class ProductForm extends Component{
         const errors = {
             productNameError: '',
             productCodeError: '',
-            categoryError: 0,
+            categoriesError: '',
+            productImageError: ''
         };
         if(!this.state.productName){
             isError = true;
-            errors.productNameError = 'Debe ingresar un nombre para el producto';
+            errors.productNameError = 'Debe ingresar un nombre';
         }
         else if(!Validator.isLength(this.state.productName, {min: 3, max: 30})){
             isError = true;
-            errors.productNameError='El largo del nombre debe ser estar entre 3 y 30 caracteres';
+            errors.productNameError='Debe tener 3 y 30 caracteres';
         }
-
         if (!this.state.productCode) {
             isError = true;
-            errors.productCodeError ='Debe ingresar un codigo para el producto';
+            errors.productCodeError ='Debe ingresar un codigo';
         }
-        else if(!Validator.isNumeric(this.state.productCode)){
+        else if(!Validator.isAlphanumeric(this.state.productCode)){
             isError = true;
-            errors.productCodeError='Debe contener unicamente numeros';
+            errors.productCodeError='Debe contener unicamente numeros y letras';
         }
-        /*if(!this.state.category == 0){
+        if(this.state.categories.length === 0){
             isError = true;
-            errors.userPhoneError='Debe seleccionar una categoria';
-        }*/
+            errors.categoriesError='Debe seleccionar al menos una categoria';
+        }
+        if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
+            isError = true;
+            errors.productImageError="Debe subir una imagen JPEG, JPG o PNG";
+        }
+
         this.setState({
             ...this.state,
             ...errors
+        }, () => {
+            console.log(this.state);
         });
 
         return isError;
@@ -73,25 +83,41 @@ export default class ProductForm extends Component{
           open: !this.state.open,
           productName: '',
           productCode: '',
-          category: 0,
-          productNameError:'',
-          productCodeError:'',
-          categoryError:0,
+          categories: [],
+          productImage: null,
+          productNameError: '',
+          productCodeError: '',
+          categoriesError: '',
+          productImageError: ''
         });
       }
 
-    onSelectChange = (tipo) => {
-        this.setState({category: Number(tipo)});
+    // onSelectChange = (tipo) => {
+    //     this.setState({category: Number(tipo)});
+    // }
+
+    onSelectChange = (seleccionados) => {
+        let selectedCategories = seleccionados.map(selected => {
+            return selected.id;
+        })
+        this.setState({categories: selectedCategories});
     }
 
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     }
 
+    onImageUpload = (image) => {
+        this.setState({
+            productImage: image
+        })
+    }
+
     onSubmit = (event)=> {
         event.preventDefault();
-        const error = this.validate();
         
+        const error = this.validate();
+        // console.log(this.state);
         if (!error){
             this.props.onClick(this.state);
             this.handleToggle();
@@ -143,17 +169,23 @@ export default class ProductForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    <InputLabel htmlFor="select-multiple-checkbox">Tipo de producto</InputLabel>
-                    <SelectType
-                            multiple
-                            content={this.props.categories}
-                            required
-                            helperText={this.state.categoryError}
-                            error={this.state.categoryError ? true : false}
-                            onChange={this.onSelectChange}
-                            //label={'Tipo de producto'}
-                            helper={'Seleccione el tipo de producto'}
-                        />
+                    {/* <InputLabel htmlFor="select-multiple-checkbox">Tipo de producto</InputLabel> */}
+                    {/* <SelectType
+                        content={this.props.categories}
+                        required
+                        helperText={this.state.categoryError}
+                        error={this.state.categoryError ? true : false}
+                        onChange={this.onSelectChange}
+                        //label={'Tipo de producto'}
+                        helper={'Seleccione el tipo de producto'}
+                    /> */}
+                    <SelectMultiple
+                        flagType='productos'
+                        flagForm={true}
+                        content={this.props.categories}
+                        onChange={this.onSelectChange}
+                    />
+                    <UploadImage onImageUpload={this.onImageUpload} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleToggle} color="primary">

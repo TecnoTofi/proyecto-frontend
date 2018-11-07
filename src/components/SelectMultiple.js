@@ -19,7 +19,7 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300,
+    maxWidth: 500+'%',
   },
   chips: {
     display: 'flex',
@@ -58,11 +58,14 @@ class MultipleSelect extends React.Component {
   render() {
     const { classes } = this.props;
 
+    let titulo = this.props.flagType === 'productos' ? 'Categoria/s' : 'Rubro/s';
+
     return (
       <div className={classes.root}>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="select-multiple-checkbox">{this.props.flagType}</InputLabel>
+        <FormControl className={classes.formControl} fullWidth={this.props.flagForm}>
+          <InputLabel htmlFor="select-multiple-checkbox">{titulo}</InputLabel>
           <Select
+            fullWidth
             multiple
             value={this.state.type}
             onChange={this.handleChange}
