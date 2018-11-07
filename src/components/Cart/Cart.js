@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 // import InputAdornment from '@material-ui/core/InputAdornment';
 import Table from '@material-ui/core/Table';
@@ -11,7 +13,17 @@ import Paper from '@material-ui/core/Paper';
 import CartSelect from './CartSelect';
 import CartPickers from './CartPickers';
 import CartProduct from './CartProduct';
+import CartTotal from './CartTotal';
 // import { Input } from '@material-ui/core';
+
+const styles = () => ({
+    root: {
+        marginBottom: 100
+    //   ...theme.mixins.gutters(),
+    //   paddingTop: theme.spacing.unit * 2,
+    //   paddingBottom: theme.spacing.unit * 2,
+    },
+  });
 
 class Cart extends Component{
 
@@ -29,6 +41,7 @@ class Cart extends Component{
 
     render(){
 
+        const { classes } = this.props;
         let productos = this.props.datosTest;
 
         return(
@@ -36,7 +49,7 @@ class Cart extends Component{
                 <Typography variant='h5'>
                     Carrito
                 </Typography>
-                <Paper>
+                <Paper className={classes.root}>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -79,9 +92,13 @@ class Cart extends Component{
                         </TableBody>
                     </Table>
                 </Paper>
+                <CartTotal />
             </Fragment>
         );
     }
 }
-
-export default Cart;
+Cart.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+  export default withStyles(styles)(Cart);

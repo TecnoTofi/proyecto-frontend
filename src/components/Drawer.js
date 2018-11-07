@@ -81,10 +81,12 @@ class SwipeableTemporaryDrawer extends React.Component {
               <ListItemText primary='Historial de despachos' />
           </ListItem>
           <Divider />
-          <ListItem button>
+          <NavLink to='/misProductos'>
+           <ListItem button>
               <ListItemIcon><ProductsIcon /></ListItemIcon>
               <ListItemText primary='Mis productos' />
-          </ListItem>
+           </ListItem>
+          </NavLink> 
           <ProductForm 
             categories={this.props.categories} 
             onClick={this.props.onClickProduct}

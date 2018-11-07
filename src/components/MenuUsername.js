@@ -62,7 +62,7 @@ class MenuUsername extends React.Component {
             </NavLink>
           </MenuItem>
           <MenuItem onClick={this.handleClose}>
-            <NavLink to='/products' className={classes.link}>
+            <NavLink to='/misProductos' className={classes.link}>
                 Mis productos
             </NavLink>
             </MenuItem>

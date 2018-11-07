@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Carrito from './components/Cart/Cart';
+import MisProductos from './components/MisProductos';
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -33,7 +34,8 @@ class App extends Component {
       userTypes: [],
       companies:[],
       productCategory:[],
-      products:[]
+      products:[],
+      myProducts: []
     }
   }
 
@@ -65,6 +67,25 @@ class App extends Component {
                     userCompanyName: data.userData.userCompanyName,
                     userCompanyId: data.userData.userCompanyId
                   }
+                }, () => {
+                  let request = new Request(`http://${ipServidor}:${port}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
+                    method: 'GET',
+                    headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+                    credentials: 'same-origin'
+                  })
+                  fetch(request)
+                    .then(res => {
+                      res.json()
+                        .then(data => {
+                          console.log(data.products);
+                          this.setState({
+                            myProducts: data.products
+                          })
+                        })
+                        .catch(err => {
+                          console.log(err);
+                        })
+                    })
                 });
               }
               
@@ -307,35 +328,6 @@ class App extends Component {
         .catch(err => {
           console.log(err);
         });
-
-      
-      // productName: '',
-      // productCode: '',
-      // category: [],
-      // productImage: null,
-
-      // let requestBody = {
-      //   productName: productData.productName,
-      //   productCode: productData.productCode,
-      //   category: productData.category
-      // }
-
-      // let request = new Request(`http://${ipServidor}:${port}/api/product`, {
-      //   method: 'POST',
-      //   headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-      //   body: JSON.stringify(requestBody)
-      // });
-  
-      // fetch(request)
-      //   .then((res) => {
-      //     res.json()
-      //       .then(data => {
-      //         console.log(data);
-      //       })
-      //       .catch(err => {
-      //         console.log(`Error enviar registro de producto : ${err}`);
-      //       });
-      //   });
     }
     else{
       console.log('No hay token');
@@ -396,6 +388,38 @@ class App extends Component {
 
   mostrarPerfil = () => {
     return <Profile />
+  }
+
+  getMisProductos = () => {
+    let token = cookies.get('access_token');
+    if(token){
+
+      let request = new Request(`http://${ipServidor}:${port}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
+        method: 'GET',
+        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+        credentials: 'same-origin'
+      })
+      fetch(request)
+        .then(res => {
+          res.json()
+            .then(data => {
+              console.log(data.products);
+              this.setState({
+                myProducts: data.products
+              })
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        })
+    }
+    else{
+      console.log('No hay token');
+    }
+  }
+  
+mostrarMisProductos = () => {
+    return <MisProductos products={this.state.myProducts} />
   }
 
   mostrarCarrito = () => {
@@ -461,8 +485,9 @@ class App extends Component {
             <Route path='/products' component={this.mostrarProductos} />
             <Route path='/profile' component={this.mostrarPerfil} />
             <Route path='/carrito' component={this.mostrarCarrito} />
+            <Route path='/misProductos' component={this.mostrarMisProductos} />
           </Switch>
-          <Footer />
+          {/* <Footer /> */}
         </Fragment>
       </BrowserRouter>
       // <Fragment>
