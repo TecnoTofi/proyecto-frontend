@@ -6,7 +6,7 @@ import axios from 'axios';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
-import Carrito from './components/Carrito';
+import Carrito from './components/Cart/Cart';
 //Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -360,7 +360,41 @@ class App extends Component {
   }
 
   mostrarCarrito = () => {
-    return <Carrito />
+    let datosTest =[
+      {
+        id: 1,
+        name: 'Jugo Citrus Frute x 20 unidades',
+        price: 300,
+        company: 'Salus',
+        quantity: 1,
+        priceEnvio: 150
+      },
+      {
+        id: 2,
+        name: 'Coca Cola 2.l x 10 unidades',
+        price: 500,
+        company: 'Coca cola',
+        quantity: 2,
+        priceEnvio: 120
+      },
+      {
+        id: 3,
+        name: 'Yogurt Biotop - Frutilla x 10 unidades',
+        price: 350,
+        company: 'Conaprole',
+        quantity: 1,
+        priceEnvio: 100
+      },
+      {
+        id: 4,
+        name: 'Dulce de leche 500g x 10 unidades',
+        price: 600,
+        company: 'Conaprole',
+        quantity: 3,
+        priceEnvio: 100
+      }
+    ];
+    return <Carrito datosTest={datosTest} />
   }
 
   render() {
