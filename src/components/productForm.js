@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import 'typeface-roboto';
-import '../App.css';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import SelectType from './SelectForm';
@@ -8,10 +7,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import ListItem from '@material-ui/core/ListItem';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
-// import ListItemText from '@material-ui/core/ListItemText';
-// import AddIcon from '@material-ui/icons/AddBox';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import AddIcon from '@material-ui/icons/AddBox';
 import Validator from 'validator';
 import InputLabel from '@material-ui/core/InputLabel';
 
@@ -106,7 +105,10 @@ export default class ProductForm extends Component{
     render(){
         return(
             <div>
-            <Button color='inherit' onClick={this.handleToggle}>Nuevo producto</Button>
+            <ListItem button  onClick={this.handleToggle}>
+                <ListItemIcon><AddIcon /></ListItemIcon>
+                <ListItemText primary='Nuevo producto' />
+            </ListItem>
             <Dialog
                 open={this.state.open}
                 onClose={this.handleToggle}
