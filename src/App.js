@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-import { Header, Footer } from './components/layouts/';
+import { Header } from './components/layouts/';
 import List from './components/List';
 import axios from 'axios';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -8,12 +8,10 @@ import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Carrito from './components/Cart/Cart';
 import MisProductos from './components/MisProductos';
-//Incluimos modulo para manejo de cookie
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const ipServidor = 'localhost';
-const port = 3000;
+const url = 'http://localhost:3000';
 
 class App extends Component {
 
@@ -39,11 +37,26 @@ class App extends Component {
     }
   }
 
-  componentDidMount(){
+  componentWillMount(){
 
     let token = cookies.get('access_token');
+
     if(token){
-      let requestAuth = new Request(`http://${ipServidor}:${port}/api/auth`, {
+      	this.verificarToken(token);
+    }
+    else{
+      this.getUserRolesSignup();
+    }
+  
+    this.getCompanyTypes();
+    this.getCompanyCategories();
+    this.getAllCompanies();
+	this.getAllProducts();
+	this.getProductCategories();
+  }
+
+  verificarToken = (token) => {
+    let requestAuth = new Request(`${url}/api/auth`, {
         method: 'POST',
         headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
         credentials: 'same-origin',
@@ -54,53 +67,33 @@ class App extends Component {
         .then(res => {
           res.json()
             .then(data => {
-              if(res.status === 200){
-                cookies.set('access_token', data.token, { path: '/' });
-            
-                this.setState({
-                  logged: true,
-                  loggedUser: {
-                    userType: data.userData.userType,
-                    userName: data.userData.userName,
-                    userEmail: data.userData.userEmail,
-                    userId: data.userData.userId,
-                    userCompanyName: data.userData.userCompanyName,
-                    userCompanyId: data.userData.userCompanyId
-                  }
-                }, () => {
-                  let request = new Request(`http://${ipServidor}:${port}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
-                    method: 'GET',
-                    headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-                    credentials: 'same-origin'
-                  })
-                  fetch(request)
-                    .then(res => {
-                      res.json()
-                        .then(data => {
-                          console.log(data.products);
-                          this.setState({
-                            myProducts: data.products
-                          })
-                        })
-                        .catch(err => {
-                          console.log(err);
-                        })
-                    })
-                });
-              }
-              
-              // console.log(data);
-            })
+				if(res.status === 200){
+					cookies.set('access_token', data.token, { path: '/' });
+				
+					this.setState({
+						logged: true,
+						loggedUser: {
+							userType: data.userData.userType,
+							userName: data.userData.userName,
+							userEmail: data.userData.userEmail,
+							userId: data.userData.userId,
+							userCompanyName: data.userData.userCompanyName,
+							userCompanyId: data.userData.userCompanyId
+						}
+					}, () => this.getMisProductos()) //esto no tiene que ir aca!
+				}
+			})
             .catch(err => {
               console.log(err);
-            })
+            });
         })
         .catch(err => {
           console.log(err);
         });
-    }
-  
-    fetch(`http://${ipServidor}:${port}/api/company/type`)
+  }
+
+  getCompanyTypes = () => {
+    fetch(`${url}/api/company/type`)
       .then(res => {
         res.json()
           .then(data => {
@@ -111,8 +104,10 @@ class App extends Component {
             console.log(`Error al buscar CompanyType : ${err}`);
           });
       });
+  }
 
-      fetch(`http://${ipServidor}:${port}/api/company/category`)
+  getCompanyCategories = () => {
+    fetch(`${url}/api/company/category`)
       .then(res => {
         res.json()
           .then(data => {
@@ -123,8 +118,10 @@ class App extends Component {
             console.log(`Error al buscar CompanyCategory : ${err}`);
           });
       });
+  }
 
-      fetch(`http://${ipServidor}:${port}/api/user/role/signup`)
+  getUserRolesSignup = () => {
+    fetch(`${url}/api/user/role/signup`)
       .then(res => {
         res.json()
           .then(data => {
@@ -135,28 +132,33 @@ class App extends Component {
             console.log(`Error al buscar Role : ${err}`);
           });
       });
-      fetch(`http://${ipServidor}:${port}/api/company`)
-      .then(res => {
-        res.json()
-          .then(data => {
-            let companias = data.map(comp => {
-              comp.imagePath = `http://${ipServidor}:${port}/${comp.imagePath}`;
-              return comp;
-            })
-            this.setState({companies: companias});
-          })
-          .catch(err => {
-            console.log(`Error al buscar Company : ${err}`);
-          });
-      });
+  }
 
-      fetch(`http://${ipServidor}:${port}/api/product`)
+  getAllCompanies = () => {
+    fetch(`${url}/api/company`)
+    .then(res => {
+      res.json()
+        .then(data => {
+          let companias = data.map(comp => {
+            comp.imagePath = `${url}/${comp.imagePath}`;
+            return comp;
+          })
+          this.setState({companies: companias});
+        })
+        .catch(err => {
+          console.log(`Error al buscar Company : ${err}`);
+        });
+    });
+  }
+
+  getAllProducts = () => {
+    fetch(`${url}/api/product`)
       .then(res => {
         res.json()
           .then(data => {
             // console.log(`Info de Product obtenida : ${data}`);
             let productos = data.map(prod => {
-              prod.imagePath = `http://${ipServidor}:${port}/${prod.imagePath}`;
+              prod.imagePath = `${url}/${prod.imagePath}`;
               return prod;
             })
             this.setState({products: productos});
@@ -165,8 +167,10 @@ class App extends Component {
             console.log(`Error al buscar Product : ${err}`);
           });
       });
+  }
 
-      fetch(`http://${ipServidor}:${port}/api/product/category`)
+  getProductCategories = () => {
+    fetch(`${url}/api/product/category`)
       .then(res => {
         res.json()
           .then(data => {
@@ -179,62 +183,43 @@ class App extends Component {
       });
   }
 
-  registroUsuarioEmpresa = (signupdata) => {
-    console.log(signupdata);
+  getMisProductos = () => {
+	let token = cookies.get('access_token');
+    if(token){
+		let request = new Request(`${url}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
+			method: 'GET',
+			headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+			credentials: 'same-origin'
+			});
+		
+		fetch(request)
+			.then(res => {
+				res.json()
+					.then(data => {
+						this.setState({
+							myProducts: data.products
+						});
+					})
+					.catch(err => {
+						console.log(err);
+					})
+			});
+	}
+}
 
-    const request = new FormData();
-    //user
-    request.set('userName', signupdata.userName);
-    request.set('userEmail', signupdata.userEmail);
-    request.set('userPassword', signupdata.userPassword);
-    request.set('userDocument', signupdata.userDocument);
-    request.set('userPhone', signupdata.userPhone);
-    request.set('userFirstStreet', signupdata.userFirstStreet);
-    request.set('userSecondStreet', signupdata.userSecondStreet);
-    request.set('userDoorNumber', signupdata.userDoorNumber);
-    request.set('role', signupdata.role);
-    //company
-    request.set('companyName', signupdata.companyName);
-    request.set('companyRut', signupdata.companyRut);
-    request.set('companyPhone', signupdata.companyPhone);
-    request.set('companyFirstStreet', signupdata.companyFirstStreet);
-    request.set('companySecondStreet', signupdata.companySecondStreet);
-    request.set('companyDoorNumber', signupdata.companyDoorNumber);
-    request.set('companyType', signupdata.companyType);
-    request.set('companyCategory', signupdata.companyCategory);
-    request.set('companyDescription', signupdata.companyDescription);
+  registroUsuarioEmpresa = (request) => {
 
-    //image
-    request.append('companyImage', signupdata.companyImage, signupdata.companyImage.name);
-
-    axios.post(`http://${ipServidor}:${port}/api/auth/signup`, request)
+    axios.post(`${url}/api/auth/signup`, request)
       .then(res => {
         console.log(res);
       })
       .catch(err => {
         console.log(err);
       });
-
-    // let request = new Request(`http://${ipServidor}:${port}/api/auth/signup`, {
-    //   method: 'POST',
-    //   headers: new Headers({ 'Content-Type': 'application/json'}),
-    //   body: JSON.stringify({userData, companyData})
-    // });
-
-    // fetch(request)
-    //   .then((res) => {
-    //     res.json()
-    //       .then(data => {
-    //         console.log(data);
-    //       })
-    //       .catch(err => {
-    //         console.log(`Error al enviar registro de usuario : ${err}`);
-    //       });
-    //   });
   }
 
   login = (userEmail, userPassword) => {
-    let request = new Request(`http://${ipServidor}:${port}/api/auth/login`, {
+    let request = new Request(`${url}/api/auth/login`, {
       method: 'POST',
       headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
       credentials: 'same-origin',
@@ -246,19 +231,15 @@ class App extends Component {
         res.json()
           .then(data => {
             if(res.status === 200){
-              cookies.set('access_token', data.token, { path: '/' });
+				
+              	cookies.set('access_token', data.token, { path: '/' });
             
-              this.setState({
-                logged: true,
-                loggedUser: {
-                  userType: data.userData.userType,
-                  userName: data.userData.userName,
-                  userEmail: data.userData.userEmail,
-                  userId: data.userData.userId,
-                  userCompanyName: data.userData.userCompanyName,
-                  userCompanyId: data.userData.userCompanyId
-                }
-              });
+				this.setState({
+					logged: true,
+					loggedUser: {
+						...data.userData
+					}
+				});
             }
             else{
               console.log(data.message);
@@ -271,7 +252,7 @@ class App extends Component {
   }
 
   logout = () => {
-    let request = new Request(`http://${ipServidor}:${port}/api/auth/logout`, {
+    let request = new Request(`${url}/api/auth/logout`, {
       method: 'POST',
       headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
       credentials: 'same-origin'
@@ -302,21 +283,13 @@ class App extends Component {
       });
   }
 
-  registroProducto = (productData) => {
+  registroProducto = (request) => {
 
     let token = cookies.get('access_token');
     if(token){
-
-      const request = new FormData();
-      
-      request.set('name', productData.productName);
-      request.set('code', productData.productCode);
-      request.set('categories', productData.categories);
-      
-      request.append('image', productData.productImage, productData.productImage.name);
-      console.log(productData.productImage);
+    
       let instance = axios.create({
-                        baseURL: `http://${ipServidor}:${port}/api/product`,
+                        baseURL: `${url}/api/product`,
                         method: 'post',
                         headers: {token: token},
                         data: request
@@ -334,24 +307,15 @@ class App extends Component {
     }
   }
 
-  asociarProducto = (productData) => {
+  asociarProducto = (body) => {
 
     let token = cookies.get('access_token');
     if(token){
 
-      let requestBody = {
-        companyId: this.state.loggedUser.userCompanyId,
-        productId: productData.productId,
-        productName: productData.productName,
-        productDescription: productData.productDescription,
-        productPrice: productData.productPrice,
-        productStock: productData.productStock,
-      }
-
-      let request = new Request(`http://${ipServidor}:${port}/api/product/company`, {
+      let request = new Request(`${url}/api/product/company`, {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(body)
       });
   
       fetch(request)
@@ -389,37 +353,11 @@ class App extends Component {
   mostrarPerfil = () => {
     return <Profile />
   }
-
-  getMisProductos = () => {
-    let token = cookies.get('access_token');
-    if(token){
-
-      let request = new Request(`http://${ipServidor}:${port}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
-        method: 'GET',
-        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-        credentials: 'same-origin'
-      })
-      fetch(request)
-        .then(res => {
-          res.json()
-            .then(data => {
-              console.log(data.products);
-              this.setState({
-                myProducts: data.products
-              })
-            })
-            .catch(err => {
-              console.log(err);
-            })
-        })
-    }
-    else{
-      console.log('No hay token');
-    }
-  }
   
 mostrarMisProductos = () => {
-    return <MisProductos products={this.state.myProducts} />
+	
+	
+		return <MisProductos products={this.state.myProducts} />
   }
 
   mostrarCarrito = () => {
@@ -490,30 +428,6 @@ mostrarMisProductos = () => {
           {/* <Footer /> */}
         </Fragment>
       </BrowserRouter>
-      // <Fragment>
-        // <Header 
-        //   logged={this.state.logged}
-        //   loggedUser={this.state.loggedUser}
-        //   login={this.login}
-        //   logout={this.logout}
-        //   signup={this.registroUsuarioEmpresa}
-        //   companyTypes={this.state.companyTypes}
-        //   userTypes={this.state.userTypes}
-        //   categories={this.state.productCategory}
-        //   registrarProducto={this.registroProducto}
-        //   products={this.state.products}
-        //   companies={this.state.companies}
-        //   registroEmpresaProducto={this.registroEmpresaProducto}
-        // />
-      //   <div>
-      //     <div>
-      //     {this.state.logged ? (
-      //       <List listado={this.state.companies} flag='companias'/>
-      //     ) : null}
-      //     </div>
-      //   </div>
-      //   <Footer />
-      // </Fragment>
     );
   }
 }

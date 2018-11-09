@@ -50,10 +50,11 @@ function ButtonAppBar(props) {
         <Toolbar>
           {props.logged ? (
             <Drawer
-              categories={props.categories} 
+              companyId={props.loggedUser.userCompanyId}
+              categories={props.categories}
               onClickProduct={props.registrarProducto}
-              products={props.products} 
-              companies={props.companies} 
+              products={props.products}
+              companies={props.companies}
               onClickAssociate={props.registroEmpresaProducto}
             />
           ) : null}

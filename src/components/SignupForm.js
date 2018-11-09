@@ -321,7 +321,33 @@ class SignupForm extends Component{
         const error = this.validate();
 
         if (!error){
-            this.props.onClick(this.state);
+
+            const request = new FormData();
+            //user
+            request.set('userName', this.state.userName);
+            request.set('userEmail', this.state.userEmail);
+            request.set('userPassword', this.state.userPassword);
+            request.set('userDocument', this.state.userDocument);
+            request.set('userPhone', this.state.userPhone);
+            request.set('userFirstStreet', this.state.userFirstStreet);
+            request.set('userSecondStreet', this.state.userSecondStreet);
+            request.set('userDoorNumber', this.state.userDoorNumber);
+            request.set('role', this.state.role);
+            //company
+            request.set('companyName', this.state.companyName);
+            request.set('companyRut', this.state.companyRut);
+            request.set('companyPhone', this.state.companyPhone);
+            request.set('companyFirstStreet', this.state.companyFirstStreet);
+            request.set('companySecondStreet', this.state.companySecondStreet);
+            request.set('companyDoorNumber', this.state.companyDoorNumber);
+            request.set('companyType', this.state.companyType);
+            request.set('companyCategory', this.state.companyCategory);
+            request.set('companyDescription', this.state.companyDescription);
+
+            //image
+            request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
+
+            this.props.onClick(request);
             this.handleToggle();
         }
     }

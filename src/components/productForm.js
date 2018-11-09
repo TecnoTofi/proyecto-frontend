@@ -119,7 +119,16 @@ export default class ProductForm extends Component{
         const error = this.validate();
         // console.log(this.state);
         if (!error){
-            this.props.onClick(this.state);
+
+            const request = new FormData();
+      
+            request.set('name', this.state.productName);
+            request.set('code', this.state.productCode);
+            request.set('categories', this.state.categories);
+            
+            request.append('image', this.state.productImage, this.state.productImage.name);
+
+            this.props.onClick(request);
             this.handleToggle();
         } 
     }

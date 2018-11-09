@@ -12,13 +12,14 @@ import IconButton from "@material-ui/core/IconButton";
 class MisProductos extends Component{
 
     handleDelete = () =>{
-
-    console.log("borrar")
+        console.log("borrar")
     }
-    handleEdit= ()=>{
-     console.log("editar")
+
+    handleEdit= () => {
+        console.log("editar")
     }
     render(){
+        
         return (
 
             <Table>
@@ -40,27 +41,23 @@ class MisProductos extends Component{
             </TableHead>
             <TableBody>
                 {this.props.products.map(product => (
-                    <TableRow>
+                    <TableRow key={product.id}>
                         <TableCell>
-                        {product.code}
+                            {product.code}
                         </TableCell>
                         <TableCell>
-                        {product.name}    
+                            {product.name}    
                         </TableCell>
                         <TableCell>
-                        {product.price}    
+                            {product.price}    
                         </TableCell>
                         <TableCell>
-                        <IconButton
-                        onClick={this.handleEdit} 
-                        >
-                         <EditIcon />
-                        </IconButton>
-                        <IconButton
-                        onClick={this.handleDelete}
-                        >
-                         <DeleteIcon />
-                        </IconButton> 
+                            <IconButton onClick={this.handleEdit}>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton onClick={this.handleDelete}>
+                                <DeleteIcon />
+                            </IconButton> 
                         </TableCell>
                     </TableRow>
                 ))}

@@ -25,7 +25,6 @@ export default class AssociateForm extends Component{
             productDescription: '',
             productPrice:'',
             productStock:'',
-            //companyIdError:0,
             productIdError:0,
             productNameError: '',
             productDescriptionError: '',
@@ -37,7 +36,6 @@ export default class AssociateForm extends Component{
     validate = () => {
         let isError = false;
         const errors = {
-            //companyIdError:0,
             productIdError:0,
             productNameError: '',
             productDescriptionError: '',
@@ -139,7 +137,17 @@ export default class AssociateForm extends Component{
         event.preventDefault();
         const error = this.validate();
         if (!error){
-            this.props.onClick(this.state);
+
+			let request = {
+				companyId: this.props.companyId,
+				productId: this.state.productId,
+				productName: this.state.productName,
+				productDescription: this.state.productDescription,
+				productPrice: this.state.productPrice,
+				productStock: this.state.productStock,
+			}
+
+            this.props.onClick(request);
             this.handleToggle();
         }
     }
