@@ -33,7 +33,8 @@ class App extends Component {
       companies:[],
       productCategory:[],
       products:[],
-      myProducts: []
+      myProducts: [],
+      cart: []
     }
   }
 
@@ -196,7 +197,8 @@ class App extends Component {
 		fetch(request)
 			.then(response => response.json())
 			.then(data => {
-				this.setState({myProducts: data.products});
+        console.log(data);
+				this.setState({myProducts: data});
 			})
 			.catch(err => console.log(err));
 	}
@@ -355,7 +357,15 @@ mostrarMisProductos = () => {
   }
 
   mostrarCarrito = () => {
-    let datosTest =[
+    // id: 1, //de CompanyProduct
+    // name: 'Jugo Citrus Frute x 20 unidades', //de CompanyProduct
+    // price: 300, //de CompanyProduct
+    // companyId: 1
+    // company: 'Salus',
+    // quantity: 1,
+    // priceEnvio: 150
+
+    let datosTest = [
       {
         id: 1,
         name: 'Jugo Citrus Frute x 20 unidades',

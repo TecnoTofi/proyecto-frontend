@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 // import InputAdornment from '@material-ui/core/InputAdornment';
 import Table from '@material-ui/core/Table';
@@ -16,9 +16,12 @@ import CartProduct from './CartProduct';
 import CartTotal from './CartTotal';
 // import { Input } from '@material-ui/core';
 
-const styles = () => ({
+const styles = theme => ({
     root: {
-        marginBottom: 100
+        display: 'flex',
+        flexWrap: 'wrap',
+        margin: theme.spacing.unit * 3,
+        alignContent: 'center'
     //   ...theme.mixins.gutters(),
     //   paddingTop: theme.spacing.unit * 2,
     //   paddingBottom: theme.spacing.unit * 2,
@@ -45,11 +48,11 @@ class Cart extends Component{
         let productos = this.props.datosTest;
 
         return(
-            <Fragment>
-                <Typography variant='h5'>
+            <Fragment className={classes.root}>
+                {/* <Typography variant='h5'>
                     Carrito
-                </Typography>
-                <Paper className={classes.root}>
+                </Typography> */}
+                <Paper>
                     <Table>
                         <TableHead>
                             <TableRow>

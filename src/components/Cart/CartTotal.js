@@ -9,16 +9,19 @@ import Divider from '@material-ui/core/Divider';
 
 const styles = () => ({
     root: {
+        display: 'flex',
+        flexWrap: 'wrap',
         // width: 200,
         textAlign: 'center'
     },
     paper: {
-        width: 200,
+        // width: 200,
+        // minWidth: 275,
         textAlign: 'center'
     },
-    card: {
-        minWidth: 275,
-      }
+    button: {
+        // textAlign: 'center'
+    }
 });
 
 function CartTotal(props){
@@ -40,7 +43,9 @@ function CartTotal(props){
                     Total: $
                 </Typography>
                 <Divider />
-                <Button variant='contained' color='primary'>Continuar</Button>
+                <Fragment className={classes.button}>
+                    <Button variant='contained' color='primary'>Continuar</Button>
+                </Fragment>
             </Paper>
         </Fragment>
     );
