@@ -25,27 +25,36 @@ const styles = () => ({
 });
 
 function CartTotal(props){
-    const { classes } = props;
+    const { classes, productos } = props;
+
+    let subTotal = productos.reduce((total, prod) => {
+        return total + prod.price;
+    }, 0);
+    
+    let subTotalEnvios = productos.reduce((total, prod) => {
+        if(prod.envio) total = total + prod.priceEnvio;
+        return total;
+    }, 0);
+    let total = subTotal + subTotalEnvios;
+
     return(
-        <Fragment className={classes.root}>
+        <Fragment>
             <Paper className={classes.paper}>
                 <Typography variant='h5'>
                     SubTotal
                 </Typography>
                 <Typography variant='h6'>
-                    Producto/s: $
+                    Producto/s: ${`${subTotal}`}
                 </Typography>
                 <Typography variant='h6'>
-                    Envio/s: $
+                    Envio/s: ${`${subTotalEnvios}`}
                 </Typography>
                 <Divider />
                 <Typography variant='h4'>
-                    Total: $
+                    Total: ${`${total}`}
                 </Typography>
                 <Divider />
-                <Fragment className={classes.button}>
-                    <Button variant='contained' color='primary'>Continuar</Button>
-                </Fragment>
+                <Button variant='contained' color='primary'>Continuar</Button>
             </Paper>
         </Fragment>
     );

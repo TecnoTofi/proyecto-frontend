@@ -185,7 +185,7 @@ class App extends Component {
   }
 
   getMisProductos = async () => {
-	  console.log('llego');
+	  // console.log('llego');
 	let token = cookies.get('access_token');
     if(token){
 		let request = new Request(`${url}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
@@ -197,8 +197,14 @@ class App extends Component {
 		fetch(request)
 			.then(response => response.json())
 			.then(data => {
-        console.log(data);
-				this.setState({myProducts: data});
+        // console.log(data);
+        let productos = data.map(prod => {
+          prod.imagePath = `${url}/${prod.imagePath}`;
+          return prod;
+        })
+				this.setState({myProducts: productos}, () => {
+          this.carcarCarrito();//esto se tiene que ir de aca
+        });
 			})
 			.catch(err => console.log(err));
 	}
@@ -356,6 +362,32 @@ mostrarMisProductos = () => {
 	return <MisProductos products={this.state.myProducts} />
   }
 
+  carcarCarrito = () => {
+    let datosTest = this.state.myProducts.map(prod => {
+      prod.quantity = 1;
+      prod.priceEnvio = 100;
+      prod.envio = false;
+      return prod;
+    });
+    this.setState({cart: datosTest});
+  }
+
+  borrarItemCarrito = (id) => {
+    let carrito = this.state.cart.filter(item => {
+      return item.id !== id;
+    });
+    this.setState({cart: carrito});
+  }
+
+  cartEnvioChange = (id, value) => {
+    let productos = this.state.cart;
+    let data = productos.map(prod => {
+      if(prod.id === id) prod.envio = value;
+      return prod;
+    });
+    this.setState({cart: data});
+  }
+
   mostrarCarrito = () => {
     // id: 1, //de CompanyProduct
     // name: 'Jugo Citrus Frute x 20 unidades', //de CompanyProduct
@@ -364,42 +396,18 @@ mostrarMisProductos = () => {
     // company: 'Salus',
     // quantity: 1,
     // priceEnvio: 150
-
-    let datosTest = [
-      {
-        id: 1,
-        name: 'Jugo Citrus Frute x 20 unidades',
-        price: 300,
-        company: 'Salus',
-        quantity: 1,
-        priceEnvio: 150
-      },
-      {
-        id: 2,
-        name: 'Coca Cola 2.l x 10 unidades',
-        price: 500,
-        company: 'Coca cola',
-        quantity: 2,
-        priceEnvio: 120
-      },
-      {
-        id: 3,
-        name: 'Yogurt Biotop - Frutilla x 10 unidades',
-        price: 350,
-        company: 'Conaprole',
-        quantity: 1,
-        priceEnvio: 100
-      },
-      {
-        id: 4,
-        name: 'Dulce de leche 500g x 10 unidades',
-        price: 600,
-        company: 'Conaprole',
-        quantity: 3,
-        priceEnvio: 100
-      }
-    ];
-    return <Carrito datosTest={datosTest} />
+    // envio: false
+    // let datosTest = await this.state.myProducts.map(prod => {
+    //   prod.quantity = 1;
+    //   prod.priceEnvio = 100
+    //   return prod;
+    // });
+    // this.setState({cart: datosTest});
+    return <Carrito 
+      productos={this.state.cart} 
+      onDelete={this.borrarItemCarrito} 
+      cartEnvioChange={this.cartEnvioChange}
+      />
   }
 
   render() {

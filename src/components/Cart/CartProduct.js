@@ -31,12 +31,16 @@ const styles = theme => ({
 
 function MediaControlCard(props) {
     const { classes } = props;
+    // console.log(props.product);
 
   return (
     <Card className={classes.card} elevation={0}>
         <CardMedia
+            component='img'
+            height='10%'
+            width='20%'
             className={classes.cover}
-            image={props.product.imagePath}
+            src={`${props.product.imagePath}`}
             title={props.product.name}
         />
         <div className={classes.details}>

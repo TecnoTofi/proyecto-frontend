@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
-import { withStyles, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 // import InputAdornment from '@material-ui/core/InputAdornment';
 import Table from '@material-ui/core/Table';
@@ -34,21 +34,22 @@ class Cart extends Component{
         console.log('funca cambio select');
     }
 
-    handlePickerChange = (productId, quantity) => {
+    handlePickerChange = (productId, selected) => {
         console.log('funca cambio picker');
+        let value = selected === 1 ? false : true;
+        this.props.cartEnvioChange(productId, value);
     }
 
-    handleDelete = (productId) => {
-        console.log('funca borrado', productId);
-    }
+    // handleDelete = (productId) => {
+    //     console.log('funca borrado', productId);
+    // }
 
     render(){
 
-        const { classes } = this.props;
-        let productos = this.props.datosTest;
+        const { classes, productos } = this.props;
 
         return(
-            <Fragment className={classes.root}>
+            <Fragment>
                 {/* <Typography variant='h5'>
                     Carrito
                 </Typography> */}
@@ -68,7 +69,7 @@ class Cart extends Component{
                                     <TableCell>
                                         <CartProduct 
                                             product={prod}
-                                            onClick={this.handleDelete}
+                                            onClick={this.props.onDelete}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -95,7 +96,7 @@ class Cart extends Component{
                         </TableBody>
                     </Table>
                 </Paper>
-                <CartTotal />
+                <CartTotal productos={productos} />
             </Fragment>
         );
     }
