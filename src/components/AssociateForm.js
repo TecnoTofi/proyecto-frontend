@@ -174,8 +174,6 @@ export default class AssociateForm extends Component{
                             content={this.props.products}
                             onChange={this.onSelectChange}
                             required
-                            // helper={this.state.productIdError}
-                            // error={this.state.productIdError ? true : false}
                             label={'Productos'}
                             selectError={this.state.productIdError}
                             helper={'Seleccione el producto'}

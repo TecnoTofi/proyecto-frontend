@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -50,7 +51,7 @@ class SignupForm extends Component{
             companyDoorNumber: '',
             companyType: 0,
             companyDescription:'',
-            companyCategory: '',
+            companyCategory: 0,
             companyImage: null,
             userNameError: '',
             userEmailError: '',
@@ -141,15 +142,11 @@ class SignupForm extends Component{
             errors.userDocumentError='Debe tener 7 u 8 caracteres';
         }
 
-        if(!this.state.userPhone){
-            isError = true;
-            errors.userPhoneError='Debe ingresar un telefono personal';
-        }
-        else if(!Validator.isNumeric(this.state.userPhone)){
+        if(this.state.userPhone && !Validator.isNumeric(this.state.userPhone)){
             isError = true;
             errors.userPhoneError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.userPhone, {min: 7, max: 15})){
+        else if(this.state.userPhone && !Validator.isLength(this.state.userPhone, {min: 7, max: 15})){
             isError = true;
             errors.userPhoneError='Debe tener entre 7 y 15 caracteres';
         }
@@ -243,6 +240,12 @@ class SignupForm extends Component{
             isError = true;
             errors.companyTypeError="Debe seleccionar el tipo de empresa";
         }
+
+        if(this.state.companyCategory === 0){
+            isError = true;
+            errors.companyCategoryError="Debe seleccionar el rubro de la empresa";
+            console.log('error en companyCategory === 0');
+        }
         
         if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
             isError = true;
@@ -278,7 +281,7 @@ class SignupForm extends Component{
             companyType: 0,
             companyImage: null,
             companyDescription:'',
-            companyCategory: '',
+            companyCategory: 0,
             userNameError: '',
             userEmailError: '',
             userPasswordError: '',
@@ -312,8 +315,8 @@ class SignupForm extends Component{
     }
 
     onSelectCategoryChange = (tipo) => {
-        let type = Number(tipo);
-        this.setState({companyCategory: type});
+        let cat = Number(tipo);
+        this.setState({companyCategory: cat});
     }
 
     onSubmit = (e) => {
@@ -403,26 +406,20 @@ class SignupForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    {/* <TextField
-                        margin='dense'
-                        id='userPassword'
-                        name='userPassword'
-                        label='Contraseña'
-                        type='password'
-                        fullWidth
-                        required
-                        helperText={this.state.userPasswordError}
-                        error={this.state.userPasswordError ? true : false}
-                        onChange={this.onChange}
-                        onKeyPress={this.onEnterPress}
-                    /> */}
                     <FormControl className={(classes.margin, classes.textField)} fullWidth>
-                        <InputLabel htmlFor="adornment-password">Contraseña</InputLabel>
+                        <InputLabel
+                            htmlFor="adornment-password"
+                            error={this.state.userPasswordError ? true : false}
+                            required
+                        >
+                            Contraseña
+                        </InputLabel>
                         <Input
                             id="userPassword"
                             name='userPassword'
                             type={this.state.showPassword ? 'text' : 'password'}
                             value={this.state.password}
+                            error={this.state.userPasswordError ? true : false}
                             onChange={this.onChange}
                             onKeyPress={this.onEnterPress}
                             endAdornment={
@@ -436,6 +433,11 @@ class SignupForm extends Component{
                             </InputAdornment>
                             }
                         />
+                        <FormHelperText
+                            id="userPasswordError"
+                            error={this.state.userPasswordError ? true : false}>
+                            {this.state.userPasswordError}
+                        </FormHelperText>
                     </FormControl>
                     <TextField
                         margin='dense'

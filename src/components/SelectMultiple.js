@@ -6,6 +6,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -59,7 +60,11 @@ class MultipleSelect extends React.Component {
 
     return (
       <div className={classes.root}>
-        <FormControl className={classes.formControl} fullWidth={this.props.flagForm}>
+        <FormControl
+          className={classes.formControl}
+          fullWidth={this.props.flagForm}
+          error={this.props.selectError ? true : false}
+        >
           <InputLabel htmlFor="select-multiple-checkbox">{titulo}</InputLabel>
           <Select
             fullWidth
@@ -83,6 +88,7 @@ class MultipleSelect extends React.Component {
               </MenuItem>
             ))}
           </Select>
+          <FormHelperText>{this.props.selectError ? this.props.selectError : this.props.helper}</FormHelperText>
         </FormControl>
       </div>
     );

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -138,27 +139,20 @@ class LoginForm extends Component {
               onChange={this.onChange}
               onKeyPress={this.onEnterPress}
             />
-            {/* <TextField
-                margin='dense'
-                id='userPassword'
-                name='userPassword'
-                label='Contaseña'
-                // type={this.state.showPassword ? 'text' : 'password'}
-                type='password'
-                fullWidth
-                required
-                helperText={this.state.userPasswordError}
-                error={this.state.userPasswordError ? true : false}
-                onChange={this.onChange}
-                onKeyPress={this.onEnterPress}
-            /> */}
             <FormControl className={(classes.margin, classes.textField)} fullWidth>
-              <InputLabel htmlFor="adornment-password">Contaseña</InputLabel>
+              	<InputLabel 
+                  htmlFor="adornment-password" 
+                  error={this.state.userPasswordError ? true : false}
+                  required
+                >
+					        Contaseña
+				        </InputLabel>
               <Input
                 id="userPassword"
                 name='userPassword'
                 type={this.state.showPassword ? 'text' : 'password'}
                 value={this.state.password}
+                error={this.state.userPasswordError ? true : false}
                 onChange={this.onChange}
                 onKeyPress={this.onEnterPress}
                 endAdornment={
@@ -172,6 +166,11 @@ class LoginForm extends Component {
                   </InputAdornment>
                 }
               />
+              <FormHelperText
+                  id="userPasswordError"
+                error={this.state.userPasswordError ? true : false}>
+                {this.state.userPasswordError}
+              </FormHelperText>
             </FormControl>
           </DialogContent>
           <DialogActions>

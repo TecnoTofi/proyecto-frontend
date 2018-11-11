@@ -41,7 +41,10 @@ class SimpleSelect extends React.Component {
     return (
       <form className={classes.root} autoComplete="off">
        
-        <FormControl className={classes.formControl} error={this.props.selectError ? true : false}>
+        <FormControl 
+          className={classes.formControl} 
+          error={this.props.selectError ? true : false}
+        >
           <InputLabel htmlFor="type-helper">{this.props.label}</InputLabel>
           <Select
             name='type'

@@ -34,7 +34,8 @@ class App extends Component {
       productCategory:[],
       products:[],
       myProducts: [],
-      cart: []
+      cart: [],
+      companiaSeleccionada: 0
     }
   }
 
@@ -337,12 +338,17 @@ class App extends Component {
     }
   }
 
+  seleccionarCompany = (id) => {
+    console.log('empresa clickeada: ', id);
+  }
+
   mostrarCompanias = () => {
     return <List
       listado={this.state.companies}
       flag='companias'
       categories={this.state.companyCategories}
       tipos={this.state.companyTypes}
+      onCompanyClick={this.seleccionarCompany}
     />;
   }
 
@@ -352,6 +358,20 @@ class App extends Component {
       flag='productos'
       categories={this.state.productCategory}
     />;
+  }
+
+  mostrarCompanyProducts = (id) => {
+    //cambiar el this.state.products, debe obtener el listado por medio de un fetch
+    let productos = this.state.products.filter(prod => {
+      return prod.companyId === id;
+    });
+
+    return <List 
+      listado-={productos}
+      flag='productos'
+      categories={this.state.productCategory}
+      companiaSeleccionada={this.state.companiaSeleccionada}
+    />
   }
 
   mostrarPerfil = () => {
@@ -436,6 +456,7 @@ mostrarMisProductos = () => {
             <Route path='/profile' component={this.mostrarPerfil} />
             <Route path='/carrito' component={this.mostrarCarrito} />
             <Route path='/misProductos' component={this.mostrarMisProductos} />
+            {/* <Route path='/company/products' component={this.mostrarCompanyProducts} /> */}
           </Switch>
           {/* <Footer /> */}
         </Fragment>

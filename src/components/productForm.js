@@ -178,21 +178,13 @@ export default class ProductForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    {/* <InputLabel htmlFor="select-multiple-checkbox">Tipo de producto</InputLabel> */}
-                    {/* <SelectType
-                        content={this.props.categories}
-                        required
-                        helperText={this.state.categoryError}
-                        error={this.state.categoryError ? true : false}
-                        onChange={this.onSelectChange}
-                        //label={'Tipo de producto'}
-                        helper={'Seleccione el tipo de producto'}
-                    /> */}
                     <SelectMultiple
                         flagType='productos'
                         flagForm={true}
                         content={this.props.categories}
                         onChange={this.onSelectChange}
+                        selectError={this.state.categoriesError}
+                        helper={'Seleccione categorias para el producto'}
                     />
                     <UploadImage onImageUpload={this.onImageUpload} />
                 </DialogContent>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -19,50 +19,59 @@ const styles = {
   },
 };
 
-function ImgMediaCard(props) {
-  const { classes } = props;
-  return (
-    <Card className={classes.card}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          alt={props.item.name}
-          className={classes.media}
-          height="140"
-          src={`${props.item.imagePath}`}
-          title={props.item.name}
+class ImgMediaCard extends Component {
+  
+  handleProdClick = () => {
+    this.props.onCompanyClick(this.props.item.id);
+  }
+
+  render(){
+    const { classes } = this.props;
+
+    return (
+      <Card className={classes.card}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            alt={this.props.item.name}
+            className={classes.media}
+            height="140"
+            src={`${this.props.item.imagePath}`}
+            title={this.props.item.name}
+            
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {this.props.item.name}
+            </Typography>
+            {/* <Typography component="p">
+            {props.item.description}
+            </Typography> */}
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+        {this.props.flag === 'companias' ? (
+          <Fragment >
+            <Button size="small" color="primary">
+              Detalles
+            </Button>
+            <Button size="small" color="primary" onClick={this.handleProdClick} >
+              Productos
+            </Button>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Button size="small" color="primary">
+              Ver
+            </Button>
+          </Fragment>
+        )}
           
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {props.item.name}
-          </Typography>
-          {/* <Typography component="p">
-          {props.item.description}
-          </Typography> */}
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-      {props.flag === 'companias' ? (
-        <Fragment >
-          <Button size="small" color="primary">
-            Detalles
-          </Button>
-          <Button size="small" color="primary">
-            Productos
-          </Button>
-        </Fragment>
-      ) : (
-        <Fragment>
-          <Button size="small" color="primary">
-            Ver
-          </Button>
-        </Fragment>
-      )}
-        
-      </CardActions>
-    </Card>
-  );
+        </CardActions>
+      </Card>
+    );
+  }
+  
 }
 
 ImgMediaCard.propTypes = {
