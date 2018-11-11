@@ -170,6 +170,16 @@ export default class AssociateForm extends Component{
                 >
                     <DialogTitle id='form-dialog-title'>Asociar producto</DialogTitle> 
                     <DialogContent>
+                        <SelectForm
+                            content={this.props.products}
+                            onChange={this.onSelectChange}
+                            required
+                            // helper={this.state.productIdError}
+                            // error={this.state.productIdError ? true : false}
+                            label={'Productos'}
+                            selectError={this.state.productIdError}
+                            helper={'Seleccione el producto'}
+                        />
                         <TextField
                             autoFocus
                             margin='dense'
@@ -197,17 +207,7 @@ export default class AssociateForm extends Component{
                             rowsMax="4"
                             onChange={this.onChange}
                             onKeyPress={this.onEnterPress}
-                        />
-                        <SelectForm
-                                content={this.props.products}
-                                onChange={this.onSelectChange}
-                                required
-                                // helper={this.state.productIdError}
-                                // error={this.state.productIdError ? true : false}
-                                label={'Productos'}
-                                selectError={this.state.productIdError}
-                                helper={'Seleccione el producto'}
-                        />
+                        />                        
                         <TextField
                             margin='dense'
                             id='productPrice'

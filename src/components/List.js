@@ -1,10 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-import '../App.css';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Item from './Item';
 import SelectMultiple from './SelectMultiple';
+
+const styles = theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap'
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+        marginTop: theme.spacing.unit * 2
+      }
+});
 
 class List extends Component{
 
@@ -38,6 +52,8 @@ class List extends Component{
     }
 
     render(){
+        const { classes } = this.props;
+
         let filteredList = this.props.listado.filter((item) => {
             return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
         });
@@ -74,9 +90,10 @@ class List extends Component{
             <Fragment>
                 {filteredList ? (
                     <Fragment>
-                        <div>
+                        <div className={classes.container}>
                             <TextField
-                                margin='dense'
+                                // margin='dense'
+                                className={classes.textField}
                                 name='searchName'
                                 placeholder='Nombre empresa'
                                 onChange={this.onSearchNameChange}
@@ -111,4 +128,8 @@ class List extends Component{
     }
 }
 
-export default List;
+List.PropTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(List);

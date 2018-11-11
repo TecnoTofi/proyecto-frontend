@@ -17,7 +17,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    margin: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
     minWidth: 120,
     maxWidth: 500+'%',
   },
@@ -27,10 +27,7 @@ const styles = theme => ({
   },
   chip: {
     margin: theme.spacing.unit / 4,
-  },
-  noLabel: {
-    marginTop: theme.spacing.unit * 3,
-  },
+  }
 });
 
 const ITEM_HEIGHT = 48;

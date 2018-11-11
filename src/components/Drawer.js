@@ -40,7 +40,7 @@ const styles = {
   },
 };
 
-class SwipeableTemporaryDrawer extends React.Component {
+class Drawer extends React.Component {
   state = {
     open: false
   };
@@ -146,8 +146,8 @@ class SwipeableTemporaryDrawer extends React.Component {
   }
 }
 
-SwipeableTemporaryDrawer.propTypes = {
+Drawer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SwipeableTemporaryDrawer);
+export default withStyles(styles)(Drawer);
