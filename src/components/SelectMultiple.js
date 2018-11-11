@@ -58,7 +58,7 @@ class MultipleSelect extends React.Component {
   render() {
     const { classes } = this.props;
 
-    let titulo = this.props.flagType === 'productos' ? 'Categoria/s' : 'Rubro/s';
+    let titulo = this.props.titulo ? this.props.titulo : this.props.flagType === 'productos' ? 'Categoria/s' : 'Rubro/s';
 
     return (
       <div className={classes.root}>

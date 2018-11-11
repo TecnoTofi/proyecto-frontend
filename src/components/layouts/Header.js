@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import LoginForm from '../LoginForm';
 import SignupForm from '../SignupForm';
 import Drawer from '../Drawer';
-// import LogoutIcon from '@material-ui/icons/Clear'
 import HomeIcon from '@material-ui/icons/Home';
 import StoresIcon from '@material-ui/icons/Store';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -77,14 +76,10 @@ function ButtonAppBar(props) {
               <NavLink to='/carrito' className={classes.link}>
                 <Button color="inherit"><ShoppingCartIcon className={classes.leftIcon} />Carrito</Button>
               </NavLink>
-              {/* <NavLink to='/profile' className={classes.link}> */}
                 <MenuUsername                  
                   userName={props.loggedUser.userName}
                   logout={props.logout}
                   />
-                {/* <Button color="inherit"><UserIcon className={classes.leftIcon} />{props.loggedUser.userName}</Button> */}
-              {/* </NavLink> */}
-              {/* <Button color="inherit" onClick={props.logout}><LogoutIcon className={classes.leftIcon} />Cerrar sesion</Button> */}
             </Fragment>
           ) : (
             <Fragment>

@@ -51,8 +51,8 @@ class App extends Component {
     this.getCompanyTypes();
     this.getCompanyCategories();
     this.getAllCompanies();
-	this.getAllProducts();
-	this.getProductCategories();
+    this.getAllProducts();
+    this.getProductCategories();
   }
 
   verificarToken = (token) => {
@@ -183,27 +183,22 @@ class App extends Component {
       });
   }
 
-  getMisProductos = () => {
+  getMisProductos = async () => {
+	  console.log('llego');
 	let token = cookies.get('access_token');
     if(token){
 		let request = new Request(`${url}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
 			method: 'GET',
 			headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
 			credentials: 'same-origin'
-			});
-		
+			});		
+			
 		fetch(request)
-			.then(res => {
-				res.json()
-					.then(data => {
-						this.setState({
-							myProducts: data.products
-						});
-					})
-					.catch(err => {
-						console.log(err);
-					})
-			});
+			.then(response => response.json())
+			.then(data => {
+				this.setState({myProducts: data.products});
+			})
+			.catch(err => console.log(err));
 	}
 }
 
@@ -338,15 +333,16 @@ class App extends Component {
     return <List
       listado={this.state.companies}
       flag='companias'
-      tipos={this.state.companyCategories}
+      categories={this.state.companyCategories}
+      tipos={this.state.companyTypes}
     />;
   }
 
   mostrarProductos = () => {
     return <List 
-    listado={this.state.products}
-    flag='productos'
-    tipos={this.state.productCategory}
+      listado={this.state.products}
+      flag='productos'
+      categories={this.state.productCategory}
     />;
   }
 
@@ -355,9 +351,7 @@ class App extends Component {
   }
   
 mostrarMisProductos = () => {
-	
-	
-		return <MisProductos products={this.state.myProducts} />
+	return <MisProductos products={this.state.myProducts} />
   }
 
   mostrarCarrito = () => {

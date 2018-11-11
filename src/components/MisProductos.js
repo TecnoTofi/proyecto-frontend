@@ -35,6 +35,9 @@ class MisProductos extends Component{
                         Precio
                     </TableCell>
                     <TableCell>
+                        Stock
+                    </TableCell>
+                    <TableCell>
                         Acciones
                     </TableCell>
                 </TableRow>
@@ -50,6 +53,9 @@ class MisProductos extends Component{
                         </TableCell>
                         <TableCell>
                             {product.price}    
+                        </TableCell>
+                        <TableCell>
+                            {product.stock}
                         </TableCell>
                         <TableCell>
                             <IconButton onClick={this.handleEdit}>

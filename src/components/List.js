@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import '../App.css';
 import TextField from '@material-ui/core/TextField';
@@ -12,7 +12,8 @@ class List extends Component{
         super(props);
         this.state = {
             searchName: '',
-            selectedCategory: []
+            selectedCategory: [],
+            selectedType: []
         }
     }
 
@@ -22,41 +23,80 @@ class List extends Component{
         });
     };
 
-    handleSelectMultipleChange = (seleccionados) => {
+    handleSelectCategories = (seleccionados) => {
         let selectedCategory = seleccionados.map(selected => {
             return selected.id;
         })
         this.setState({selectedCategory: selectedCategory});
     }
 
+    handleSelectTypes = (seleccionados) => {
+        let selectedType = seleccionados.map(selected => {
+            return selected.id;
+        })
+        this.setState({selectedType: selectedType});
+    }
+
     render(){
         let filteredList = this.props.listado.filter((item) => {
-            return item.name.indexOf(this.state.searchName) !== -1;
+            return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
         });
 
         if(this.state.selectedCategory.length > 0){
             filteredList = filteredList.filter(item => {
-                let res = this.state.selectedCategory.includes(Number(item.categoryId));
+                let res = false;
+                if(this.props.flag === 'productos'){
+                    let i = 0;
+                    let counter = 0;
+                    while(i<item.categories.length){
+                        if(this.state.selectedCategory.includes(item.categories[i].id)){
+                            counter++;
+                        }
+                        i++;
+                    }
+                    if(counter > 0) res = true;
+                    else res = false;
+                }
+                else{
+                    res = this.state.selectedCategory.includes(Number(item.categoryId));
+                }
                 return res;
             });
-        }   
+        }
+
+        if(this.state.selectedType.length > 0){
+            filteredList = filteredList.filter(item => {
+                return this.state.selectedType.includes(item.typeId);
+            })
+        }
 
         return(
-            <div>
+            <Fragment>
                 {filteredList ? (
-                    <div>
-                        <TextField
-                            margin='dense'
-                            name='searchName'
-                            placeholder='Nombre empresa'
-                            onChange={this.onSearchNameChange}
-                        />
-                        <SelectMultiple
-                            flagType={this.props.flag}
-                            flagForm={false}
-                            content={this.props.tipos}
-                            onChange={this.handleSelectMultipleChange}
-                        />
+                    <Fragment>
+                        <div>
+                            <TextField
+                                margin='dense'
+                                name='searchName'
+                                placeholder='Nombre empresa'
+                                onChange={this.onSearchNameChange}
+                            />
+                            <SelectMultiple
+                                flagType={this.props.flag}
+                                flagForm={false}
+                                content={this.props.categories}
+                                onChange={this.handleSelectCategories}
+                            />
+                            {this.props.tipos ? (
+                                <SelectMultiple
+                                    flagType={this.props.flag}
+                                    titulo='Tipo/s'
+                                    flagForm={false}
+                                    content={this.props.tipos}
+                                    onChange={this.handleSelectTypes}
+                                />
+                            ) : null}
+                        </div>
                         <Grid container spacing={24} style={{padding: 24}}>
                             {filteredList.map(item => (
                                 <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
@@ -64,9 +104,9 @@ class List extends Component{
                                 </Grid>
                             ))}
                         </Grid>
-                    </div>
-                ) : 'No hay empresas registradas aun' }
-            </div>
+                    </Fragment>
+                ) : `No hay ${this.props.flag} registradas aun` }
+            </Fragment>
         );
     }
 }
