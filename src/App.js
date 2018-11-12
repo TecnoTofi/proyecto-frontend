@@ -340,6 +340,7 @@ class App extends Component {
 
   seleccionarCompany = (id) => {
     console.log('empresa clickeada: ', id);
+    this.setState({companiaSeleccionada: id});
   }
 
   mostrarCompanias = () => {
@@ -360,18 +361,41 @@ class App extends Component {
     />;
   }
 
-  mostrarCompanyProducts = (id) => {
-    //cambiar el this.state.products, debe obtener el listado por medio de un fetch
-    let productos = this.state.products.filter(prod => {
-      return prod.companyId === id;
-    });
+  mostrarCompanyProducts = async () => {
 
-    return <List 
-      listado-={productos}
-      flag='productos'
-      categories={this.state.productCategory}
-      companiaSeleccionada={this.state.companiaSeleccionada}
-    />
+    let token = cookies.get('access_token');
+    let request = new Request(`${url}/api/product/company/${this.state.companiaSeleccionada}`, {
+			method: 'GET',
+			headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+			credentials: 'same-origin'
+			});		
+			
+		await fetch(request)
+			.then(response => response.json())
+			.then(data => {
+        return <List 
+          listado={data}
+          flag='productos'
+          categories={this.state.productCategory}
+          companiaSeleccionada={this.state.companiaSeleccionada}
+        />
+      })
+      .catch(err => console.log(err));
+    
+    //cambiar el this.state.products, debe obtener el listado por medio de un fetch
+    // let productos = this.state.products;
+    // .filter(prod => {
+    //   return prod.companyId === id;
+      
+    // });
+            
+
+    // return <List 
+    //   listado={productos}
+    //   flag='productos'
+    //   categories={this.state.productCategory}
+    //   companiaSeleccionada={this.state.companiaSeleccionada}
+    // />
   }
 
   mostrarPerfil = () => {
@@ -456,7 +480,7 @@ mostrarMisProductos = () => {
             <Route path='/profile' component={this.mostrarPerfil} />
             <Route path='/carrito' component={this.mostrarCarrito} />
             <Route path='/misProductos' component={this.mostrarMisProductos} />
-            {/* <Route path='/company/products' component={this.mostrarCompanyProducts} /> */}
+            <Route path='/company/products' component={this.mostrarCompanyProducts} />
           </Switch>
           {/* <Footer /> */}
         </Fragment>

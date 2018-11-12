@@ -128,7 +128,7 @@ class List extends Component{
     }
 }
 
-List.PropTypes = {
+List.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
