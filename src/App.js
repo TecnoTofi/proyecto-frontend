@@ -3,7 +3,8 @@ import 'typeface-roboto';
 import { Header } from './components/layouts/';
 import List from './components/List';
 import axios from 'axios';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+// import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Carrito from './components/Cart/Cart';
@@ -18,6 +19,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      shownWindow: 'home',
       logged: false,
       loggedUser: {
         userType: '',
@@ -55,6 +57,10 @@ class App extends Component {
     this.getAllCompanies();
     this.getAllProducts();
     this.getProductCategories();
+  }
+
+  cambiarVentana = (ventana) => {
+    this.setState({shownWindow: ventana});
   }
 
   verificarToken = (token) => {
@@ -239,6 +245,7 @@ class App extends Component {
               	cookies.set('access_token', data.token, { path: '/' });
             
 				this.setState({
+          shownWindow: 'dashboard',
 					logged: true,
 					loggedUser: {
 						...data.userData
@@ -456,9 +463,9 @@ mostrarMisProductos = () => {
 
   render() {
     return (
-      <BrowserRouter>
         <Fragment>
           <Header 
+            cambiarVentana={this.cambiarVentana}
             logged={this.state.logged}
             loggedUser={this.state.loggedUser}
             login={this.login}
@@ -473,7 +480,40 @@ mostrarMisProductos = () => {
             companies={this.state.companies}
             registroEmpresaProducto={this.asociarProducto}
           />
-          <Switch>
+          {this.state.shownWindow === 'home' ? (
+            <Home />
+          ) : (
+            this.state.shownWindow === 'dashboard' ? (
+              <Dashboard />
+            ) : (
+              this.state.shownWindow === 'companies' ? (
+                this.mostrarCompanias()
+              ) : (
+                this.state.shownWindow === 'productsGeneric' ? (
+                  this.mostrarProductos()
+                ) : (
+                  this.state.shownWindow === 'productsCompany' ? (
+                    this.mostrarCompanyProducts()
+                  ) : (
+                    this.state.shownWindow === 'myProducts' ? (
+                      this.mostrarMisProductos()
+                    ) : (
+                      this.state.shownWindow === 'carrito' ? (
+                        this.mostrarCarrito()
+                      ) : (
+                        this.state.shownWindow === 'profile' ? (
+                          this.mostrarPerfil()
+                        ) : (
+                          null
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )}
+          {/* <Switch>
             <Route path='/' component={Dashboard} exact />
             <Route path='/companies' component={this.mostrarCompanias} />
             <Route path='/products' component={this.mostrarProductos} />
@@ -481,10 +521,9 @@ mostrarMisProductos = () => {
             <Route path='/carrito' component={this.mostrarCarrito} />
             <Route path='/misProductos' component={this.mostrarMisProductos} />
             <Route path='/company/products' component={this.mostrarCompanyProducts} />
-          </Switch>
+          </Switch> */}
           {/* <Footer /> */}
         </Fragment>
-      </BrowserRouter>
     );
   }
 }

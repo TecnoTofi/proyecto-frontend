@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import UserIcon from '@material-ui/icons/AccountCircle';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
     leftIcon: {
@@ -42,13 +42,13 @@ class MenuUsername extends React.Component {
     return (
       <div>
         <Button
-            color='inherit'
-            aria-owns={anchorEl ? 'simple-menu' : undefined}
-            aria-haspopup="true"
-            onClick={this.handleClick}
+          color='inherit'
+          aria-owns={anchorEl ? 'simple-menu' : undefined}
+          aria-haspopup="true"
+          onClick={this.handleClick}
         >
-            <UserIcon className={classes.leftIcon} />
-            {this.props.userName}
+          <UserIcon className={classes.leftIcon} />
+          {this.props.userName}
         </Button>
         <Menu
           id="simple-menu"
@@ -56,15 +56,21 @@ class MenuUsername extends React.Component {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={this.handleClose}>
-            <NavLink to='/profile' className={classes.link}>
+          <MenuItem onClick={() => {
+            this.handleClose();
+            this.props.cambiarVentana('profile')
+          }}>
+            {/* <NavLink to='/profile' className={classes.link}> */}
                 Perfil
-            </NavLink>
+            {/* </NavLink> */}
           </MenuItem>
-          <MenuItem onClick={this.handleClose}>
-            <NavLink to='/misProductos' className={classes.link}>
+          <MenuItem onClick={() => {
+            this.handleClose();
+            this.props.cambiarVentana('myProducts')
+          }}>
+            {/* <NavLink to='/misProductos' className={classes.link}> */}
                 Mis productos
-            </NavLink>
+            {/* </NavLink> */}
             </MenuItem>
           <MenuItem onClick={this.logout}>Cerrar sesion</MenuItem>
         </Menu>

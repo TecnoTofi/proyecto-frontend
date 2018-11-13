@@ -18,7 +18,7 @@ import WorstFiveIcon from '@material-ui/icons/TrendingDown';
 import HistorialIcon from '@material-ui/icons/Assignment';
 import GraficoIcon from '@material-ui/icons/Assessment';
 import CamionIcon from '@material-ui/icons/LocalShipping';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import ProductForm from './ProductForm';
 import AssociateForm from './AssociateForm';
 
@@ -57,12 +57,15 @@ class Drawer extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List>
-          <NavLink to='/profile' className={classes.link}>
-            <ListItem button>
+          {/* <NavLink to='/profile' className={classes.link}> */}
+            <ListItem button onClick={() => {
+              this.toggleDrawer(); //por alguna razon no se esta llamando
+              this.props.cambiarVentana('profile');
+            }}>
                 <ListItemIcon><UserIcon /></ListItemIcon>
                 <ListItemText primary='Mi perfil' />
             </ListItem>
-          </NavLink>
+          {/* </NavLink> */}
           <ListItem button>
               <ListItemIcon><WalletIcon /></ListItemIcon>
               <ListItemText primary='Mis metodos de pago' />
@@ -81,12 +84,15 @@ class Drawer extends React.Component {
               <ListItemText primary='Historial de despachos' />
           </ListItem>
           <Divider />
-          <NavLink to='/misProductos' className={classes.link}>
-           <ListItem button>
+          {/* <NavLink to='/misProductos' className={classes.link}> */}
+           <ListItem button onClick={() => {
+             this.toggleDrawer(); //por alguna razon no se esta llamando
+             this.props.cambiarVentana('myProducts');
+           }}>
               <ListItemIcon><ProductsIcon /></ListItemIcon>
               <ListItemText primary='Mis productos' />
            </ListItem>
-          </NavLink> 
+          {/* </NavLink>  */}
           <ProductForm 
             categories={this.props.categories} 
             onClick={this.props.onClickProduct}

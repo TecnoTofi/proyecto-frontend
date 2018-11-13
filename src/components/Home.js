@@ -2,12 +2,12 @@ import React from 'react';
 import 'typeface-roboto';
 import Typography from '@material-ui/core/Typography';
 
-function Dashboard(){
+function Home(){
     return(
         <div>
-            <Typography variant='h4'>Dashboard</Typography>
+            <Typography variant='h4'>Home</Typography>
         </div>
     );
 }
 
-export default Dashboard;
+export default Home;
