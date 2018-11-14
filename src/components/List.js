@@ -22,13 +22,29 @@ const styles = theme => ({
 
 class List extends Component{
 
-    constructor(props){
-        super(props);
-        this.state = {
+    // constructor(props){
+    //     super(props);
+        state = {
+            listado: [],
+            categorias: [],
+            tipos: [],
             searchName: '',
             selectedCategory: [],
             selectedType: []
         }
+    // }
+
+    async componentWillMount(){
+        let listado = await this.props.getContent();
+        let categorias = await this.props.getCategories();
+        let tipos = [];
+        if(this.props.flag === 'companias')
+            tipos = await this.props.getTipos();
+        await this.setState({
+            listado: listado,
+            categorias: categorias,
+            tipos: tipos
+        });
     }
 
     onSearchNameChange = (e) => {
@@ -54,7 +70,7 @@ class List extends Component{
     render(){
         const { classes } = this.props;
 
-        let filteredList = this.props.listado.filter((item) => {
+        let filteredList = this.state.listado.filter((item) => {
             return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
         });
 
@@ -101,15 +117,15 @@ class List extends Component{
                             <SelectMultiple
                                 flagType={this.props.flag}
                                 flagForm={false}
-                                content={this.props.categories}
+                                content={this.state.categorias}
                                 onChange={this.handleSelectCategories}
                             />
-                            {this.props.tipos ? (
+                            {this.props.flag === 'companias' ? (
                                 <SelectMultiple
                                     flagType={this.props.flag}
                                     titulo='Tipo/s'
                                     flagForm={false}
-                                    content={this.props.tipos}
+                                    content={this.state.tipos}
                                     onChange={this.handleSelectTypes}
                                 />
                             ) : null}

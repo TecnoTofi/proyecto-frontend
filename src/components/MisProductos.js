@@ -25,6 +25,17 @@ const styles = theme => ({
 
 class MisProductos extends Component{
 
+    state = {
+        productos: []
+    }
+
+    async componentWillMount(){
+        let productos = await this.props.getProductos();
+        await this.setState({
+            productos: productos
+        })
+    }
+
     handleDelete = () =>{
         console.log("borrar")
     }
@@ -38,58 +49,51 @@ class MisProductos extends Component{
         return (
             <Paper className={classes.root}>
                 <Table className={classes.table}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            Codigo
-                        </TableCell>
-                        <TableCell>
-                            Nombre
-                        </TableCell>
-                        <TableCell>
-                            Precio
-                        </TableCell>
-                        <TableCell>
-                            Stock
-                        </TableCell>
-                        <TableCell>
-                            Acciones
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {this.props.products.map(product => (
-                        <TableRow key={product.id}>
+                    <TableHead>
+                        <TableRow>
                             <TableCell>
-                                {product.code}
+                                Codigo
                             </TableCell>
                             <TableCell>
-                                {product.name}    
+                                Nombre
                             </TableCell>
                             <TableCell>
-                                {product.price}    
+                                Precio
                             </TableCell>
                             <TableCell>
-                                {product.stock}
-                            </TableCell>
-                            <TableCell>
-                                <IconButton onClick={this.handleEdit}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton onClick={this.handleDelete}>
-                                    <DeleteIcon />
-                                </IconButton> 
+                                Acciones
                             </TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
+                    </TableHead>
+                    <TableBody>
+                        {this.state.productos.map(product => (
+                            <TableRow key={product.id}>
+                                <TableCell>
+                                    {product.code}
+                                </TableCell>
+                                <TableCell>
+                                    {product.name}    
+                                </TableCell>
+                                <TableCell>
+                                    {product.price}    
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton onClick={this.handleEdit}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton onClick={this.handleDelete}>
+                                        <DeleteIcon />
+                                    </IconButton> 
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             </Paper>
         );
     }
 }
-
-MisProductos.PropTypes = {
+MisProductos.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
