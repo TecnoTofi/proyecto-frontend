@@ -29,6 +29,11 @@ class SimpleSelect extends React.Component {
     type: ''
   };
 
+  componentWillMount(){
+    console.log(this.props.selectedValue);
+    this.setState({typo: this.props.selectedValue})
+  }
+
   handleChange = event => {
     this.setState({[event.target.name]: event.target.value}, () => {
       this.props.onChange(this.state.type);

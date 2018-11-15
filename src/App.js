@@ -315,9 +315,47 @@ class App extends Component {
 	// }
 }
 
+getCompanyById = async () => {
+  let compania = await fetch(`${url}/api/company/${this.state.loggedUser.userCompanyId}`)
+            .then(res => (
+              res.json()
+            ))
+            .then(data => {
+              return data;
+            })
+            .catch(err => console.log(`Error al buscar Company : ${err}`));
+  return compania;
+}
+
+getUserById = async () => {
+  let usuario = await fetch(`${url}/api/user/${this.state.loggedUser.userId}`)
+            .then(res => (
+              res.json()
+            ))
+            .then(data => {
+              return data;
+            })
+            .catch(err => {
+              console.log(`Error al buscar Usuario : ${err}`);
+            });
+  return usuario;
+}
+
   registroUsuarioEmpresa = (request) => {
 
     axios.post(`${url}/api/auth/signup`, request)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  modificarPerfil = (request) => {
+
+    axios.post(`${url}/api/auth/update/user/${this.state.loggedUser.userId}/company/${this.state.loggedUser.userCompanyId}`,
+    request)
       .then(res => {
         console.log(res);
       })
@@ -504,7 +542,14 @@ class App extends Component {
   }
 
   mostrarPerfil = () => {
-    return <Profile />
+    return <Profile 
+      getUser = {this.getUserById}
+      getCompany = {this.getCompanyById}
+      userId = {this.state.loggedUser.userId}
+      companyId = {this.state.loggedUser.userCompanyId}
+      getCategories={this.getCompanyCategories}
+      modificarPerfil={this.modificarPerfil}
+    />
   }
   
 mostrarMisProductos = () => {
