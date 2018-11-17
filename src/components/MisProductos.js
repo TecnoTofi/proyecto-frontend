@@ -30,7 +30,7 @@ class MisProductos extends Component{
     }
 
     async componentWillMount(){
-        let productos = await this.props.getProductos();
+        let productos = await this.props.getProductos(this.props.company);
         await this.setState({
             productos: productos
         })

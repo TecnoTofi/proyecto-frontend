@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import { Header } from './components/layouts/';
-import List from './components/List';
+import CompanyList from './components/CompanyList';
+import ProductList from './components/ProductList';
 import axios from 'axios';
-// import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
@@ -33,7 +33,7 @@ class App extends Component {
       companyCategories: [],
       userTypes: [],
       companies:[],
-      productCategory:[],
+      productCategories:[],
       products:[],
       myProducts: [],
       cart: [],
@@ -61,6 +61,15 @@ class App extends Component {
 
   cambiarVentana = (ventana) => {
     this.setState({shownWindow: ventana});
+    // if(ventana === 'companies'){
+    //   // console.log('llegue a buscar companies');
+    //   this.getAllCompanies();
+    //   this.getCompanyCategories();
+    //   this.getCompanyTypes();
+    // }else if(ventana === 'productsGeneric'){
+    //   this.getAllProducts();
+    //   this.getProductCategories();
+    // }
   }
 
   verificarToken = (token) => {
@@ -88,7 +97,7 @@ class App extends Component {
 							userCompanyName: data.userData.userCompanyName,
 							userCompanyId: data.userData.userCompanyId
 						}
-					})//, () => this.getMisProductos()) //esto no tiene que ir aca!
+					})
 				}
 			})
             .catch(err => {
@@ -101,65 +110,31 @@ class App extends Component {
   }
 
   getCompanyTypes = async () => {
-
-    // let request = new Request(`${url}/api/company/type`, {
-    //   method: 'GET',
-    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-    //   credentials: 'same-origin'
-    // });
-
     let tipos = await fetch(`${url}/api/company/type`)
                             .then(response => (
                               response.json()
                             ))
                             .then(data => {
+                              console.log('tipos empresa', data);
                               return data;
+                              // this.setState({companyTypes: data});
                             })
                             .catch(err => console.log(err));
     return tipos;
-
-    // fetch(`${url}/api/company/type`)
-    //   .then(res => {
-    //     res.json()
-    //       .then(data => {
-    //         // console.log(`Info de CompanyCategory obtenida : ${data}`);
-    //         this.setState({companyTypes: data});
-    //       })
-    //       .catch(err => {
-    //         console.log(`Error al buscar CompanyType : ${err}`);
-    //       });
-    //   });
   }
 
   getCompanyCategories = async () => {
-
-    // let request = new Request(`${url}/api/company/category`, {
-    //   method: 'GET',
-    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-    //   credentials: 'same-origin'
-    // });
-
     let categories = await fetch(`${url}/api/company/category`)
                             .then(response => (
                               response.json()
                             ))
                             .then(data => {
+                              console.log('categorias empresa', data);
                               return data;
+                              // this.setState({companyCategories: data});
                             })
                             .catch(err => console.log(err));
     return categories;
-
-    // fetch(`${url}/api/company/category`)
-    //   .then(res => {
-    //     res.json()
-    //       .then(data => {
-    //         // console.log(`Info de CompanyCategory obtenida : ${data}`);
-    //         this.setState({companyCategories: data});
-    //       })
-    //       .catch(err => {
-    //         console.log(`Error al buscar CompanyCategory : ${err}`);
-    //       });
-    //   });
   }
 
   getUserRolesSignup = () => {
@@ -167,7 +142,6 @@ class App extends Component {
       .then(res => {
         res.json()
           .then(data => {
-            // console.log(`Info de Role obtenida : ${data}`);
             this.setState({userTypes: data});
           })
           .catch(err => {
@@ -177,12 +151,6 @@ class App extends Component {
   }
 
   getAllCompanies = async () => {
-    // let request = new Request(`${url}/api/company`, {
-    //   method: 'GET',
-    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-    //   credentials: 'same-origin'
-    // });
-
     let companias = await fetch(`${url}/api/company`)
                             .then(response => (
                               response.json()
@@ -192,128 +160,63 @@ class App extends Component {
                                 comp.imagePath = `${url}/${comp.imagePath}`;
                                 return comp;
                               });
+                              console.log('companias', companias);
                               return companias;
+                              // this.setState({companies: companias});
                             })
                             .catch(err => console.log(err));
     return companias;
-
-
-    // fetch(`${url}/api/company`)
-    // .then(res => {
-    //   res.json()
-    //     .then(data => {
-    //       let companias = data.map(comp => {
-    //         comp.imagePath = `${url}/${comp.imagePath}`;
-    //         return comp;
-    //       })
-    //       this.setState({companies: companias});
-    //     })
-    //     .catch(err => {
-    //       console.log(`Error al buscar Company : ${err}`);
-    //     });
-    // });
   }
 
   getAllProducts = async () => {
-
-    let categories = await fetch(`${url}/api/product`)
+    let productos = await fetch(`${url}/api/product`)
                               .then(response => (
                                 response.json()
                               ))
                               .then(data => {
-                                let productos = data.map(prod => {
+                                let response = data.map(prod => {
                                             prod.imagePath = `${url}/${prod.imagePath}`;
                                             return prod;
                                           });
-                                return productos;
+                                console.log('productos', response);
+                                return response;
+                                // this.setState({products: response});
                               })
                               .catch(err => console.log(err));
-    return categories;
-
-    // fetch(`${url}/api/product`)
-    //   .then(res => {
-    //     res.json()
-    //       .then(data => {
-    //         // console.log(`Info de Product obtenida : ${data}`);
-    //         let productos = data.map(prod => {
-    //           prod.imagePath = `${url}/${prod.imagePath}`;
-    //           return prod;
-    //         })
-    //         this.setState({products: productos});
-    //       })
-    //       .catch(err => {
-    //         console.log(`Error al buscar Product : ${err}`);
-    //       });
-    //   });
+    return productos;
   }
 
   getProductCategories = async () => {
-
-    // let request = new Request(`${url}/api/product/category`, {
-    //   method: 'GET',
-    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-    //   credentials: 'same-origin'
-    // });
-
     let categories = await fetch(`${url}/api/product/category`)
                               .then(response => (
                                 response.json()
                               ))
                               .then(data => {
+                                console.log('categorias productos', data);
                                 return data;
+                                // this.setState({productCategories: data})
                               })
                               .catch(err => console.log(err));
     return categories;
-
-    // fetch(`${url}/api/product/category`)
-    //   .then(res => {
-    //     res.json()
-    //       .then(data => {
-    //         // console.log(`Info de ProductCategory obtenida : ${data}`);
-    //         this.setState({productCategory: data});
-    //       })
-    //       .catch(err => {
-    //         console.log(`Error al buscar ProductCategory : ${err}`);
-    //       });
-    //   });
   }
 
-  getMisProductos = async () => {
-	  // console.log('llego');
-    let token = cookies.get('access_token');
-      if(token){
-      let request = new Request(`${url}/api/product/company/${this.state.loggedUser.userCompanyId}`, {
-        method: 'GET',
-        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-        credentials: 'same-origin'
-        });
-        
-        let productos = await fetch(request)
+  getProductsByCompany = async (id) => {
+    console.log('llegue', 'id', id)
+    let productos = await fetch(`${url}/api/product/company/${id}`)
                                 .then(response => (
                                   response.json()
                                 ))
                                 .then(data => {
-                                  // console.log(data);
-                                  return data;
+                                  console.log('data', data);
+                                  let response = data.map(prod => {
+                                              prod.imagePath = `${url}/${prod.imagePath}`;
+                                              return prod;
+                                            });
+                                  return response;
                                 })
                                 .catch(err => console.log(err));
-        return productos;
-      }
-  // 	fetch(request)
-	// 		.then(response => response.json())
-	// 		.then(data => {
-  //       // console.log(data);
-  //       let productos = data.map(prod => {
-  //         prod.imagePath = `${url}/${prod.imagePath}`;
-  //         return prod;
-  //       })
-	// 			this.setState({myProducts: productos}, () => {
-  //         this.carcarCarrito();//esto se tiene que ir de aca
-  //       });
-	// 		})
-	// 		.catch(err => console.log(err));
-	// }
-}
+      return productos;
+  }
 
 getCompanyById = async () => {
   let compania = await fetch(`${url}/api/company/${this.state.loggedUser.userCompanyId}`)
@@ -342,7 +245,6 @@ getUserById = async () => {
 }
 
   registroUsuarioEmpresa = (request) => {
-
     axios.post(`${url}/api/auth/signup`, request)
       .then(res => {
         console.log(res);
@@ -353,7 +255,7 @@ getUserById = async () => {
   }
 
   modificarPerfil = (request) => {
-
+    console.log(request.getAll());
     axios.post(`${url}/api/auth/update/user/${this.state.loggedUser.userId}/company/${this.state.loggedUser.userCompanyId}`,
     request)
       .then(res => {
@@ -431,7 +333,6 @@ getUserById = async () => {
   }
 
   registroProducto = (request) => {
-
     let token = cookies.get('access_token');
     if(token){
     
@@ -455,7 +356,6 @@ getUserById = async () => {
   }
 
   asociarProducto = (body) => {
-
     let token = cookies.get('access_token');
     if(token){
 
@@ -482,12 +382,17 @@ getUserById = async () => {
   }
 
   seleccionarCompany = (id) => {
-    console.log('empresa clickeada: ', id);
-    this.setState({companiaSeleccionada: id});
+    // console.log('idEmpresa', typeof this.state.companiaSeleccionada);
+    // console.log('idEmpresa', this.state.companiaSeleccionada);
+    this.setState({companiaSeleccionada: Number(id), shownWindow: 'productsCompany'});
+  }
+
+  getEmpresaSeleccionada = () => {
+    return this.state.companiaSeleccionada;
   }
 
   mostrarCompanias = () => {
-    return <List
+    return <CompanyList
       listado={this.state.companies}
       flag='companias'
       categories={this.state.companyCategories}
@@ -497,7 +402,7 @@ getUserById = async () => {
   }
 
   mostrarProductos = () => {
-    return <List 
+    return <CompanyList 
       listado={this.state.products}
       flag='productos'
       categories={this.state.productCategory}
@@ -505,40 +410,14 @@ getUserById = async () => {
   }
 
   mostrarCompanyProducts = async () => {
-
-    let token = cookies.get('access_token');
-    let request = new Request(`${url}/api/product/company/${this.state.companiaSeleccionada}`, {
-			method: 'GET',
-			headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-			credentials: 'same-origin'
-			});		
-			
-		await fetch(request)
-			.then(response => response.json())
-			.then(data => {
-        return <List 
-          listado={data}
-          flag='productos'
-          categories={this.state.productCategory}
-          companiaSeleccionada={this.state.companiaSeleccionada}
-        />
-      })
-      .catch(err => console.log(err));
-    
-    //cambiar el this.state.products, debe obtener el listado por medio de un fetch
-    // let productos = this.state.products;
-    // .filter(prod => {
-    //   return prod.companyId === id;
-      
-    // });
-            
-
-    // return <List 
-    //   listado={productos}
-    //   flag='productos'
-    //   categories={this.state.productCategory}
-    //   companiaSeleccionada={this.state.companiaSeleccionada}
-    // />
+    // console.log(this.state.companiaSeleccionada);;
+    // let productos = await this.getProductsByCompany(this.state.companiaSeleccionada);
+    return <CompanyList 
+      listado={this.getProductsByCompany}
+      comapny={this.state.companiaSeleccionada}
+      flag='productos'
+      categories={this.state.productCategory}
+    />;
   }
 
   mostrarPerfil = () => {
@@ -630,7 +509,7 @@ mostrarMisProductos = () => {
               <Dashboard />
             ) : (
               this.state.shownWindow === 'companies' ? (
-                <List
+                <CompanyList
                   flag='companias'
                   getContent={this.getAllCompanies}
                   getCategories={this.getCompanyCategories}
@@ -639,17 +518,25 @@ mostrarMisProductos = () => {
                 />
               ) : (
                 this.state.shownWindow === 'productsGeneric' ? (
-                  <List 
+                  <ProductList 
                     flag='productos'
                     getContent={this.getAllProducts}
                     getCategories={this.getProductCategories}
                   />
                 ) : (
                   this.state.shownWindow === 'productsCompany' ? (
-                    this.mostrarCompanyProducts()
+                    <ProductList 
+                      flag='productos'
+                      getContent={this.getProductsByCompany}
+                      company={this.state.companiaSeleccionada}
+                      getCategories={this.getProductCategories}
+                    />
                   ) : (
                     this.state.shownWindow === 'myProducts' ? (
-                      <MisProductos getProductos={this.getMisProductos} />
+                      <MisProductos
+                        getProductos={this.getProductsByCompany}
+                        company={this.state.loggedUser.userCompanyId}
+                      />
                     ) : (
                       this.state.shownWindow === 'carrito' ? (
                         this.mostrarCarrito()
@@ -666,16 +553,6 @@ mostrarMisProductos = () => {
               )
             )
           )}
-          {/* <Switch>
-            <Route path='/' component={Dashboard} exact />
-            <Route path='/companies' component={this.mostrarCompanias} />
-            <Route path='/products' component={this.mostrarProductos} />
-            <Route path='/profile' component={this.mostrarPerfil} />
-            <Route path='/carrito' component={this.mostrarCarrito} />
-            <Route path='/misProductos' component={this.mostrarMisProductos} />
-            <Route path='/company/products' component={this.mostrarCompanyProducts} />
-          </Switch> */}
-          {/* <Footer /> */}
         </Fragment>
     );
   }

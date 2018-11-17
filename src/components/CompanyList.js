@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Item from './Item';
+import Item from './CompanyItem';
 import SelectMultiple from './SelectMultiple';
 
 const styles = theme => ({
@@ -35,11 +35,29 @@ class List extends Component{
     // }
 
     async componentWillMount(){
-        let listado = await this.props.getContent();
+        // console.log('companyId, mount', this.props);
+        this.getInfo();
+    }
+
+    async componentWillReceiveProps(){
+        // console.log('recibe', this.props);
+        // console.log('flag', this.props.flag)
+        this.getInfo();
+    }
+
+    async getInfo(){
+        
+        // let listado = [];
+        // if(!this.props.company && this.props.company !== 0){
+            // console.log('companyId', this.props.company);
+            let listado = await this.props.getContent();
+        // }
+        // else
+        //     listado = await this.props.getContent();
         let categorias = await this.props.getCategories();
-        let tipos = [];
-        if(this.props.flag === 'companias')
-            tipos = await this.props.getTipos();
+        // let tipos = [];
+        // if(this.props.flag === 'companias')
+            let tipos = await this.props.getTipos();
         await this.setState({
             listado: listado,
             categorias: categorias,
