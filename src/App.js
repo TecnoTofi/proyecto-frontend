@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Carrito from './components/Cart/Cart';
 import MisProductos from './components/MisProductos';
+import ProductForm from './components/ProductForm';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -115,7 +116,7 @@ class App extends Component {
                               response.json()
                             ))
                             .then(data => {
-                              console.log('tipos empresa', data);
+                              // console.log('tipos empresa', data);
                               return data;
                               // this.setState({companyTypes: data});
                             })
@@ -129,7 +130,7 @@ class App extends Component {
                               response.json()
                             ))
                             .then(data => {
-                              console.log('categorias empresa', data);
+                              // console.log('categorias empresa', data);
                               return data;
                               // this.setState({companyCategories: data});
                             })
@@ -160,7 +161,7 @@ class App extends Component {
                                 comp.imagePath = `${url}/${comp.imagePath}`;
                                 return comp;
                               });
-                              console.log('companias', companias);
+                              // console.log('companias', companias);
                               return companias;
                               // this.setState({companies: companias});
                             })
@@ -178,7 +179,7 @@ class App extends Component {
                                             prod.imagePath = `${url}/${prod.imagePath}`;
                                             return prod;
                                           });
-                                console.log('productos', response);
+                                // console.log('productos', response);
                                 return response;
                                 // this.setState({products: response});
                               })
@@ -192,7 +193,7 @@ class App extends Component {
                                 response.json()
                               ))
                               .then(data => {
-                                console.log('categorias productos', data);
+                                // console.log('categorias productos', data);
                                 return data;
                                 // this.setState({productCategories: data})
                               })
@@ -207,7 +208,7 @@ class App extends Component {
                                   response.json()
                                 ))
                                 .then(data => {
-                                  console.log('data', data);
+                                  // console.log('data', data);
                                   let response = data.map(prod => {
                                               prod.imagePath = `${url}/${prod.imagePath}`;
                                               return prod;
@@ -255,7 +256,7 @@ getUserById = async () => {
   }
 
   modificarPerfil = (request) => {
-    console.log(request.getAll());
+    // console.log(request.getAll());
     axios.post(`${url}/api/auth/update/user/${this.state.loggedUser.userId}/company/${this.state.loggedUser.userCompanyId}`,
     request)
       .then(res => {
@@ -496,9 +497,9 @@ mostrarMisProductos = () => {
             companyTypes={this.state.companyTypes}
             companyCategories={this.state.companyCategories}
             userTypes={this.state.userTypes}
-            categories={this.state.productCategory}
+            getCategories={this.getProductCategories}
             registrarProducto={this.registroProducto}
-            products={this.state.products}
+            getProducts={this.getAllProducts}
             companies={this.state.companies}
             registroEmpresaProducto={this.asociarProducto}
           />
@@ -527,6 +528,7 @@ mostrarMisProductos = () => {
                   this.state.shownWindow === 'productsCompany' ? (
                     <ProductList 
                       flag='productos'
+                      flagCart={true}
                       getContent={this.getProductsByCompany}
                       company={this.state.companiaSeleccionada}
                       getCategories={this.getProductCategories}
@@ -544,7 +546,14 @@ mostrarMisProductos = () => {
                         this.state.shownWindow === 'profile' ? (
                           this.mostrarPerfil()
                         ) : (
-                          null
+                          this.state.shownWindow === 'productForm' ? (
+                            <ProductForm 
+                              getCategories={this.getProductCategories}
+                              onClick={this.registroProducto}
+                            />
+                          ) : (
+                            null
+                          )
                         )
                       )
                     )

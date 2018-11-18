@@ -19,6 +19,7 @@ export default class AssociateForm extends Component{
         super(props);
         this.state = {
             open: false,
+            productos: [],
             companyId:0,
             productId:-1,
             productName: '',
@@ -31,6 +32,20 @@ export default class AssociateForm extends Component{
             productPriceError:'',
             productStockError: ''
         };
+    }
+
+    async componentWillMount() {
+        this.getInfo();
+    }
+
+    async componentWillReceiveProps(){
+        this.getInfo();
+    }
+
+    getInfo = async () => {
+        let productos = await this.props.getProducts();
+        console.log(productos);
+        await this.setState({productos: productos});
     }
 
     validate = () => {
@@ -171,7 +186,7 @@ export default class AssociateForm extends Component{
                     <DialogTitle id='form-dialog-title'>Asociar producto</DialogTitle> 
                     <DialogContent>
                         <SelectForm
-                            content={this.props.products}
+                            content={this.state.productos}
                             onChange={this.onSelectChange}
                             required
                             label={'Productos'}

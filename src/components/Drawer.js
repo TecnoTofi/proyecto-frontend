@@ -18,7 +18,6 @@ import WorstFiveIcon from '@material-ui/icons/TrendingDown';
 import HistorialIcon from '@material-ui/icons/Assignment';
 import GraficoIcon from '@material-ui/icons/Assessment';
 import CamionIcon from '@material-ui/icons/LocalShipping';
-// import { NavLink } from 'react-router-dom';
 import ProductForm from './ProductForm';
 import AssociateForm from './AssociateForm';
 
@@ -57,7 +56,6 @@ class Drawer extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List>
-          {/* <NavLink to='/profile' className={classes.link}> */}
             <ListItem button onClick={() => {
               this.toggleDrawer(); //por alguna razon no se esta llamando
               this.props.cambiarVentana('profile');
@@ -65,7 +63,6 @@ class Drawer extends React.Component {
                 <ListItemIcon><UserIcon /></ListItemIcon>
                 <ListItemText primary='Mi perfil' />
             </ListItem>
-          {/* </NavLink> */}
           <ListItem button>
               <ListItemIcon><WalletIcon /></ListItemIcon>
               <ListItemText primary='Mis metodos de pago' />
@@ -84,7 +81,6 @@ class Drawer extends React.Component {
               <ListItemText primary='Historial de despachos' />
           </ListItem>
           <Divider />
-          {/* <NavLink to='/misProductos' className={classes.link}> */}
            <ListItem button onClick={() => {
              this.toggleDrawer(); //por alguna razon no se esta llamando
              this.props.cambiarVentana('myProducts');
@@ -92,15 +88,14 @@ class Drawer extends React.Component {
               <ListItemIcon><ProductsIcon /></ListItemIcon>
               <ListItemText primary='Mis productos' />
            </ListItem>
-          {/* </NavLink>  */}
           <ProductForm 
-            categories={this.props.categories} 
+            getCategories={this.props.getCategories}
             onClick={this.props.onClickProduct}
           />
           <AssociateForm
             companyId={this.props.companyId}
-            products={this.props.products} 
-            companies={this.props.companies} 
+            getProducts={this.props.getProducts} 
+            // companies={this.props.companies} 
             onClick={this.props.onClickAssociate}
           />
         <Divider />

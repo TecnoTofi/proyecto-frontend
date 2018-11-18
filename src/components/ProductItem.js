@@ -9,6 +9,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CartIcon from '@material-ui/icons/AddShoppingCart';
+
 // import { NavLink } from 'react-router-dom';
 
 const styles = {
@@ -45,6 +47,12 @@ class ImgMediaCard extends Component {
             <Typography gutterBottom variant="h5" component="h2">
               {this.props.item.name}
             </Typography>
+            <Typography gutterBottom variant="caption" component="h2">
+              {this.props.item.price}
+            </Typography>
+            <Typography gutterBottom variant="overline" component="h2">
+              {this.props.item.description}
+            </Typography>
             {/* <Typography component="p">
             {props.item.description}
             </Typography> */}
@@ -67,6 +75,12 @@ class ImgMediaCard extends Component {
             <Button size="small" color="primary">
               Ver
             </Button>
+            {this.props.flagCart ? (
+              <Button size="small" color="primary">
+                <CartIcon className={classes.leftIcon} />
+                Agregar
+              </Button>
+            ) : null}
           </Fragment>
         )}
           

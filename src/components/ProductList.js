@@ -131,7 +131,12 @@ class List extends Component{
                         <Grid container spacing={24} style={{padding: 24}}>
                             {filteredList.map(item => (
                                 <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
-                                    <Item item={item} flag={this.props.flag} onCompanyClick={this.props.onCompanyClick} />
+                                    <Item
+                                    item={item}
+                                    flag={this.props.flag}
+                                    onCompanyClick={this.props.onCompanyClick}
+                                    flagCart={this.props.flagCart}
+                                    />
                                 </Grid>
                             ))}
                         </Grid>
