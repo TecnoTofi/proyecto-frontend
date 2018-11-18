@@ -75,6 +75,18 @@ class SignupForm extends Component{
         }
     }
 
+    async componentWillMount(){
+        let categories = await this.props.getCategories();
+        let userTypes = await this.props.getUserTypes();
+        let companyTypes = await this.props.getCompanyTypes();
+
+        await this.setState({
+            categories: categories,
+            userTypes: userTypes,
+            companyTypes: companyTypes
+        })
+    }
+
     validate = () => {
         let isError = false;
         const errors = {
@@ -592,14 +604,14 @@ class SignupForm extends Component{
                         onKeyPress={this.onEnterPress}
                     />
                     <SelectSignup 
-                        content={this.props.companyTypes}
+                        content={this.state.companyTypes}
                         onChange={this.onSelectTypeChange}
                         selectError={this.state.companyTypeError}
                         label={'Tipo de empresa'}
                         helper={'Seleccione el tipo de empresa'}
                     />
                     <SelectSignup 
-                        content={this.props.companyCategories}
+                        content={this.state.categories}
                         onChange={this.onSelectCategoryChange}
                         selectError={this.state.companyCategoryError}
                         label={'Rubro de la empresa'}

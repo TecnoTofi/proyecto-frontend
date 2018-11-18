@@ -50,7 +50,7 @@ function ButtonAppBar(props) {
             <Drawer
               cambiarVentana={props.cambiarVentana}
               companyId={props.loggedUser.userCompanyId}
-              getCategories={props.getCategories}
+              getCategories={props.getProductCategories}
               onClickProduct={props.registrarProducto}
               getProducts={props.getProducts}
               companies={props.companies}
@@ -111,9 +111,9 @@ function ButtonAppBar(props) {
             <Fragment>
               <LoginForm onClick={props.login} />
               <SignupForm onClick={props.signup}
-                  companyTypes={props.companyTypes} 
-                  companyCategories={props.companyCategories} 
-                  userTypes={props.userTypes}
+                  getCompanyTypes={props.getCompanyTypes} 
+                  getCategories={props.getCompanyCategories} 
+                  getUserTypes={props.getUserTypes}
               />
             </Fragment>
           )}

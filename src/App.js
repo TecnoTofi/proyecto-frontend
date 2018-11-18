@@ -49,9 +49,9 @@ class App extends Component {
     if(token){
       	this.verificarToken(token);
     }
-    else{
-      this.getUserRolesSignup();
-    }
+    // else{
+    //   this.getUserRolesSignup();
+    // }
   
     // this.getCompanyTypes();
     // this.getCompanyCategories();
@@ -138,17 +138,18 @@ class App extends Component {
     return categories;
   }
 
-  getUserRolesSignup = () => {
-    fetch(`${url}/api/user/role/signup`)
-      .then(res => {
-        res.json()
-          .then(data => {
-            this.setState({userTypes: data});
-          })
-          .catch(err => {
-            console.log(`Error al buscar Role : ${err}`);
-          });
-      });
+  getUserTypes = async () => {
+    let userTypes = await fetch(`${url}/api/user/role/signup`)
+                            .then(response => (
+                              response.json()
+                            ))
+                            .then(data => {
+                              // console.log('user Types', data);
+                              return data;
+                              // this.setState({userTypes: data});
+                            })
+                            .catch(err => console.log(err));
+    return userTypes;
   }
 
   getAllCompanies = async () => {
@@ -446,6 +447,24 @@ mostrarMisProductos = () => {
     this.setState({cart: datosTest});
   }
 
+  agregarAlCarrito = (producto) => {
+    let cart = this.state.cart;
+    producto.quantity = 1;
+    producto.priceEnvio = 100
+    cart.push(producto);
+    this.setState({
+      cart: cart
+    })
+  }
+
+  cambiarCantidadProdCarrito = async (id, cantidad) => {
+    let cart = await this.state.cart.map(prod => {
+      if(prod.id === id) prod.quantity = cantidad;
+      return prod;
+    });
+    this.setState({cart: cart});
+  }
+
   borrarItemCarrito = (id) => {
     let carrito = this.state.cart.filter(item => {
       return item.id !== id;
@@ -494,10 +513,10 @@ mostrarMisProductos = () => {
             login={this.login}
             logout={this.logout}
             signup={this.registroUsuarioEmpresa}
-            companyTypes={this.state.companyTypes}
-            companyCategories={this.state.companyCategories}
-            userTypes={this.state.userTypes}
-            getCategories={this.getProductCategories}
+            getCompanyTypes={this.getCompanyTypes}
+            getCompanyCategories={this.getCompanyCategories}
+            getUserTypes={this.getUserTypes}
+            getProductCategories={this.getProductCategories}
             registrarProducto={this.registroProducto}
             getProducts={this.getAllProducts}
             companies={this.state.companies}
@@ -529,6 +548,7 @@ mostrarMisProductos = () => {
                     <ProductList 
                       flag='productos'
                       flagCart={true}
+                      agregarAlCarrito={this.agregarAlCarrito}
                       getContent={this.getProductsByCompany}
                       company={this.state.companiaSeleccionada}
                       getCategories={this.getProductCategories}
@@ -541,7 +561,12 @@ mostrarMisProductos = () => {
                       />
                     ) : (
                       this.state.shownWindow === 'carrito' ? (
-                        this.mostrarCarrito()
+                        <Carrito 
+                          productos={this.state.cart} 
+                          onDelete={this.borrarItemCarrito} 
+                          cartEnvioChange={this.cartEnvioChange}
+                          cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
+                        />
                       ) : (
                         this.state.shownWindow === 'profile' ? (
                           <Profile 

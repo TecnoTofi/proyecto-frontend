@@ -136,6 +136,7 @@ class List extends Component{
                                     flag={this.props.flag}
                                     onCompanyClick={this.props.onCompanyClick}
                                     flagCart={this.props.flagCart}
+                                    agregarAlCarrito={this.props.agregarAlCarrito}
                                     />
                                 </Grid>
                             ))}

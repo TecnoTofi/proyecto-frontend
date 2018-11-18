@@ -28,6 +28,10 @@ class ImgMediaCard extends Component {
     this.props.onCompanyClick(this.props.item.id);
   }
 
+  agregarAlCarrito = () => {
+    this.props.agregarAlCarrito(this.props.item);
+  }
+
   render(){
     const { classes } = this.props;
 
@@ -76,7 +80,7 @@ class ImgMediaCard extends Component {
               Ver
             </Button>
             {this.props.flagCart ? (
-              <Button size="small" color="primary">
+              <Button size="small" color="primary" onClick={this.agregarAlCarrito}>
                 <CartIcon className={classes.leftIcon} />
                 Agregar
               </Button>

@@ -28,7 +28,7 @@ function CartTotal(props){
     const { classes, productos } = props;
 
     let subTotal = productos.reduce((total, prod) => {
-        return total + prod.price;
+        return total + (prod.price * prod.quantity);
     }, 0);
     
     let subTotalEnvios = productos.reduce((total, prod) => {

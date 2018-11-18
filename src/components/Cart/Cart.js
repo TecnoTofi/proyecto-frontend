@@ -31,7 +31,8 @@ const styles = theme => ({
 class Cart extends Component{
 
     handleSelectChange = (productId, quantity) => {
-        console.log('funca cambio select');
+        console.log('funca cambio select', productId, quantity);
+        this.props.cambiarCantidadProdCarrito(productId, quantity);
     }
 
     handlePickerChange = (productId, selected) => {
