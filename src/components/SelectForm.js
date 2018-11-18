@@ -26,12 +26,15 @@ const styles = theme => ({
 
 class SimpleSelect extends React.Component {
   state = {
-    type: ''
+    type: 0
   };
 
-  componentWillMount(){
-    console.log(this.props.selectedValue);
-    this.setState({typo: this.props.selectedValue})
+  async componentWillReceiveProps(){
+    if(this.props.flag === 'profile'){
+      let type = this.props.getSelectedCompany();
+      // console.log(typeof type);
+      await this.setState({type: Number(type)})
+    }
   }
 
   handleChange = event => {
@@ -44,29 +47,30 @@ class SimpleSelect extends React.Component {
     const { classes } = this.props;
 
     return (
-      <form className={classes.root} autoComplete="off">
-       
+      // <form className={classes.root} autoComplete='off'>
+       <div className={classes.root}>
         <FormControl 
           className={classes.formControl} 
           error={this.props.selectError ? true : false}
         >
-          <InputLabel htmlFor="type-helper">{this.props.label}</InputLabel>
+          <InputLabel htmlFor='type-helper'>{this.props.label}</InputLabel>
           <Select
             name='type'
             value={this.state.type}
             onChange={this.handleChange}
             // helperText={this.props.selectError}
             // error={this.props.selectError ? true : false}
-            input={<Input name="type" id="type-helper" />}
+            input={<Input name='type' id='type-helper' />}
           >
-            <MenuItem value="">
+            <MenuItem value=''>
               <em>Seleccione</em>
             </MenuItem>
             {this.props.content.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
           </Select>
           <FormHelperText>{this.props.selectError ? this.props.selectError : this.props.helper}</FormHelperText>
         </FormControl>
-      </form>
+        </div>
+      // </form>
     );
   }
 }

@@ -544,7 +544,14 @@ mostrarMisProductos = () => {
                         this.mostrarCarrito()
                       ) : (
                         this.state.shownWindow === 'profile' ? (
-                          this.mostrarPerfil()
+                          <Profile 
+                            getUser = {this.getUserById}
+                            getCompany = {this.getCompanyById}
+                            userId = {this.state.loggedUser.userId}
+                            companyId = {this.state.loggedUser.userCompanyId}
+                            getCategories={this.getCompanyCategories}
+                            modificarPerfil={this.modificarPerfil}
+                          />
                         ) : (
                           this.state.shownWindow === 'productForm' ? (
                             <ProductForm 
