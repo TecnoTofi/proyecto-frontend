@@ -72,6 +72,12 @@ class MenuUsername extends React.Component {
                 Mis productos
             {/* </NavLink> */}
             </MenuItem>
+            <MenuItem onClick={() => {
+              this.handleClose();
+              this.props.cambiarVentana('package')
+            }}>
+              Package
+            </MenuItem>
           <MenuItem onClick={this.logout}>Cerrar sesion</MenuItem>
         </Menu>
       </div>

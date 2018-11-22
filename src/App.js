@@ -10,6 +10,8 @@ import Profile from './components/Profile';
 import Carrito from './components/Cart/Cart';
 import MisProductos from './components/MisProductos';
 import ProductForm from './components/ProductForm';
+import ModificarProducto from './components/ModificarProducto';
+import Package from './components/PackageForm';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -246,6 +248,49 @@ getUserById = async () => {
   return usuario;
 }
 
+getMisPackage = async () => {
+  let token = cookies.get('access_token');
+    if(token){
+    let request = new Request(`${url}/api/package/company/${this.state.loggedUser.userCompanyId}`, {
+      method: 'GET',
+      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+      credentials: 'same-origin'
+      });
+      
+      let packages = await fetch(request)
+                              .then(response => (
+                                response.json()
+                              ))
+                              .then(data => {
+                                return data;
+                              })
+                              .catch(err => console.log(err));
+      return packages;
+    }
+}
+
+getLineasPackage = async (id) => {
+  let token = cookies.get('access_token');
+    if(token){
+    let request = new Request(`${url}/api/package/products/${id}`, {
+      method: 'GET',
+      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+      credentials: 'same-origin'
+      });
+      
+      let packages = await fetch(request)
+                              .then(response => (
+                                response.json()
+                              ))
+                              .then(data => {
+                                console.log(data);
+                                return data;
+                              })
+                              .catch(err => console.log(err));
+      return packages;
+    }
+}
+
   registroUsuarioEmpresa = (request) => {
     axios.post(`${url}/api/auth/signup`, request)
       .then(res => {
@@ -432,20 +477,53 @@ getUserById = async () => {
       modificarPerfil={this.modificarPerfil}
     />
   }
+
+  mostrarPackages = () => {
+    return <Package
+    getCompany = {this.getCompanyById}
+    companyId = {this.state.loggedUser.userCompanyId}
+    getMisProductos = {this.getMisProductos}
+    getMisPackage = {this.getMisPackage}
+    getLineasPackage = {this.getLineasPackage}
+    />
+  }
+
+  modificarProducto = (request,id) => {
+    axios.post(`${url}/api/product/update/company/${id}`,
+      request)
+        .then(res => {
+          console.log(res);
+            
+        })
+        .catch(err => {
+          console.log(err);
+        });
+  }
+
+  eliminarProducto = (id) =>{
+      axios.post(`${url}/api/product/delete/company/${id}`)
+        .then(res => {
+          console.log(res);
+            
+        })
+        .catch(err => {
+          console.log(err);
+        });
+  }
   
 mostrarMisProductos = () => {
 	return <MisProductos products={this.state.myProducts} />
   }
 
-  carcarCarrito = () => {
-    let datosTest = this.state.myProducts.map(prod => {
-      prod.quantity = 1;
-      prod.priceEnvio = 100;
-      prod.envio = false;
-      return prod;
-    });
-    this.setState({cart: datosTest});
-  }
+  // cargarCarrito = () => {
+  //   let datosTest = this.state.myProducts.map(prod => {
+  //     prod.quantity = 1;
+  //     prod.priceEnvio = 100;
+  //     prod.envio = false;
+  //     return prod;
+  //   });
+  //   this.setState({cart: datosTest});
+  // }
 
   agregarAlCarrito = (producto) => {
     let cart = this.state.cart;
@@ -584,7 +662,11 @@ mostrarMisProductos = () => {
                               onClick={this.registroProducto}
                             />
                           ) : (
+                            this.state.shownWindow === 'package' ? (
+                            this.mostrarPackages()
+                            ) : (
                             null
+                            )
                           )
                         )
                       )

@@ -319,11 +319,10 @@ class SignupForm extends Component{
         this.setState({[e.target.name]: e.target.value});
     }
 
-    onSelectTypeChange = (tipo) => {
-        let type = Number(tipo);
-        this.setState({companyType: type}, () => {
-            this.setState({role: type});
-        });
+    onSelectTypeChange = (id) => {
+        let companyTypeName = this.state.companyTypes.find(type => type.id === id).name;
+        let role = this.state.userTypes.find(rol => rol.name === companyTypeName);
+        this.setState({companyType: Number(id), role: Number(role.id)});
     }
 
     onSelectCategoryChange = (tipo) => {
