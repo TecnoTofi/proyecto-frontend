@@ -90,21 +90,15 @@ class List extends Component{
         if(this.state.selectedCategory.length > 0){
             filteredList = filteredList.filter(item => {
                 let res = false;
-                if(this.props.flag === 'productos'){
-                    let i = 0;
-                    let counter = 0;
-                    while(i<item.categories.length){
-                        if(this.state.selectedCategory.includes(item.categories[i].id)){
-                            counter++;
-                        }
-                        i++;
+                let i = 0;
+                let counter = 0;
+                while(i<item.categories.length){
+                    if(this.state.selectedCategory.includes(item.categories[i].id)){
+                        counter++;
                     }
-                    if(counter > 0) res = true;
-                    else res = false;
+                    i++;
                 }
-                else{
-                    res = this.state.selectedCategory.includes(Number(item.categoryId));
-                }
+                if(counter > 0) res = true;
                 return res;
             });
         }
