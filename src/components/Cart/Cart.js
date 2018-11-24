@@ -31,29 +31,19 @@ const styles = theme => ({
 class Cart extends Component{
 
     handleSelectChange = (productId, quantity) => {
-        console.log('funca cambio select', productId, quantity);
         this.props.cambiarCantidadProdCarrito(productId, quantity);
     }
 
     handlePickerChange = (productId, selected) => {
-        console.log('funca cambio picker');
-        let value = selected === 1 ? false : true;
-        this.props.cartEnvioChange(productId, value);
+        let value = false;
+        if(Number(selected) !== 1) value = true;
+        this.props.cartEnvioChange(productId, value, selected);
     }
-
-    // handleDelete = (productId) => {
-    //     console.log('funca borrado', productId);
-    // }
-
     render(){
-
-        const { classes, productos } = this.props;
+        const { productos, subTotal, subTotalEnvios, total } = this.props.cart;
 
         return(
             <Fragment>
-                {/* <Typography variant='h5'>
-                    Carrito
-                </Typography> */}
                 <Paper>
                     <Table>
                         <TableHead>
@@ -88,6 +78,7 @@ class Cart extends Component{
                                     <TableCell>
                                         <CartPickers 
                                             priceEnvio={prod.priceEnvio}
+                                            envioType={prod.envioType}
                                             productId={prod.id}
                                             onChange={this.handlePickerChange}
                                         />
@@ -97,7 +88,7 @@ class Cart extends Component{
                         </TableBody>
                     </Table>
                 </Paper>
-                <CartTotal productos={productos} />
+                <CartTotal subTotal={subTotal} subTotalEnvios={subTotalEnvios} total={total} />
             </Fragment>
         );
     }

@@ -20,16 +20,16 @@ export default class AssociateForm extends Component{
         this.state = {
             open: false,
             productos: [],
-            companyId:0,
-            productId:-1,
+            companyId: 0,
+            productId: 0,
             productName: '',
             productDescription: '',
-            productPrice:'',
-            productStock:'',
-            productIdError:0,
+            productPrice: '',
+            productStock: '',
+            productIdError: 0,
             productNameError: '',
             productDescriptionError: '',
-            productPriceError:'',
+            productPriceError: '',
             productStockError: ''
         };
     }
@@ -42,10 +42,10 @@ export default class AssociateForm extends Component{
     validate = () => {
         let isError = false;
         const errors = {
-            productIdError:0,
+            productIdError: 0,
             productNameError: '',
             productDescriptionError: '',
-            productPriceError:'',
+            productPriceError: '',
             productStockError: ''
         };
 
@@ -143,6 +143,14 @@ export default class AssociateForm extends Component{
         event.preventDefault();
         const error = this.validate();
         if (!error){
+            // console.log('productId', this.state.productId);
+            // console.log('productos', this.state.productos);
+            let product = this.state.productos.filter(prod => {
+                return Number(prod.id) === this.state.productId
+            })[0];
+            // console.log('product', product);
+            let {imageName, imagePath} = product;
+            // console.log('imagen', imageName, imagePath);
 
 			let request = {
 				companyId: this.props.companyId,
@@ -150,9 +158,11 @@ export default class AssociateForm extends Component{
 				productName: this.state.productName,
 				productDescription: this.state.productDescription,
 				productPrice: this.state.productPrice,
-				productStock: this.state.productStock,
+                productStock: this.state.productStock,
+                imageName: imageName,
+                imagePath: imagePath
 			}
-
+            // console.log('request', request);
             this.props.onClick(request);
             this.handleToggle();
         }

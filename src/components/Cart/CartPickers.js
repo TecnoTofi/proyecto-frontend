@@ -11,10 +11,13 @@ class CartPickers extends Component{
         value: '1',
     };
 
+    componentDidMount(){
+        this.setState({value: this.props.envioType});
+    }
+
     handleChange = (event) => {
-        this.setState({value: event.target.value}, () => {
-            this.props.onChange(this.props.productId, Number(this.state.value));
-        })
+        this.setState({value: event.target.value});
+        this.props.onChange(this.props.productId, event.target.value);
     }
 
     render(){

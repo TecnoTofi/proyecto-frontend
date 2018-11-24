@@ -40,7 +40,7 @@ function MediaControlCard(props) {
             height='10%'
             width='20%'
             className={classes.cover}
-            src={`${props.product.imagePath}`}
+            src={`${props.product.imageUrl}`}
             title={props.product.name}
         />
         <div className={classes.details}>

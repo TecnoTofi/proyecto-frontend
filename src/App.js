@@ -8,10 +8,9 @@ import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Carrito from './components/Cart/Cart';
+import CartFunctions from './components/Cart/CartFunctions';
 import MisProductos from './components/MisProductos';
 import ProductForm from './components/ProductForm';
-import ModificarProducto from './components/ModificarProducto';
-import Package from './components/PackageForm';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -39,7 +38,12 @@ class App extends Component {
       productCategories:[],
       products:[],
       myProducts: [],
-      cart: [],
+      cart: {
+        productos: [],
+        subTotal: 0,
+        subTotalEnvios: 0,
+        total: 0
+      },
       companiaSeleccionada: 0
     }
   }
@@ -51,28 +55,10 @@ class App extends Component {
     if(token){
       	this.verificarToken(token);
     }
-    // else{
-    //   this.getUserRolesSignup();
-    // }
-  
-    // this.getCompanyTypes();
-    // this.getCompanyCategories();
-    // this.getAllCompanies();
-    // this.getAllProducts();
-    // this.getProductCategories();
   }
 
   cambiarVentana = (ventana) => {
     this.setState({shownWindow: ventana});
-    // if(ventana === 'companies'){
-    //   // console.log('llegue a buscar companies');
-    //   this.getAllCompanies();
-    //   this.getCompanyCategories();
-    //   this.getCompanyTypes();
-    // }else if(ventana === 'productsGeneric'){
-    //   this.getAllProducts();
-    //   this.getProductCategories();
-    // }
   }
 
   verificarToken = (token) => {
@@ -161,7 +147,7 @@ class App extends Component {
                             ))
                             .then(data => {
                               let companias = data.map(comp => {
-                                comp.imagePath = `${url}/${comp.imagePath}`;
+                                comp.imageUrl = `${url}/${comp.imagePath}`;
                                 return comp;
                               });
                               // console.log('companias', companias);
@@ -179,7 +165,7 @@ class App extends Component {
                               ))
                               .then(data => {
                                 let response = data.map(prod => {
-                                            prod.imagePath = `${url}/${prod.imagePath}`;
+                                            prod.imageUrl = `${url}/${prod.imagePath}`;
                                             return prod;
                                           });
                                 // console.log('productos', response);
@@ -212,7 +198,7 @@ class App extends Component {
                                 .then(data => {
                                   // console.log('data', data);
                                   let response = data.map(prod => {
-                                              prod.imagePath = `${url}/${prod.imagePath}`;
+                                              prod.imageUrl = `${url}/${prod.imagePath}`;
                                               return prod;
                                             });
                                   return response;
@@ -463,63 +449,12 @@ getLineasPackage = async (id) => {
   }
 
   seleccionarCompany = (id) => {
-    // console.log('idEmpresa', typeof this.state.companiaSeleccionada);
-    // console.log('idEmpresa', this.state.companiaSeleccionada);
     this.setState({companiaSeleccionada: Number(id), shownWindow: 'productsCompany'});
   }
 
   getEmpresaSeleccionada = () => {
     return this.state.companiaSeleccionada;
   }
-
-  mostrarCompanias = () => {
-    return <CompanyList
-      listado={this.state.companies}
-      flag='companias'
-      categories={this.state.companyCategories}
-      tipos={this.state.companyTypes}
-      onCompanyClick={this.seleccionarCompany}
-    />;
-  }
-
-  mostrarProductos = () => {
-    return <CompanyList 
-      listado={this.state.products}
-      flag='productos'
-      categories={this.state.productCategory}
-    />;
-  }
-
-  mostrarCompanyProducts = async () => {
-    // console.log(this.state.companiaSeleccionada);;
-    // let productos = await this.getProductsByCompany(this.state.companiaSeleccionada);
-    return <CompanyList 
-      listado={this.getProductsByCompany}
-      comapny={this.state.companiaSeleccionada}
-      flag='productos'
-      categories={this.state.productCategory}
-    />;
-  }
-
-  mostrarPerfil = () => {
-    return <Profile 
-      getUser = {this.getUserById}
-      getCompany = {this.getCompanyById}
-      userId = {this.state.loggedUser.userId}
-      companyId = {this.state.loggedUser.userCompanyId}
-      getCategories={this.getCompanyCategories}
-      modificarPerfil={this.modificarPerfil}
-    />
-  }
-
-  // mostrarPackages = () => {
-  //   console.log(this.state.loggedUser.userCompanyId);
-  //   return <Package
-  //     companyId = {this.state.loggedUser.userCompanyId}
-  //     // getProducts = {this.getProductsByCompany}
-  //     // crearPaquete = {this.crearPaquete}
-  //   />
-  // }
 
   modificarProducto = (request,id) => {
     axios.post(`${url}/api/product/update/company/${id}`,
@@ -543,75 +478,86 @@ getLineasPackage = async (id) => {
           console.log(err);
         });
   }
-  
-mostrarMisProductos = () => {
-	return <MisProductos products={this.state.myProducts} />
-  }
-
-  // cargarCarrito = () => {
-  //   let datosTest = this.state.myProducts.map(prod => {
-  //     prod.quantity = 1;
-  //     prod.priceEnvio = 100;
-  //     prod.envio = false;
-  //     return prod;
-  //   });
-  //   this.setState({cart: datosTest});
-  // }
 
   agregarAlCarrito = (producto, cantidad=1) => {
-    let cart = this.state.cart;
-    producto.quantity = cantidad;
-    producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
-    cart.push(producto);
-    this.setState({
-      cart: cart
-    })
+    let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
+    this.setState({cart: cart}, () => this.cartTotalCalculate());
+    // let cart = this.state.cart;
+    // let existePos = 0;
+    // let existe = cart.productos.filter((prod, i) => {
+    //   let val = prod.id === producto.id;
+    //   if(val) existePos = i;
+    //   return val;
+    // })[0];
+
+    // if(existe){
+    //   existe.quantity += cantidad
+    //   cart.productos[existePos] = existe;
+    // }
+    // else{
+    //   producto.quantity = cantidad;
+    //   producto.envio = false;
+    //   producto.envioType = '1';
+    //   producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
+    //   cart.productos.push(producto);
+    // }
+    // this.setState({
+    //   cart: cart
+    // }, () => this.cartTotalCalculate())
+  }
+  
+  borrarItemCarrito = (id) => {
+    // let cart = this.state.cart;
+    // let productos = cart.productos.filter(item => {
+    //   return item.id !== id;
+    // });
+    // cart.productos = productos;
+    let cart = CartFunctions.borrarItemCarrito(this.state.cart, id);
+    this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
   cambiarCantidadProdCarrito = async (id, cantidad) => {
-    let cart = await this.state.cart.map(prod => {
-      if(prod.id === id) prod.quantity = cantidad;
-      return prod;
-    });
-    this.setState({cart: cart});
-  }
-
-  borrarItemCarrito = (id) => {
-    let carrito = this.state.cart.filter(item => {
-      return item.id !== id;
-    });
-    this.setState({cart: carrito});
-  }
-
-  cartEnvioChange = (id, value) => {
-    let productos = this.state.cart;
-    let data = productos.map(prod => {
-      if(prod.id === id) prod.envio = value;
-      return prod;
-    });
-    this.setState({cart: data});
-  }
-
-  mostrarCarrito = () => {
-    // id: 1, //de CompanyProduct
-    // name: 'Jugo Citrus Frute x 20 unidades', //de CompanyProduct
-    // price: 300, //de CompanyProduct
-    // companyId: 1
-    // company: 'Salus',
-    // quantity: 1,
-    // priceEnvio: 150
-    // envio: false
-    // let datosTest = await this.state.myProducts.map(prod => {
-    //   prod.quantity = 1;
-    //   prod.priceEnvio = 100
+    // let cart = this.state.cart;
+    // let productos = cart.productos.map(prod => {
+    //   if(prod.id === id) prod.quantity = cantidad;
     //   return prod;
     // });
-    // this.setState({cart: datosTest});
-    return <Carrito 
-      productos={this.state.cart} 
-      onDelete={this.borrarItemCarrito} 
-      cartEnvioChange={this.cartEnvioChange}
-    />
+    // cart.productos = productos;
+    let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, id, cantidad);
+    this.setState({cart: cart}, () => this.cartTotalCalculate());
+  }
+
+  cartEnvioChange = (id, value, selectedEnvio) => {
+    // let cart = this.state.cart;
+    // let productos = cart.productos.map(prod => {
+    //   if(prod.id === id){
+    //     prod.envio = value;
+    //     prod.envioType = selectedEnvio
+    //   }
+    //   return prod;
+    // });
+    // cart.productos = productos;
+    let cart = CartFunctions.cartEnvioChange(this.state.cart, id, value, selectedEnvio);
+    this.setState({cart: cart}, () => this.cartTotalCalculate());
+  }
+
+  cartTotalCalculate = () => {
+    // let cart = this.state.cart;
+    // let subTotal = 0;
+    // let subTotalEnvios = 0;
+    // let total = 0;
+
+    // cart.productos.map(prod => {
+    //   subTotal += prod.price * prod.quantity;
+    //   if(prod.envio) subTotalEnvios += prod.priceEnvio
+    //   total += subTotal + subTotalEnvios;
+    //   return true;
+    // });
+    // cart.subTotal = subTotal;
+    // cart.subTotalEnvios = subTotalEnvios;
+    // cart.total = total;
+    let cart = CartFunctions.cartTotalCalculate(this.state.cart);
+    this.setState({cart: cart});
   }
 
   render() {
@@ -675,8 +621,8 @@ mostrarMisProductos = () => {
                     ) : (
                       this.state.shownWindow === 'carrito' ? (
                         <Carrito 
-                          productos={this.state.cart} 
-                          onDelete={this.borrarItemCarrito} 
+                          cart={this.state.cart}
+                          onDelete={this.borrarItemCarrito}
                           cartEnvioChange={this.cartEnvioChange}
                           cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
                         />
@@ -697,11 +643,7 @@ mostrarMisProductos = () => {
                               onClick={this.registroProducto}
                             />
                           ) : (
-                            this.state.shownWindow === 'package' ? (
-                            this.mostrarPackages()
-                            ) : (
                             null
-                            )
                           )
                         )
                       )

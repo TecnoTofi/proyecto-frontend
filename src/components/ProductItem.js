@@ -43,7 +43,7 @@ class ImgMediaCard extends Component {
             alt={this.props.item.name}
             className={classes.media}
             height="140"
-            src={`${this.props.item.imagePath}`}
+            src={`${this.props.item.imageUrl}`}
             title={this.props.item.name}
             
           />

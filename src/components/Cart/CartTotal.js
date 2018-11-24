@@ -25,17 +25,17 @@ const styles = () => ({
 });
 
 function CartTotal(props){
-    const { classes, productos } = props;
+    const { classes, subTotal, subTotalEnvios, total } = props;
 
-    let subTotal = productos.reduce((total, prod) => {
-        return total + (prod.price * prod.quantity);
-    }, 0);
+    // let subTotal = productos.reduce((total, prod) => {
+    //     return total + (prod.price * prod.quantity);
+    // }, 0);
     
-    let subTotalEnvios = productos.reduce((total, prod) => {
-        if(prod.envio) total = total + prod.priceEnvio;
-        return total;
-    }, 0);
-    let total = subTotal + subTotalEnvios;
+    // let subTotalEnvios = productos.reduce((total, prod) => {
+    //     if(prod.envio) total = total + prod.priceEnvio;
+    //     return total;
+    // }, 0);
+    // let total = subTotal + subTotalEnvios;
 
     return(
         <Fragment>

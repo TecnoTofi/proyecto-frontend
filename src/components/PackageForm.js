@@ -3,9 +3,9 @@ import 'typeface-roboto';
 // import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import SelectMultiple from './SelectMultiple';
-import UploadImage from './UploadImage';
+// import FormControl from '@material-ui/core/FormControl';
+// import SelectMultiple from './SelectMultiple';
+// import UploadImage from './UploadImage';
 import SelectForm from './SelectForm';
 // import SelectType from './SelectForm';
 import Dialog from '@material-ui/core/Dialog';
