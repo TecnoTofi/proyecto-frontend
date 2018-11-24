@@ -55,6 +55,8 @@ function ButtonAppBar(props) {
               getProducts={props.getProducts}
               companies={props.companies}
               onClickAssociate={props.registroEmpresaProducto}
+              getProductosByCompany={props.getProductosByCompany}
+              crearPaquete = {props.crearPaquete}
             />
           ) : null}
             <Typography

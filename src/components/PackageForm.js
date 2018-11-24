@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import 'typeface-roboto';
+// import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
@@ -14,7 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import AddIcon from '@material-ui/icons/AddBox';
+import AddIcon from '@material-ui/icons/LibraryBooks';
 import Validator from 'validator';
 // import InputLabel from '@material-ui/core/InputLabel';
 
@@ -24,36 +25,31 @@ export default class PackageForm extends Component{
     constructor(props){
         super(props);
         this.state = {
-            retorno:{
                 open: false,
                 price: '',
                 description: '',
                 companyId: 0,
+                productosSeleccionados:[],
                 priceError: '',
                 descriptionError: '',
                 companyIdError: '',
-            }, 
-        products:[],
-        packages:[]
-     }
-    }
+                productId:0, 
+                cantidad:'',
+                products:[],
+                //packages:[]
+            }
+    };
 
     async componentWillMount(){
-        let company= await this.props.getCompany(this.props.companyId);
-         console.log('company', company);
-        let products = await this.props.getMisProductos(this.props.companyId);
+        let products = await this.props.getProducts(this.props.companyId);
          console.log('products', products);
-        let packages= await this.props.getMisPackage(this.props.companyId);
-        console.log('packages', packages);
-        
+        /*let packages= await this.props.getMisPackage(this.props.companyId);
+        console.log('packages', packages);*/
 
-        
         await this.setState({
-                companyId:company.id,
                 products: products,
-                packages: packages,
-
-            });
+                companyId: this.props.companyId
+        }, () => console.log(this.state));
      };
 
     validate = () => {
@@ -94,26 +90,25 @@ export default class PackageForm extends Component{
         return isError;
     };
 
-
     handleToggle = () => {
         this.setState({
           open: !this.state.open,
           price: '',
-            description: '',
-            companyId: 0,
-            priceError: '',
-            descriptionError: '',
-            companyIdError: '',
+          description: '',
+        //   companyId: 0,
+          productosSeleccionados:[],
+          priceError: '',
+          descriptionError: '',
+          companyIdError: '',
+          productId:0, 
+          cantidad:'',
+        //   products:[],
         });
       }
 
-
-   /* onSelectChange = (seleccionados) => {
-        let selectedCategories = seleccionados.map(selected => {
-            return selected.id;
-        })
-        this.setState({categories: selectedCategories});
-    }*/
+    onSelectChange = (value) => {
+        this.setState({productId: Number(value)});
+    }
 
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
@@ -123,16 +118,23 @@ export default class PackageForm extends Component{
         event.preventDefault();
         
         const error = this.validate();
-        // console.log(this.state);
+        console.log(this.state);
         if (!error){
 
-            const request = new FormData();
-      
-            request.set('price', this.state.price);
-            request.set('description', this.state.description);
-            request.set('companyId', this.state.companyId);
+            // const request = new FormData();
+            // request.set('price', this.state.price);
+            // request.set('description', this.state.description);
+            // request.set('companyId', this.props.companyId);
+            // request.set('products',this.state.productosSeleccionados);
 
-            this.props.onClick(request);
+            let request = {
+                price: this.state.price,
+                description: this.state.description,
+                companyId: this.props.companyId,
+                products: this.state.productosSeleccionados
+            }
+
+            this.props.crearPaquete(request);
             this.handleToggle();
         } 
     }
@@ -141,11 +143,36 @@ export default class PackageForm extends Component{
         if(e.key === 'Enter') this.onSubmit(e);
     }
 
+    agregarProducto = () =>{
+        let productosSeleccionados = this.state.productosSeleccionados;
+        let existe = productosSeleccionados.map(prod => {return prod.id}).indexOf(this.state.productId);
+
+        if(existe > -1){
+            productosSeleccionados[existe].cantidad += Number(this.state.cantidad);
+        }
+        else{
+            let prod = {'id':this.state.productId , 'cantidad': Number(this.state.cantidad)};
+            productosSeleccionados.push(prod);
+        }
+        this.setState({'cantidad': '', 'productId': 0, productosSeleccionados}, () => console.log(this.state.productosSeleccionados));
+    }
+
     render(){
-        console.log(this.state.packages);
+        //console.log(this.state.packages);
         return(
             <div>
-            <FormControl>
+                <ListItem button onClick={this.handleToggle}>
+                    <ListItemIcon><AddIcon /></ListItemIcon>
+                    <ListItemText primary='Alta paquete' />
+                </ListItem>
+                <Dialog
+                     open={this.state.open}
+                     onClose={this.handleToggle}
+                     aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Crear paquete nuevo</DialogTitle>
+                    <DialogContent>
+                    
                     <TextField
                         autoFocus
                         margin='dense'
@@ -173,25 +200,17 @@ export default class PackageForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    <Button onClick={this.handleToggle} color="primary">
-                        Cancelar
-                    </Button>
-                    <Button onClick={this.onSubmit} color="primary" variant='contained'>
-                        Aceptar
-                    </Button>
-                    </FormControl>
-                    <FormControl>
-                    <SelectForm
-                            content={this.state.packages}
-                            onChange={this.onSelectChange}
-                            required
-                            label={'Packages'}
-                            //selectError={this.state.productIdError}
-                            helper={'Seleccione el paquete'}
-                    />
+                    <ul>
+                        {this.state.productosSeleccionados.map(prod => (
+                            <li key={prod.id}>
+                                {prod.id}
+                            </li>
+                        ))}
+                    </ul>
                     <SelectForm
                             content={this.state.products}
                             onChange={this.onSelectChange}
+                            selected={this.state.productId}
                             required
                             label={'Productos'}
                             selectError={this.state.productIdError}
@@ -202,7 +221,8 @@ export default class PackageForm extends Component{
                         id='cantidad'
                         name='cantidad'
                         label='cantidad del producto'
-                        type='text'
+                        type='number'
+                        value={this.state.cantidad}
                         fullWidth
                         required
                         //helperText={this.state.descriptionError}
@@ -210,13 +230,19 @@ export default class PackageForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    <Button onClick={this.handleToggle} color="primary">
+                    <Button onClick={this.agregarProducto} color="primary" variant='contained'>
+                        Agregar
+                    </Button> 
+                    </DialogContent>
+                     <DialogActions>
+                     <Button onClick={this.handleToggle} color="primary">
                         Cancelar
                     </Button>
                     <Button onClick={this.onSubmit} color="primary" variant='contained'>
                         Aceptar
                     </Button>
-                    </FormControl>
+                     </DialogActions>
+                    </Dialog>
             </div>
         );
     }

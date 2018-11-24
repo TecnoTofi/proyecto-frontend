@@ -26,6 +26,7 @@ export default class ProductForm extends Component{
             productName: '',
             productCode: '',
             categories: [],
+            categoryList:[],
             productImage: null,
             productNameError: '',
             productCodeError: '',
@@ -44,8 +45,7 @@ export default class ProductForm extends Component{
 
     getInfo = async () => {
         let categories = await this.props.getCategories();
-        console.log(categories);
-        await this.setState({categories: categories});
+        await this.setState({categoryList: categories});
     }
 
     validate = () => {
@@ -195,7 +195,7 @@ export default class ProductForm extends Component{
                     <SelectMultiple
                         flagType='productos'
                         flagForm={true}
-                        content={this.state.categories}
+                        content={this.state.categoryList}
                         onChange={this.onSelectChange}
                         selectError={this.state.categoriesError}
                         helper={'Seleccione categorias para el producto'}

@@ -20,7 +20,7 @@ import GraficoIcon from '@material-ui/icons/Assessment';
 import CamionIcon from '@material-ui/icons/LocalShipping';
 import ProductForm from './ProductForm';
 import AssociateForm from './AssociateForm';
-
+import PackageForm from './PackageForm';
 
 const styles = {
   list: {
@@ -97,6 +97,11 @@ class Drawer extends React.Component {
             getProducts={this.props.getProducts} 
             // companies={this.props.companies} 
             onClick={this.props.onClickAssociate}
+          />
+          <PackageForm 
+            getProducts={this.props.getProductosByCompany}
+            companyId={this.props.companyId}
+            crearPaquete = {this.props.crearPaquete}
           />
         <Divider />
         <ListItem button>

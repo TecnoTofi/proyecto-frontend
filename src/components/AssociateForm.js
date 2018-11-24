@@ -35,16 +35,7 @@ export default class AssociateForm extends Component{
     }
 
     async componentWillMount() {
-        this.getInfo();
-    }
-
-    async componentWillReceiveProps(){
-        this.getInfo();
-    }
-
-    getInfo = async () => {
         let productos = await this.props.getProducts();
-        console.log(productos);
         await this.setState({productos: productos});
     }
 

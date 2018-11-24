@@ -87,14 +87,12 @@ class List extends Component{
 
     render(){
         const { classes } = this.props;
-        console.log('listado completo: ', this.state.listado);
         let filteredList = this.state.listado.filter((item) => {
             return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
         });
 
         if(this.state.selectedCategory.length > 0){
             filteredList = filteredList.filter(item => {
-                console.log('categorias seleccionadas: ', this.state.selectedCategory);
                 return this.state.selectedCategory.includes(item.categoryId);
             });
         }

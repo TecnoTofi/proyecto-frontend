@@ -35,6 +35,9 @@ class SimpleSelect extends React.Component {
       // console.log(typeof type);
       await this.setState({type: Number(type)})
     }
+    else if(this.props.selected === 0){
+      this.setState({type: 0})
+    }
   }
 
   handleChange = event => {
@@ -47,8 +50,7 @@ class SimpleSelect extends React.Component {
     const { classes } = this.props;
 
     return (
-      // <form className={classes.root} autoComplete='off'>
-       <div className={classes.root}>
+        <div className={classes.root}>
         <FormControl 
           className={classes.formControl} 
           error={this.props.selectError ? true : false}
@@ -62,15 +64,18 @@ class SimpleSelect extends React.Component {
             // error={this.props.selectError ? true : false}
             input={<Input name='type' id='type-helper' />}
           >
-            <MenuItem value=''>
+            <MenuItem value={0}>
               <em>Seleccione</em>
             </MenuItem>
-            {this.props.content.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
+            {!this.props.content.length > 0 ? (
+              null
+            ) : (
+              this.props.content.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)
+            )}
           </Select>
           <FormHelperText>{this.props.selectError ? this.props.selectError : this.props.helper}</FormHelperText>
         </FormControl>
         </div>
-      // </form>
     );
   }
 }

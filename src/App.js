@@ -205,7 +205,6 @@ class App extends Component {
   }
 
   getProductsByCompany = async (id) => {
-    console.log('llegue', 'id', id)
     let productos = await fetch(`${url}/api/product/company/${id}`)
                                 .then(response => (
                                   response.json()
@@ -428,6 +427,41 @@ getLineasPackage = async (id) => {
     }
   }
 
+  crearPaquete = (body) =>{
+    // console.log(request);
+    // axios.post(`${url}/api/package`, request)
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+
+    let token = cookies.get('access_token');
+    if(token){
+
+      let request = new Request(`${url}/api/package`, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
+        body: JSON.stringify(body)
+      });
+  
+      fetch(request)
+        .then((res) => {
+          res.json()
+            .then(data => {
+              console.log(data);
+            })
+            .catch(err => {
+              console.log(`Error al enviar registro de paquetes : ${err}`);
+            });
+        });
+    }
+    else{
+      console.log('No hay token')
+    }
+  }
+
   seleccionarCompany = (id) => {
     // console.log('idEmpresa', typeof this.state.companiaSeleccionada);
     // console.log('idEmpresa', this.state.companiaSeleccionada);
@@ -478,15 +512,14 @@ getLineasPackage = async (id) => {
     />
   }
 
-  mostrarPackages = () => {
-    return <Package
-    getCompany = {this.getCompanyById}
-    companyId = {this.state.loggedUser.userCompanyId}
-    getMisProductos = {this.getMisProductos}
-    getMisPackage = {this.getMisPackage}
-    getLineasPackage = {this.getLineasPackage}
-    />
-  }
+  // mostrarPackages = () => {
+  //   console.log(this.state.loggedUser.userCompanyId);
+  //   return <Package
+  //     companyId = {this.state.loggedUser.userCompanyId}
+  //     // getProducts = {this.getProductsByCompany}
+  //     // crearPaquete = {this.crearPaquete}
+  //   />
+  // }
 
   modificarProducto = (request,id) => {
     axios.post(`${url}/api/product/update/company/${id}`,
@@ -525,10 +558,10 @@ mostrarMisProductos = () => {
   //   this.setState({cart: datosTest});
   // }
 
-  agregarAlCarrito = (producto) => {
+  agregarAlCarrito = (producto, cantidad=1) => {
     let cart = this.state.cart;
-    producto.quantity = 1;
-    producto.priceEnvio = 100
+    producto.quantity = cantidad;
+    producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
     cart.push(producto);
     this.setState({
       cart: cart
@@ -599,6 +632,8 @@ mostrarMisProductos = () => {
             getProducts={this.getAllProducts}
             companies={this.state.companies}
             registroEmpresaProducto={this.asociarProducto}
+            getProductosByCompany = {this.getProductsByCompany}
+            crearPaquete = {this.crearPaquete}
           />
           {this.state.shownWindow === 'home' ? (
             <Home />
