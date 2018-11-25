@@ -14,7 +14,7 @@ import ProductForm from './components/ProductForm';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const url = 'https://gentle-brook-96273.herokuapp.com';
+const url = 'https://backend-ort.herokuapp.com';
 // const url = 'http://localhost:3000';
 
 class App extends Component {
