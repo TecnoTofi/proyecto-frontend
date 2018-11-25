@@ -14,8 +14,11 @@
     "universal-cookie": "^3.0.4",
     "validator": "^10.8.0"
   },
+  "engines": {
+    "node": "10.13"
+  },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "PORT=$PORT react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
