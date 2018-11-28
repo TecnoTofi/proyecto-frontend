@@ -17,8 +17,34 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/LibraryBooks';
 import Validator from 'validator';
+import UploadImage from './UploadImage';
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
 // import InputLabel from '@material-ui/core/InputLabel';
+// import PropTypes from 'prop-types';
+// import { withStyles } from '@material-ui/core/styles';
+// import List from '@material-ui/core/List';
+//import ListItem from '@material-ui/core/ListItem';
+//import ListItemText from '@material-ui/core/ListItemText';
+// import ListSubheader from '@material-ui/core/ListSubheader';
 
+// const styles = theme => ({
+//     root: {
+//       width: '100%',
+//       maxWidth: 360,
+//       backgroundColor: theme.palette.background.paper,
+//       position: 'relative',
+//       overflow: 'auto',
+//       maxHeight: 300,
+//     },
+//     listSection: {
+//       backgroundColor: 'inherit',
+//     },
+//     ul: {
+//       backgroundColor: 'inherit',
+//       padding: 0,
+//     },
+//   });
 
 export default class PackageForm extends Component{
 
@@ -30,12 +56,14 @@ export default class PackageForm extends Component{
                 description: '',
                 companyId: 0,
                 productosSeleccionados:[],
+                packageImage:null,
                 priceError: '',
                 descriptionError: '',
                 companyIdError: '',
                 productId:0, 
                 cantidad:'',
                 products:[],
+                packageImageError:'',
                 //packages:[]
             }
     };
@@ -57,7 +85,8 @@ export default class PackageForm extends Component{
         const errors = {
             priceError: '',
             descriptionError: '',
-            companyIdError: ''
+            companyIdError: '',
+            packageImageError:'',
         };
         if(!this.state.price){
             isError = true;
@@ -79,6 +108,10 @@ export default class PackageForm extends Component{
             isError = true;
           errors.companyIdError = "Debe seleccionar una compania";
         }
+        if(this.state.packageImage && this.state.packageImage.type !== 'image/jpeg' && this.state.packageImage.type !== 'image/jpg' && this.state.packageImage.type !== 'image/png'){
+            isError = true;
+            errors.imageName="Debe subir una imagen JPEG, JPG o PNG";
+        }
 
         this.setState({
             ...this.state,
@@ -95,14 +128,13 @@ export default class PackageForm extends Component{
           open: !this.state.open,
           price: '',
           description: '',
-        //   companyId: 0,
           productosSeleccionados:[],
           priceError: '',
           descriptionError: '',
           companyIdError: '',
           productId:0, 
           cantidad:'',
-        //   products:[],
+          packageImage:null,
         });
       }
 
@@ -121,20 +153,24 @@ export default class PackageForm extends Component{
         console.log(this.state);
         if (!error){
 
-            // const request = new FormData();
-            // request.set('price', this.state.price);
-            // request.set('description', this.state.description);
-            // request.set('companyId', this.props.companyId);
-            // request.set('products',this.state.productosSeleccionados);
+             const request = new FormData();
+             request.set('price', this.state.price);
+             request.set('description', this.state.description);
+             request.set('companyId', this.props.companyId);
+             request.set('products',this.state.productosSeleccionados);
+             request.append('image', this.state.packageImage, this.state.packageImage.name);
 
-            let request = {
+            /*let request = {
                 price: this.state.price,
                 description: this.state.description,
                 companyId: this.props.companyId,
-                products: this.state.productosSeleccionados
-            }
-
+                products: this.state.productosSeleccionados,
+                //packageImage:this.state.packageImage,
+            }*/
+            //console.log(request);
+            
             this.props.crearPaquete(request);
+
             this.handleToggle();
         } 
     }
@@ -155,7 +191,19 @@ export default class PackageForm extends Component{
             productosSeleccionados.push(prod);
         }
         this.setState({'cantidad': '', 'productId': 0, productosSeleccionados}, () => console.log(this.state.productosSeleccionados));
+        //SelectForm.setState.type = 0;
     }
+
+    onImageUpload = (image) => {
+        this.setState({
+            packageImage: image
+        })
+    }
+
+    handleDelete = (e) =>{
+        console.log(e.target.value)
+    }
+
 
     render(){
         //console.log(this.state.packages);
@@ -200,18 +248,23 @@ export default class PackageForm extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    <ul>
+                      <ul>
                         {this.state.productosSeleccionados.map(prod => (
-                            <li key={prod.id}>
-                                {prod.id}
+                            <li key={prod.id} >
+                                {'id Producto :' + prod.id}
+                                {'cantidad :' + prod.cantidad}
+                                <IconButton id={prod.id} onClick={this.handleDelete}>
+                                  <DeleteIcon />
+                                </IconButton>
                             </li>
                         ))}
-                    </ul>
+                      </ul>
                     <SelectForm
                             content={this.state.products}
                             onChange={this.onSelectChange}
-                            selected={this.state.productId}
+                            //selected={this.state.productId}
                             required
+                            value= {this.state.productId}
                             label={'Productos'}
                             selectError={this.state.productIdError}
                             helper={'Seleccione el producto'}
@@ -233,6 +286,7 @@ export default class PackageForm extends Component{
                     <Button onClick={this.agregarProducto} color="primary" variant='contained'>
                         Agregar
                     </Button> 
+                    <UploadImage onImageUpload={this.onImageUpload} />
                     </DialogContent>
                      <DialogActions>
                      <Button onClick={this.handleToggle} color="primary">

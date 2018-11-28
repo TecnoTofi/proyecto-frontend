@@ -30,8 +30,8 @@ const styles = theme => ({
 
 class Cart extends Component{
 
-    handleSelectChange = (productId, quantity) => {
-        this.props.cambiarCantidadProdCarrito(productId, quantity);
+    handleSelectChange = (productId, productCode, companyId, quantity) => {
+        this.props.cambiarCantidadProdCarrito(productId, productCode, companyId, quantity);
     }
 
     handlePickerChange = (productId, selected) => {
@@ -39,8 +39,9 @@ class Cart extends Component{
         if(Number(selected) !== 1) value = true;
         this.props.cartEnvioChange(productId, value, selected);
     }
+    
     render(){
-        const { productos, subTotal, subTotalEnvios, total } = this.props.cart;
+        const { contenido, subTotal, subTotalEnvios, total } = this.props.cart;
 
         return(
             <Fragment>
@@ -55,36 +56,65 @@ class Cart extends Component{
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {productos.map(prod => (
-                                <TableRow key={prod.id}>
-                                    <TableCell>
-                                        <CartProduct 
-                                            product={prod}
-                                            onClick={this.props.onDelete}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant='body1'>
-                                            ${prod.price}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <CartSelect 
-                                            quantity={prod.quantity}
-                                            productId={prod.id}
-                                            onChange={this.handleSelectChange}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <CartPickers 
-                                            priceEnvio={prod.priceEnvio}
-                                            envioType={prod.envioType}
-                                            productId={prod.id}
-                                            onChange={this.handlePickerChange}
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {contenido.map((seller) => {
+                                    let prods = seller.productos.map((prod, i) => (
+                                        <TableRow key={prod.id}>
+                                            <TableCell>
+                                                <CartProduct
+                                                    product={prod}
+                                                    onClick={this.props.onDelete}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant='body1'>
+                                                    ${prod.price}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <CartSelect 
+                                                    quantity={prod.quantity}
+                                                    product={prod}
+                                                    onChange={this.handleSelectChange}
+                                                />
+                                            </TableCell>
+                                            {i===0 ? (
+                                                <TableCell>
+                                                    <CartPickers 
+                                                        priceEnvio={prod.priceEnvio}
+                                                        envioType={prod.envioType}
+                                                        productId={prod.id}
+                                                        onChange={this.handlePickerChange}
+                                                    />
+                                                </TableCell>
+                                            ) : (
+                                                null
+                                            )}
+                                        </TableRow>
+                                    ))
+                                    let packs = seller.paquetes.map(pack => (
+                                        <TableRow key={pack.id}>
+                                            <TableCell>
+                                            <CartProduct
+                                                    product={pack}
+                                                    onClick={this.props.onDelete}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant='body1'>
+                                                    ${pack.price}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <CartSelect
+                                                    quantity={pack.quantity}
+                                                    product={pack}
+                                                    onChange={this.handleSelectChange}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                    return prods.concat(packs);
+                            })}
                         </TableBody>
                     </Table>
                 </Paper>

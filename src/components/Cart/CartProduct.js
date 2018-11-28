@@ -49,7 +49,7 @@ function MediaControlCard(props) {
                 {props.product.name}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-                {props.product.company}
+                {props.product.companyName}
             </Typography>
             </CardContent>
             <div className={classes.controls}>
@@ -57,7 +57,7 @@ function MediaControlCard(props) {
                     variant='contained'
                     color='primary'
                     onClick={() => (
-                        props.onClick(props.product.id)
+                        props.onClick(props.product.id, props.product.code, props.product.companyId)
                     )}
                 >
                     Borrar

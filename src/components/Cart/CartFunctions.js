@@ -1,88 +1,168 @@
 const agregarAlCarrito = (cart, producto, cantidad=1) => {
-    // let cart = this.state.cart;
-    let existePos = 0;
-    let existe = cart.productos.filter((prod, i) => {
-      let val = prod.id === producto.id;
-      if(val) existePos = i;
-      return val;
-    })[0];
+	let existeProd = verificarExistenciaProd(cart.contenido, producto);
 
-    if(existe){
-      existe.quantity += cantidad
-      cart.productos[existePos] = existe;
-    }
-    else{
-      producto.quantity = cantidad;
-      producto.envio = false;
-      producto.envioType = '1';
-      producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
-      cart.productos.push(producto);
-    }
-    return cart;
-    // this.setState({
-    //   cart: cart
-    // }, () => this.cartTotalCalculate())
-  }
-  
-  const borrarItemCarrito = (cart, id) => {
-    // let cart = this.state.cart;
-    let productos = cart.productos.filter(item => {
-      return item.id !== id;
-    });
-    cart.productos = productos;
-    return cart;
-    // this.setState({cart: cart}, () => this.cartTotalCalculate());
-  }
+	if(existeProd.res){
+		if(producto.code){
+			existeProd.res.productos[existeProd.productoPos].quantity += cantidad;
+			cart.contenido[existeProd.sellerPos] = existeProd.res;
+		}
+		else{
+			existeProd.res.paquetes[existeProd.productoPos].quantity += cantidad;
+			cart.contenido[existeProd.sellerPos] = existeProd.res;
+		}
+	}
+	else{
+		let existeSeller = verificarExistenciaSeller(cart.contenido, producto.companyId);
+		
+		producto.quantity = cantidad;
+		producto.envio = false;
+		producto.envioType = '1';
+		producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
 
-  const cambiarCantidadProdCarrito = (cart, id, cantidad) => {
-    // let cart = this.state.cart;
-    let productos = cart.productos.map(prod => {
-      if(prod.id === id) prod.quantity = cantidad;
-      return prod;
-    });
-    cart.productos = productos;
-    return cart;
-    // this.setState({cart: cart}, () => this.cartTotalCalculate());
-  }
+		if(existeSeller.res){
 
-  const cartEnvioChange = (cart, id, value, selectedEnvio) => {
-    // let cart = this.state.cart;
-    let productos = cart.productos.map(prod => {
-      if(prod.id === id){
-        prod.envio = value;
-        prod.envioType = selectedEnvio
-      }
-      return prod;
-    });
-    cart.productos = productos;
-    return cart;
-    // this.setState({cart: cart}, () => this.cartTotalCalculate());
-  }
+			if(producto.code) existeSeller.res.productos.push(producto);
+			else existeSeller.res.paquetes.push(producto);
 
-  const cartTotalCalculate = (cart) => {
-    // let cart = this.state.cart;
-    let subTotal = 0;
-    let subTotalEnvios = 0;
-    let total = 0;
+			cart.contenido[existeSeller.sellerPos] = existeSeller.res;
+		}
+		else{
+			let seller = {
+				sellerId: producto.companyId,
+				productos: [],
+				paquetes: []
+			}
+			if(producto.code) seller.productos.push(producto);
+			else seller.paquetes.push(producto);
 
-    cart.productos.map(prod => {
-      subTotal += prod.price * prod.quantity;
-      if(prod.envio) subTotalEnvios += prod.priceEnvio
-      total += subTotal + subTotalEnvios;
-      return true;
-    });
-    cart.subTotal = subTotal;
-    cart.subTotalEnvios = subTotalEnvios;
-    cart.total = total;
+			cart.contenido.push(seller);
+		}
+	}
+	return cart;
+}
 
-    return cart;
-    // this.setState({cart: cart});
-  }
+const verificarExistenciaProd = (contenido, producto) => {
 
-  export default {
-    agregarAlCarrito,
-    borrarItemCarrito,
-    cambiarCantidadProdCarrito,
-    cartEnvioChange,
-    cartTotalCalculate
-  }
+	let productoPos = 0;
+	let sellerPos = 0;
+
+	let res = contenido.filter((seller, i) => {
+		let encontrado = false;
+		if(seller.sellerId === producto.companyId){
+			sellerPos = i;
+			let x = 0;
+			if(producto.code){
+				while(x < seller.productos.length && !encontrado){
+					if(seller.productos[x].id === producto.id){
+						encontrado = true;
+						productoPos = x;
+					}
+					x++;
+				}
+			}
+			else{
+				while(x < seller.paquetes.length && !encontrado){
+					if(seller.paquetes[x].id === producto.id){
+						encontrado = true;
+						productoPos = x;
+					}
+					x++;
+				}
+			}
+		}
+		return encontrado;
+	})[0];
+	return { res, sellerPos, productoPos };
+}
+
+const verificarExistenciaSeller = (contenido, id) => {
+	let sellerPos = 0;
+
+	let res = contenido.filter((seller, i) => {
+		if(seller.sellerId === id){
+			sellerPos = i;
+			return true;
+		}
+		else return false;
+	})[0];
+
+	return { res, sellerPos };
+}
+
+const borrarItemCarrito = (cart, prodId, prodCode, companyId) => {
+	let seller = verificarExistenciaSeller(cart.contenido, companyId);
+	if(prodCode){
+		let productos = seller.res.productos.filter(item => {
+			return item.id !== prodId;
+		});
+		seller.res.productos = productos;
+	}
+	else{
+		let paquetes = seller.res.paquetes.filter(item => {
+			return item.id !== prodId;
+		});
+		seller.res.paquetes = paquetes;
+	}
+	cart.contenido[seller.sellerPos] = seller.res;
+	return cart;
+}
+
+const cambiarCantidadProdCarrito = (cart, prodId, prodCode, companyId, cantidad) => {
+	let product = {id: prodId, code: prodCode, companyId};
+	let seller = verificarExistenciaProd(cart.contenido, product);
+
+	if(prodCode) seller.res.productos[seller.productoPos].quantity = cantidad;
+	else seller.res.paquetes[seller.productoPos].quantity = cantidad;
+
+	cart.contenido[seller.sellerPos] = seller.res;
+	console.log(cart);
+	return cart;
+}
+
+// const cartEnvioChange = (cart, id, value, selectedEnvio) => {
+//   // let cart = this.state.cart;
+// 	let productos = cart.contenido.map(prod => {
+// 		if(prod.id === id){
+// 			prod.envio = value;
+// 			prod.envioType = selectedEnvio
+// 		}
+// 		return prod;
+// 	});
+// 	cart.contenido = productos;
+// 	return cart;
+//   // this.setState({cart: cart}, () => this.cartTotalCalculate());
+// }
+
+const calcularTotal = (cart) => {
+	let subTotal = 0;
+	let subTotalEnvios = 0;
+	let total = 0;
+
+	cart.contenido.map(seller => {
+		seller.productos.map(prod => {
+			subTotal += prod.price * prod.quantity;
+			if(prod.envio) subTotalEnvios += prod.priceEnvio
+			return true
+		});
+
+		seller.paquetes.map(pack => {
+			subTotal += pack.price * pack.quantity;
+			if(pack.envio) subTotalEnvios += pack.priceEnvio
+			return true
+		});
+		return true;
+	});
+	total = subTotal + subTotalEnvios;
+	cart.subTotal = subTotal;
+	cart.subTotalEnvios = subTotalEnvios;
+	cart.total = total;
+	return cart;
+}
+
+export default {
+	agregarAlCarrito,
+	borrarItemCarrito,
+	cambiarCantidadProdCarrito,
+	// cartEnvioChange,
+	calcularTotal
+}

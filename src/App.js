@@ -14,8 +14,8 @@ import ProductForm from './components/ProductForm';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const url = 'https://backend-ort.herokuapp.com';
-// const url = 'http://localhost:3000';
+// const url = 'https://backend-ort.herokuapp.com';
+const url = 'http://localhost:3000';
 
 class App extends Component {
 
@@ -40,7 +40,7 @@ class App extends Component {
       products:[],
       myProducts: [],
       cart: {
-        productos: [],
+        contenido: [],
         subTotal: 0,
         subTotalEnvios: 0,
         total: 0
@@ -414,39 +414,39 @@ getLineasPackage = async (id) => {
     }
   }
 
-  crearPaquete = (body) =>{
-    // console.log(request);
-    // axios.post(`${url}/api/package`, request)
-    //   .then(res => {
-    //     console.log(res);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-
+  crearPaquete = (request) =>{
     let token = cookies.get('access_token');
+    console.log('token enviado',token);
+    console.log(request);
     if(token){
-
-      let request = new Request(`${url}/api/package`, {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-        body: JSON.stringify(body)
+      let instance = axios.create({
+        baseURL: `${url}/api/package`,
+        method: 'post',
+        headers: {token: token},
+        data: request
       });
-  
-      fetch(request)
-        .then((res) => {
-          res.json()
-            .then(data => {
-              console.log(data);
-            })
-            .catch(err => {
-              console.log(`Error al enviar registro de paquetes : ${err}`);
-            });
-        });
+      instance()
+      .then(res => {
+      console.log(res);
+      })
+      .catch(err => {
+      console.log(err);
+      });
     }
     else{
-      console.log('No hay token')
+    console.log('No hay token');
     }
+    /*axios.post(`${url}/api/package`, request)
+      .then(res => {
+        console.log(res);
+        //return res.status;
+        if(res.status === 201){
+          return <Snacks />
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });*/
   }
 
   seleccionarCompany = (id) => {
@@ -482,6 +482,7 @@ getLineasPackage = async (id) => {
 
   agregarAlCarrito = (producto, cantidad=1) => {
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
+    // this.setState({cart: cart});
     this.setState({cart: cart}, () => this.cartTotalCalculate());
     // let cart = this.state.cart;
     // let existePos = 0;
@@ -507,40 +508,40 @@ getLineasPackage = async (id) => {
     // }, () => this.cartTotalCalculate())
   }
   
-  borrarItemCarrito = (id) => {
+  borrarItemCarrito = (prodId, prodCode, companyId) => {
     // let cart = this.state.cart;
     // let productos = cart.productos.filter(item => {
     //   return item.id !== id;
     // });
     // cart.productos = productos;
-    let cart = CartFunctions.borrarItemCarrito(this.state.cart, id);
+    let cart = CartFunctions.borrarItemCarrito(this.state.cart, prodId, prodCode, companyId);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
-  cambiarCantidadProdCarrito = async (id, cantidad) => {
+  cambiarCantidadProdCarrito = async (prodId, prodCode, companyId,  cantidad) => {
     // let cart = this.state.cart;
     // let productos = cart.productos.map(prod => {
     //   if(prod.id === id) prod.quantity = cantidad;
     //   return prod;
     // });
     // cart.productos = productos;
-    let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, id, cantidad);
+    let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, prodId, prodCode, companyId, cantidad);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
-  cartEnvioChange = (id, value, selectedEnvio) => {
-    // let cart = this.state.cart;
-    // let productos = cart.productos.map(prod => {
-    //   if(prod.id === id){
-    //     prod.envio = value;
-    //     prod.envioType = selectedEnvio
-    //   }
-    //   return prod;
-    // });
-    // cart.productos = productos;
-    let cart = CartFunctions.cartEnvioChange(this.state.cart, id, value, selectedEnvio);
-    this.setState({cart: cart}, () => this.cartTotalCalculate());
-  }
+  // cartEnvioChange = (id, value, selectedEnvio) => {
+  //   // let cart = this.state.cart;
+  //   // let productos = cart.productos.map(prod => {
+  //   //   if(prod.id === id){
+  //   //     prod.envio = value;
+  //   //     prod.envioType = selectedEnvio
+  //   //   }
+  //   //   return prod;
+  //   // });
+  //   // cart.productos = productos;
+  //   let cart = CartFunctions.cartEnvioChange(this.state.cart, id, value, selectedEnvio);
+  //   this.setState({cart: cart}, () => this.cartTotalCalculate());
+  // }
 
   cartTotalCalculate = () => {
     // let cart = this.state.cart;
@@ -557,7 +558,7 @@ getLineasPackage = async (id) => {
     // cart.subTotal = subTotal;
     // cart.subTotalEnvios = subTotalEnvios;
     // cart.total = total;
-    let cart = CartFunctions.cartTotalCalculate(this.state.cart);
+    let cart = CartFunctions.calcularTotal(this.state.cart);
     this.setState({cart: cart});
   }
 

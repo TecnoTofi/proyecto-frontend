@@ -22,9 +22,9 @@ class CartSelect extends Component{
         selected: this.props.quantity
     };
 
-    handleChange = (event) => {
+    handleChange = (event) => {        
         this.setState({selected: event.target.value}, () => {
-            this.props.onChange(this.props.productId, this.state.selected);
+            this.props.onChange(this.props.product.id, this.props.product.code, this.props.product.companyId, this.state.selected);
         })
     }
     

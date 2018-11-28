@@ -80,7 +80,7 @@ class SignupForm extends Component{
         let userTypes = await this.props.getUserTypes();
         let companyTypes = await this.props.getCompanyTypes();
 
-        await this.setState({
+        await this.setState({ //ver porque da error de no-op
             categories: categories,
             userTypes: userTypes,
             companyTypes: companyTypes
