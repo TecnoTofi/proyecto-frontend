@@ -481,85 +481,45 @@ getLineasPackage = async (id) => {
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
+    if(producto.companyId === this.state.loggedUser.userCompanyId) return;
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
-    // this.setState({cart: cart});
     this.setState({cart: cart}, () => this.cartTotalCalculate());
-    // let cart = this.state.cart;
-    // let existePos = 0;
-    // let existe = cart.productos.filter((prod, i) => {
-    //   let val = prod.id === producto.id;
-    //   if(val) existePos = i;
-    //   return val;
-    // })[0];
-
-    // if(existe){
-    //   existe.quantity += cantidad
-    //   cart.productos[existePos] = existe;
-    // }
-    // else{
-    //   producto.quantity = cantidad;
-    //   producto.envio = false;
-    //   producto.envioType = '1';
-    //   producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
-    //   cart.productos.push(producto);
-    // }
-    // this.setState({
-    //   cart: cart
-    // }, () => this.cartTotalCalculate())
+    console.log(cart)
   }
   
   borrarItemCarrito = (prodId, prodCode, companyId) => {
-    // let cart = this.state.cart;
-    // let productos = cart.productos.filter(item => {
-    //   return item.id !== id;
-    // });
-    // cart.productos = productos;
     let cart = CartFunctions.borrarItemCarrito(this.state.cart, prodId, prodCode, companyId);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
   cambiarCantidadProdCarrito = async (prodId, prodCode, companyId,  cantidad) => {
-    // let cart = this.state.cart;
-    // let productos = cart.productos.map(prod => {
-    //   if(prod.id === id) prod.quantity = cantidad;
-    //   return prod;
-    // });
-    // cart.productos = productos;
     let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, prodId, prodCode, companyId, cantidad);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
   // cartEnvioChange = (id, value, selectedEnvio) => {
-  //   // let cart = this.state.cart;
-  //   // let productos = cart.productos.map(prod => {
-  //   //   if(prod.id === id){
-  //   //     prod.envio = value;
-  //   //     prod.envioType = selectedEnvio
-  //   //   }
-  //   //   return prod;
-  //   // });
-  //   // cart.productos = productos;
   //   let cart = CartFunctions.cartEnvioChange(this.state.cart, id, value, selectedEnvio);
   //   this.setState({cart: cart}, () => this.cartTotalCalculate());
   // }
 
   cartTotalCalculate = () => {
-    // let cart = this.state.cart;
-    // let subTotal = 0;
-    // let subTotalEnvios = 0;
-    // let total = 0;
-
-    // cart.productos.map(prod => {
-    //   subTotal += prod.price * prod.quantity;
-    //   if(prod.envio) subTotalEnvios += prod.priceEnvio
-    //   total += subTotal + subTotalEnvios;
-    //   return true;
-    // });
-    // cart.subTotal = subTotal;
-    // cart.subTotalEnvios = subTotalEnvios;
-    // cart.total = total;
     let cart = CartFunctions.calcularTotal(this.state.cart);
     this.setState({cart: cart});
+  }
+
+  realizarPedido = () => {
+    let token = cookies.get('access_token');
+    if(!token) return
+    let request = {
+      userId: this.state.loggedUser.userId,
+      buyerId: this.state.loggedUser.userCompanyId,
+      amount: this.state.cart.total,
+      specialDiscount: 0, //luego se trabajara este valor que debera ir dentro de cada seller
+      deliveryType: 'Comprador', //trabajar este punto
+      contenido: this.state.cart.contenido
+    }
+    let response = CartFunctions.realizarPedido(request, url, token);
+    console.log(response);
   }
 
   render() {
@@ -627,6 +587,7 @@ getLineasPackage = async (id) => {
                           onDelete={this.borrarItemCarrito}
                           cartEnvioChange={this.cartEnvioChange}
                           cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
+                          realizarPedido={this.realizarPedido}
                         />
                       ) : (
                         this.state.shownWindow === 'profile' ? (

@@ -118,7 +118,12 @@ class Cart extends Component{
                         </TableBody>
                     </Table>
                 </Paper>
-                <CartTotal subTotal={subTotal} subTotalEnvios={subTotalEnvios} total={total} />
+                <CartTotal 
+                    subTotal={subTotal} 
+                    subTotalEnvios={subTotalEnvios} 
+                    total={total} 
+                    realizarPedido={this.props.realizarPedido}
+                />
             </Fragment>
         );
     }

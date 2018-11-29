@@ -159,10 +159,39 @@ const calcularTotal = (cart) => {
 	return cart;
 }
 
+const realizarPedido = (req, url, token) => {
+	let request = new Request(`${url}/api/pedido`, {
+		method: 'POST',
+		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+		credentials: 'same-origin',
+		body: JSON.stringify(req)
+	  });
+  
+	  fetch(request)
+		.then(res => {
+			console.log(res.status);
+			return res.json()
+		})
+		.then(data => {
+			// if(res.status === 200){
+			// 	console.log('Se realizo el pedido bien');
+				console.log(data);
+			// }
+			// else{
+			// 	console.log('El pedido no salio bien');
+			// }
+		})
+		.catch(err => {
+			console.log(`Error en fetch realizar peido: ${err}`);
+			//hacer llamado a snackbar para mostrar mensaje
+		})
+}
+
 export default {
 	agregarAlCarrito,
 	borrarItemCarrito,
 	cambiarCantidadProdCarrito,
 	// cartEnvioChange,
-	calcularTotal
+	calcularTotal,
+	realizarPedido
 }

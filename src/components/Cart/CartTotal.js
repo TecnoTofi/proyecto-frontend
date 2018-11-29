@@ -54,7 +54,7 @@ function CartTotal(props){
                     Total: ${`${total}`}
                 </Typography>
                 <Divider />
-                <Button variant='contained' color='primary'>Continuar</Button>
+                <Button variant='contained' color='primary' onClick={props.realizarPedido}>Continuar</Button>
             </Paper>
         </Fragment>
     );
