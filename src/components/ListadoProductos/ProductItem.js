@@ -22,7 +22,7 @@ const styles = {
   },
 };
 
-class ImgMediaCard extends Component {
+class ProductItem extends Component {
   
   handleProdClick = () => {
     this.props.onCompanyClick(this.props.item.id);
@@ -95,8 +95,8 @@ class ImgMediaCard extends Component {
   
 }
 
-ImgMediaCard.propTypes = {
+ProductItem.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ImgMediaCard);
+export default withStyles(styles)(ProductItem);

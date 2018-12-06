@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import UploadImage from './UploadImage';
+import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 // import Input from '@material-ui/core/Input';
 // import InputLabel from '@material-ui/core/InputLabel';
@@ -20,7 +20,7 @@ import Validator from 'validator';
 // import VisibilityOff from '@material-ui/icons/VisibilityOff';
 // import EditIcon from "@material-ui/icons/Create";
 // import IconButton from "@material-ui/core/IconButton";
-import Select from './SelectForm';
+import Select from '../Helpers/SelectForm';
 // import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
@@ -82,32 +82,32 @@ const styles = theme => ({
 
     async componentWillMount(){
         let company= await this.props.getCompany(this.props.companyId);
-        // console.log('comapny', company.categoryId);
+        console.log('comapny', company);
         let user = await this.props.getUser(this.props.userId);
-        // console.log('user', user);
+        console.log('user', user);
         let categories = await this.props.getCategories();
-        // console.log('categories', categories);
+        console.log('categories', categories);
         
-        await this.setState({
-                userName: user.name,
-                userEmail: user.email,
-                userDocument: user.document,
-                userPhone: user.phone,
-                userFirstStreet: user.firstStreet,
-                userSecondStreet: user.secondStreet,
-                userDoorNumber: user.doorNumber.toString(),
-                role: user.roleId,
-                companyName: company.name,
-                companyRut: company.rut,
-                companyPhone: company.phone,
-                companyFirstStreet: company.firstStreet,
-                companySecondStreet: company.secondStreet,
-                companyDoorNumber: company.doorNumber.toString(),
-                companyType: company.typeId,
-                companyDescription:company.description,
-                companyCategory: company.categoryId,
-                categories: categories
-            });
+        this.setState({
+            userName: user.name,
+            userEmail: user.email,
+            userDocument: user.document,
+            userPhone: user.phone,
+            userFirstStreet: user.firstStreet,
+            userSecondStreet: user.secondStreet,
+            userDoorNumber: user.doorNumber.toString(),
+            role: user.roleId,
+            companyName: company.name,
+            companyRut: company.rut,
+            companyPhone: company.phone,
+            companyFirstStreet: company.firstStreet,
+            companySecondStreet: company.secondStreet,
+            companyDoorNumber: company.doorNumber.toString(),
+            companyType: company.typeId,
+            companyDescription:company.description,
+            companyCategory: company.categoryId,
+            categories: categories
+        });
      };
 
      getCompanyId = () => {

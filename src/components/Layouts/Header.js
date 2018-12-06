@@ -6,14 +6,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import LoginForm from '../LoginForm';
-import SignupForm from '../SignupForm';
-import Drawer from '../Drawer';
+import LoginForm from '../Auth/LoginForm';
+import SignupForm from '../Auth/SignupForm';
+import Drawer from './Drawer';
 import HomeIcon from '@material-ui/icons/Home';
 import StoresIcon from '@material-ui/icons/Store';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ProductsIcon from '@material-ui/icons/Fastfood';
-import MenuUsername from '../MenuUsername';
+import MenuUsername from '../Helpers/MenuUsername';
 // import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
@@ -40,7 +40,7 @@ const styles = theme => ({
   }
 });
 
-function ButtonAppBar(props) {
+function Header(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -125,8 +125,8 @@ function ButtonAppBar(props) {
   );
 }
 
-ButtonAppBar.propTypes = {
+Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ButtonAppBar);
+export default withStyles(styles)(Header);

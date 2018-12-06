@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Item from './CompanyItem';
-import SelectMultiple from './SelectMultiple';
+import Item from './ProductItem';
+import SelectMultiple from '../Helpers/SelectMultiple';
 
 const styles = theme => ({
     container: {
@@ -27,10 +27,8 @@ class List extends Component{
         state = {
             listado: [],
             categorias: [],
-            tipos: [],
             searchName: '',
             selectedCategory: [],
-            selectedType: []
         }
     // }
 
@@ -50,18 +48,15 @@ class List extends Component{
         // let listado = [];
         // if(!this.props.company && this.props.company !== 0){
             // console.log('companyId', this.props.company);
-            let listado = await this.props.getContent();
+            let listado = await this.props.getContent(this.props.company);
         // }
         // else
         //     listado = await this.props.getContent();
         let categorias = await this.props.getCategories();
-        // let tipos = [];
-        // if(this.props.flag === 'companias')
-            let tipos = await this.props.getTipos();
+        
         await this.setState({
             listado: listado,
-            categorias: categorias,
-            tipos: tipos
+            categorias: categorias
         });
     }
 
@@ -87,20 +82,25 @@ class List extends Component{
 
     render(){
         const { classes } = this.props;
+
         let filteredList = this.state.listado.filter((item) => {
             return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
         });
 
         if(this.state.selectedCategory.length > 0){
             filteredList = filteredList.filter(item => {
-                return this.state.selectedCategory.includes(item.categoryId);
+                let res = false;
+                let i = 0;
+                let counter = 0;
+                while(i<item.categories.length){
+                    if(this.state.selectedCategory.includes(item.categories[i].id)){
+                        counter++;
+                    }
+                    i++;
+                }
+                if(counter > 0) res = true;
+                return res;
             });
-        }
-
-        if(this.state.selectedType.length > 0){
-            filteredList = filteredList.filter(item => {
-                return this.state.selectedType.includes(item.typeId);
-            })
         }
 
         return(
@@ -121,20 +121,17 @@ class List extends Component{
                                 content={this.state.categorias}
                                 onChange={this.handleSelectCategories}
                             />
-                            {this.props.flag === 'companias' ? (
-                                <SelectMultiple
-                                    flagType={this.props.flag}
-                                    titulo='Tipo/s'
-                                    flagForm={false}
-                                    content={this.state.tipos}
-                                    onChange={this.handleSelectTypes}
-                                />
-                            ) : null}
                         </div>
                         <Grid container spacing={24} style={{padding: 24}}>
                             {filteredList.map(item => (
                                 <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
-                                    <Item item={item} flag={this.props.flag} onCompanyClick={this.props.onCompanyClick} />
+                                    <Item
+                                    item={item}
+                                    flag={this.props.flag}
+                                    onCompanyClick={this.props.onCompanyClick}
+                                    flagCart={this.props.flagCart}
+                                    agregarAlCarrito={this.props.agregarAlCarrito}
+                                    />
                                 </Grid>
                             ))}
                         </Grid>

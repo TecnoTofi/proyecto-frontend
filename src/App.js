@@ -1,16 +1,20 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-import { Header } from './components/layouts/';
-import CompanyList from './components/CompanyList';
-import ProductList from './components/ProductList';
+import { Header } from './components/Layouts/';
+import CompanyList from './components/ListadoEmpresas/CompanyList';
+import ProductList from './components/ListadoProductos/ProductList';
 import axios from 'axios';
-import Home from './components/Home';
-import Dashboard from './components/Dashboard';
-import Profile from './components/Profile';
+import Home from './components/PaginasPrincipales/Home';
+import Dashboard from './components/PaginasPrincipales/Dashboard';
+import Profile from './components/Profile/Profile';
 import Carrito from './components/Cart/Cart';
 import CartFunctions from './components/Cart/CartFunctions';
-import MisProductos from './components/MisProductos';
-import ProductForm from './components/ProductForm';
+import MisProductos from './components/Productos/MisProductos';
+import ProductForm from './components/Productos/ProductForm';
+import HistorialCompras from './components/HistorialCompras/HistorialCompras';
+import HistorialComprasFunctions from './components/HistorialCompras/HistorialComprasFunctions';
+// import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -23,6 +27,9 @@ class App extends Component {
     super(props);
     this.state = {
       shownWindow: 'home',
+      snackbarStatus: false,
+      snackbarMessage: '',
+      snackbarVariant: '',
       logged: false,
       loggedUser: {
         userType: '',
@@ -306,31 +313,32 @@ getLineasPackage = async (id) => {
       credentials: 'same-origin',
       body: JSON.stringify({userEmail, userPassword})
     });
-
+    let status = '';
     fetch(request)
-      .then((res) => {
-        res.json()
-          .then(data => {
-            if(res.status === 200){
-				
-              	cookies.set('access_token', data.token, { path: '/' });
-            
-				this.setState({
-          shownWindow: 'dashboard',
-					logged: true,
-					loggedUser: {
-						...data.userData
-					}
-				});
-            }
-            else{
-              console.log(data.message);
-            }
-          })
-          .catch(err => {
-            console.log(`Error al enviar inicio de sesion : ${err}`);
-          });
-      });
+        .then((res) => {
+          status = res.status;
+          return res.json()
+        })
+        .then(data => {
+          if(data && status === 200) {
+            cookies.set('access_token', data.token, { path: '/' });
+            this.setState({
+              shownWindow: 'dashboard',
+              logged: true,
+              loggedUser: {
+                ...data.userData
+              }
+            });
+          }
+          else{
+            console.log('fallo'); //devolver response status para no cerrar diaog y mostar error
+            // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
+          }
+        })
+        .catch(err => {
+          console.log(`Error al enviar inicio de sesion : ${err}`);
+          this.setearSnackbar(true, 'Error al iniciar sesion', 'error');
+        });
   }
 
   logout = () => {
@@ -484,12 +492,13 @@ getLineasPackage = async (id) => {
     if(producto.companyId === this.state.loggedUser.userCompanyId) return;
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
-    console.log(cart)
+    this.setearSnackbar(true,'Producto agregado al carrito','success');
   }
   
   borrarItemCarrito = (prodId, prodCode, companyId) => {
     let cart = CartFunctions.borrarItemCarrito(this.state.cart, prodId, prodCode, companyId);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
+    this.setearSnackbar(true,'Producto eliminado del carrito','success');
   }
 
   cambiarCantidadProdCarrito = async (prodId, prodCode, companyId,  cantidad) => {
@@ -507,7 +516,7 @@ getLineasPackage = async (id) => {
     this.setState({cart: cart});
   }
 
-  realizarPedido = () => {
+  realizarPedido = async () => {
     let token = cookies.get('access_token');
     if(!token) return
     let request = {
@@ -518,13 +527,32 @@ getLineasPackage = async (id) => {
       deliveryType: 'Comprador', //trabajar este punto
       contenido: this.state.cart.contenido
     }
-    let response = CartFunctions.realizarPedido(request, url, token);
+    let {response, status} = await CartFunctions.realizarPedido(request, url, token);
+    console.log('response', response)
+    console.log('status', status);
+    if(status === 201 || status === 200) this.setearSnackbar(true,'Pedido realizado con exito','success');
+    else this.setearSnackbar(true, 'Fallo el pedido', 'error');
+    
     console.log(response);
+  }
+
+  setearSnackbar = (status, message, variant) => {
+    this.setState({
+      snackbarStatus: status,
+      snackbarMessage: message,
+      snackbarVariant: variant
+    });
   }
 
   render() {
     return (
         <Fragment>
+          <Snackbar
+            open={this.state.snackbarStatus}
+            message={this.state.snackbarMessage}
+            variant={this.state.snackbarVariant}
+            onClose={this.setearSnackbar}
+          />
           <Header 
             cambiarVentana={this.cambiarVentana}
             logged={this.state.logged}
@@ -606,7 +634,14 @@ getLineasPackage = async (id) => {
                               onClick={this.registroProducto}
                             />
                           ) : (
-                            null
+                            this.state.shownWindow === 'historialCompras' ? (
+                              <HistorialCompras
+                                userId={this.state.loggedUser.userId}
+                                url={url}
+                              />
+                            ) : (
+                              null
+                            )
                           )
                         )
                       )

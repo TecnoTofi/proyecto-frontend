@@ -18,9 +18,9 @@ import WorstFiveIcon from '@material-ui/icons/TrendingDown';
 import HistorialIcon from '@material-ui/icons/Assignment';
 import GraficoIcon from '@material-ui/icons/Assessment';
 import CamionIcon from '@material-ui/icons/LocalShipping';
-import ProductForm from './ProductForm';
-import AssociateForm from './AssociateForm';
-import PackageForm from './PackageForm';
+import ProductForm from '../Productos/ProductForm';
+import AssociateForm from '../Productos/AssociateForm';
+import PackageForm from '../Paquetes/PackageForm';
 
 const styles = {
   list: {
@@ -68,7 +68,14 @@ class Drawer extends React.Component {
               <ListItemText primary='Mis metodos de pago' />
           </ListItem>
           <Divider />
-          <ListItem button>
+          {/* <ListItem button>
+              <ListItemIcon><HistorialIcon /></ListItemIcon>
+              <ListItemText primary='Historial de compras' />
+          </ListItem> */}
+          <ListItem button onClick={() => {
+             this.toggleDrawer(); //por alguna razon no se esta llamando
+             this.props.cambiarVentana('historialCompras');
+           }}>
               <ListItemIcon><HistorialIcon /></ListItemIcon>
               <ListItemText primary='Historial de compras' />
           </ListItem>

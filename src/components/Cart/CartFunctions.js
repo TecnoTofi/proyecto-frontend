@@ -1,3 +1,5 @@
+import React from 'react';
+
 const agregarAlCarrito = (cart, producto, cantidad=1) => {
 	let existeProd = verificarExistenciaProd(cart.contenido, producto);
 
@@ -159,32 +161,35 @@ const calcularTotal = (cart) => {
 	return cart;
 }
 
-const realizarPedido = (req, url, token) => {
+const realizarPedido = async (req, url, token) => {
 	let request = new Request(`${url}/api/pedido`, {
 		method: 'POST',
 		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
 		credentials: 'same-origin',
 		body: JSON.stringify(req)
 	  });
-  
-	  fetch(request)
-		.then(res => {
-			console.log(res.status);
-			return res.json()
-		})
-		.then(data => {
-			// if(res.status === 200){
-			// 	console.log('Se realizo el pedido bien');
-				console.log(data);
-			// }
-			// else{
-			// 	console.log('El pedido no salio bien');
-			// }
-		})
-		.catch(err => {
-			console.log(`Error en fetch realizar peido: ${err}`);
-			//hacer llamado a snackbar para mostrar mensaje
-		})
+	  let status = '';
+	  let response = await fetch(request)
+					.then(res => {
+						console.log(res.status);
+						status = res.status;
+						return res.json()
+					})
+					.then(data => {
+						// if(res.status === 200){
+						// 	console.log('Se realizo el pedido bien');
+							console.log(data);
+							return data;
+						// }
+						// else{
+						// 	console.log('El pedido no salio bien');
+						// }
+					})
+					.catch(err => {
+						console.log(`Error en fetch realizar peido: ${err}`);
+						//hacer llamado a snackbar para mostrar mensaje
+					})
+	return { response, status };
 }
 
 export default {
