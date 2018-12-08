@@ -1,14 +1,19 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import { Header } from './components/Layouts/';
-import CompanyList from './components/ListadoEmpresas/CompanyList';
-import ProductList from './components/ListadoProductos/ProductList';
+import CompanyList from './components/Companies/CompanyList'
+import ProductList from './components/Productos/ProductList';
 import axios from 'axios';
 import Home from './components/PaginasPrincipales/Home';
 import Dashboard from './components/PaginasPrincipales/Dashboard';
 import Profile from './components/Profile/Profile';
+import AuthFunctions from './components/Auth/Functions';
+import CompanyFunctions from './components/ListadoEmpresas/Functions';
+import ProductFunctions from './components/Productos/Functions';
+import DetalleProducto from './components/Productos/DetalleProducto';
+import PackageFunctions from './components/Paquetes/Functions';
 import Carrito from './components/Cart/Cart';
-import CartFunctions from './components/Cart/CartFunctions';
+import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
 import ProductForm from './components/Productos/ProductForm';
 import HistorialCompras from './components/HistorialCompras/HistorialCompras';
@@ -52,7 +57,8 @@ class App extends Component {
         subTotalEnvios: 0,
         total: 0
       },
-      companiaSeleccionada: 0
+      companiaSeleccionada: 0,
+      productSeleccionado:0
     }
   }
 
@@ -69,69 +75,97 @@ class App extends Component {
     this.setState({shownWindow: ventana});
   }
 
-  verificarToken = (token) => {
-    let requestAuth = new Request(`${url}/api/auth`, {
-        method: 'POST',
-        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-        credentials: 'same-origin',
-        body: JSON.stringify({message: 'AuthToken'})
-      })
-      
-      fetch(requestAuth)
-        .then(res => {
-          res.json()
-            .then(data => {
-				if(res.status === 200){
-					cookies.set('access_token', data.token, { path: '/' });
+  cambiarVentana2 = (ventana, id) => {
+    this.setState({shownWindow: ventana});
+    this.setState({productSeleccionado: id});
+  } 
+
+  verificarToken = async (token) => {
+    let { valido, data } = await AuthFunctions.verificarToken(url, token);
+    if(valido){
+      // console.log('entre en valido status');
+      cookies.set('access_token', data.token, { path: '/' });
 				
-					this.setState({
-						logged: true,
-						loggedUser: {
-							userType: data.userData.userType,
-							userName: data.userData.userName,
-							userEmail: data.userData.userEmail,
-							userId: data.userData.userId,
-							userCompanyName: data.userData.userCompanyName,
-							userCompanyId: data.userData.userCompanyId
-						}
-					})
-				}
-			})
-            .catch(err => {
-              console.log(err);
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.setState({
+        logged: true,
+        loggedUser: {
+          userType: data.userData.userType,
+          userName: data.userData.userName,
+          userEmail: data.userData.userEmail,
+          userId: data.userData.userId,
+          userCompanyName: data.userData.userCompanyName,
+          userCompanyId: data.userData.userCompanyId
+        }
+      })
+    }
+    else{
+      console.log('error en auth de token, o vencido');
+    }
+
+    // let requestAuth = new Request(`${url}/api/auth`, {
+    //     method: 'POST',
+    //     headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+    //     credentials: 'same-origin',
+    //     body: JSON.stringify({message: 'AuthToken'})
+    //   })
+      
+    //   fetch(requestAuth)
+    //     .then(res => {
+    //       res.json()
+    //         .then(data => {
+		// 		if(res.status === 200){
+		// 			cookies.set('access_token', data.token, { path: '/' });
+				
+		// 			this.setState({
+		// 				logged: true,
+		// 				loggedUser: {
+		// 					userType: data.userData.userType,
+		// 					userName: data.userData.userName,
+		// 					userEmail: data.userData.userEmail,
+		// 					userId: data.userData.userId,
+		// 					userCompanyName: data.userData.userCompanyName,
+		// 					userCompanyId: data.userData.userCompanyId
+		// 				}
+		// 			})
+		// 		}
+		// 	})
+    //         .catch(err => {
+    //           console.log(err);
+    //         });
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
   }
 
   getCompanyTypes = async () => {
-    let tipos = await fetch(`${url}/api/company/type`)
-                            .then(response => (
-                              response.json()
-                            ))
-                            .then(data => {
-                              // console.log('tipos empresa', data);
-                              return data;
-                              // this.setState({companyTypes: data});
-                            })
-                            .catch(err => console.log(err));
-    return tipos;
+    return await CompanyFunctions.getCompanyTypes(url);
+    // let tipos = await fetch(`${url}/api/company/type`)
+    //                         .then(response => (
+    //                           response.json()
+    //                         ))
+    //                         .then(data => {
+    //                           // console.log('tipos empresa', data);
+    //                           return data;
+    //                           // this.setState({companyTypes: data});
+    //                         })
+    //                         .catch(err => console.log(err));
+    // return tipos;
   }
 
   getCompanyCategories = async () => {
-    let categories = await fetch(`${url}/api/company/category`)
-                            .then(response => (
-                              response.json()
-                            ))
-                            .then(data => {
-                              // console.log('categorias empresa', data);
-                              return data;
-                              // this.setState({companyCategories: data});
-                            })
-                            .catch(err => console.log(err));
-    return categories;
+    return await CompanyFunctions.getCompanyCategories(url);
+    // let categories = await fetch(`${url}/api/company/category`)
+    //                         .then(response => (
+    //                           response.json()
+    //                         ))
+    //                         .then(data => {
+    //                           // console.log('categorias empresa', data);
+    //                           return data;
+    //                           // this.setState({companyCategories: data});
+    //                         })
+    //                         .catch(err => console.log(err));
+    // return categories;
   }
 
   getUserTypes = async () => {
@@ -167,52 +201,82 @@ class App extends Component {
   }
 
   getAllProducts = async () => {
-    let productos = await fetch(`${url}/api/product`)
-                              .then(response => (
-                                response.json()
-                              ))
-                              .then(data => {
-                                let response = data.map(prod => {
-                                            prod.imageUrl = `${url}/${prod.imagePath}`;
-                                            return prod;
-                                          });
-                                // console.log('productos', response);
-                                return response;
-                                // this.setState({products: response});
-                              })
-                              .catch(err => console.log(err));
-    return productos;
+    return await ProductFunctions.getAllProducts(url);
+    // let productos = await fetch(`${url}/api/product`)
+    //                           .then(response => (
+    //                             response.json()
+    //                           ))
+    //                           .then(data => {
+    //                             let response = data.map(prod => {
+    //                                         prod.imageUrl = `${url}/${prod.imagePath}`;
+    //                                         return prod;
+    //                                       });
+    //                             // console.log('productos', response);
+    //                             return response;
+    //                             // this.setState({products: response});
+    //                           })
+    //                           .catch(err => console.log(err));
+    // return productos;
+  }
+
+  getProductById = async (id) => {
+    return await ProductFunctions.getProductById(url, id);
+  }
+
+  getProductsCompanyByCompanies = async (id) => {
+    return await ProductFunctions.getProductsCompanyByCompanies(url, id);
+  }
+
+  getAllPackages = async () => {
+    return await PackageFunctions.getAllPackages(url);
+    // let paquetes = await fetch(`${url}/api/package`)
+    //                           .then(res => (
+    //                             res.json()
+    //                           ))
+    //                           .then(data => {
+    //                             // let response = data.map(prod => {
+    //                             //             prod.imageUrl = `${url}/${prod.imagePath}`;
+    //                             //             return prod;
+    //                             //           });
+    //                             // console.log('productos', response);
+    //                             // return response;
+    //                             return data;
+    //                           })
+    //                           .catch(err => console.log(err));
+    // return paquetes;
   }
 
   getProductCategories = async () => {
-    let categories = await fetch(`${url}/api/product/category`)
-                              .then(response => (
-                                response.json()
-                              ))
-                              .then(data => {
-                                // console.log('categorias productos', data);
-                                return data;
-                                // this.setState({productCategories: data})
-                              })
-                              .catch(err => console.log(err));
-    return categories;
+    return await ProductFunctions.getProductCategories(url);
+    // let categories = await fetch(`${url}/api/product/category`)
+    //                           .then(response => (
+    //                             response.json()
+    //                           ))
+    //                           .then(data => {
+    //                             // console.log('categorias productos', data);
+    //                             return data;
+    //                             // this.setState({productCategories: data})
+    //                           })
+    //                           .catch(err => console.log(err));
+    // return categories;
   }
 
   getProductsByCompany = async (id) => {
-    let productos = await fetch(`${url}/api/product/company/${id}`)
-                                .then(response => (
-                                  response.json()
-                                ))
-                                .then(data => {
-                                  // console.log('data', data);
-                                  let response = data.map(prod => {
-                                              prod.imageUrl = `${url}/${prod.imagePath}`;
-                                              return prod;
-                                            });
-                                  return response;
-                                })
-                                .catch(err => console.log(err));
-      return productos;
+    return await ProductFunctions.getProductsByCompany(url, id);
+    // let productos = await fetch(`${url}/api/product/company/${id}`)
+    //                             .then(response => (
+    //                               response.json()
+    //                             ))
+    //                             .then(data => {
+    //                               // console.log('data', data);
+    //                               let response = data.map(prod => {
+    //                                           prod.imageUrl = `${url}/${prod.imagePath}`;
+    //                                           return prod;
+    //                                         });
+    //                               return response;
+    //                             })
+    //                             .catch(err => console.log(err));
+    //   return productos;
   }
 
 getCompanyById = async () => {
@@ -241,47 +305,46 @@ getUserById = async () => {
   return usuario;
 }
 
-getMisPackage = async () => {
-  let token = cookies.get('access_token');
-    if(token){
-    let request = new Request(`${url}/api/package/company/${this.state.loggedUser.userCompanyId}`, {
-      method: 'GET',
-      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-      credentials: 'same-origin'
-      });
-      
-      let packages = await fetch(request)
-                              .then(response => (
-                                response.json()
-                              ))
-                              .then(data => {
-                                return data;
-                              })
-                              .catch(err => console.log(err));
-      return packages;
-    }
+getPackagesByCompany = async (id) => {
+  return await PackageFunctions.getPackagesByCompany(url, id);
+  // let paquetes = await fetch(`${url}/api/package/company/${id}`)
+  //                       .then(res => (
+  //                         res.json()
+  //                       ))
+  //                       .then(data => {
+  //                         // console.log('data', data);
+  //                         // let response = data.map(pack => {
+  //                         //             pack.imageUrl = `${url}/${pack.imagePath}`;
+  //                         //             return pack;
+  //                         //           });
+  //                         // return response;
+  //                         return data
+  //                       })
+  //                       .catch(err => console.log(err));
+  // return paquetes;
 }
 
 getLineasPackage = async (id) => {
   let token = cookies.get('access_token');
-    if(token){
-    let request = new Request(`${url}/api/package/products/${id}`, {
-      method: 'GET',
-      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-      credentials: 'same-origin'
-      });
+  return await PackageFunctions.getLineasPackage(url, token, id);
+  //   if(token){
+  //   let request = new Request(`${url}/api/package/products/${id}`, {
+  //     method: 'GET',
+  //     headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+  //     credentials: 'same-origin'
+  //     });
       
-      let packages = await fetch(request)
-                              .then(response => (
-                                response.json()
-                              ))
-                              .then(data => {
-                                console.log(data);
-                                return data;
-                              })
-                              .catch(err => console.log(err));
-      return packages;
-    }
+  //     let packages = await fetch(request)
+  //                             .then(response => (
+  //                               response.json()
+  //                             ))
+  //                             .then(data => {
+  //                               console.log(data);
+  //                               return data;
+  //                             })
+  //                             .catch(err => console.log(err));
+  //     return packages;
+  //   }
 }
 
   registroUsuarioEmpresa = (request) => {
@@ -373,77 +436,80 @@ getLineasPackage = async (id) => {
       });
   }
 
-  registroProducto = (request) => {
+  registroProducto = async (request) => {
     let token = cookies.get('access_token');
-    if(token){
+    return await ProductFunctions.registroProducto(url, token, request);
+    // if(token){
     
-      let instance = axios.create({
-                        baseURL: `${url}/api/product`,
-                        method: 'post',
-                        headers: {token: token},
-                        data: request
-                      });
-      instance()
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-    else{
-      console.log('No hay token');
-    }
+    //   let instance = axios.create({
+    //                     baseURL: `${url}/api/product`,
+    //                     method: 'post',
+    //                     headers: {token: token},
+    //                     data: request
+    //                   });
+    //   instance()
+    //     .then(res => {
+    //       console.log(res);
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
+    // else{
+    //   console.log('No hay token');
+    // }
   }
 
-  asociarProducto = (body) => {
+  asociarProducto = async (request) => {
     let token = cookies.get('access_token');
-    if(token){
+    return await ProductFunctions.asociarProducto(url, token, request);
+    // if(token){
 
-      let request = new Request(`${url}/api/product/company`, {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-        body: JSON.stringify(body)
-      });
+    //   let request = new Request(`${url}/api/product/company`, {
+    //     method: 'POST',
+    //     headers: new Headers({ 'Content-Type': 'application/json', token: token}),
+    //     body: JSON.stringify(body)
+    //   });
   
-      fetch(request)
-        .then((res) => {
-          res.json()
-            .then(data => {
-              console.log(data);
-            })
-            .catch(err => {
-              console.log(`Error al enviar registro de productoEmpresa : ${err}`);
-            });
-        });
-    }
-    else{
-      console.log('No hay token')
-    }
+    //   fetch(request)
+    //     .then((res) => {
+    //       res.json()
+    //         .then(data => {
+    //           console.log(data);
+    //         })
+    //         .catch(err => {
+    //           console.log(`Error al enviar registro de productoEmpresa : ${err}`);
+    //         });
+    //     });
+    // }
+    // else{
+    //   console.log('No hay token')
+    // }
   }
 
-  crearPaquete = (request) =>{
+  crearPaquete = async (request) =>{
     let token = cookies.get('access_token');
-    console.log('token enviado',token);
-    console.log(request);
-    if(token){
-      let instance = axios.create({
-        baseURL: `${url}/api/package`,
-        method: 'post',
-        headers: {token: token},
-        data: request
-      });
-      instance()
-      .then(res => {
-      console.log(res);
-      })
-      .catch(err => {
-      console.log(err);
-      });
-    }
-    else{
-    console.log('No hay token');
-    }
+    return await PackageFunctions.crearPaquete(url, token, request);
+    // console.log('token enviado',token);
+    // console.log(request);
+    // if(token){
+    //   let instance = axios.create({
+    //     baseURL: `${url}/api/package`,
+    //     method: 'post',
+    //     headers: {token: token},
+    //     data: request
+    //   });
+    //   instance()
+    //   .then(res => {
+    //   console.log(res);
+    //   })
+    //   .catch(err => {
+    //   console.log(err);
+    //   });
+    // }
+    // else{
+    // console.log('No hay token');
+    // }
     /*axios.post(`${url}/api/package`, request)
       .then(res => {
         console.log(res);
@@ -465,30 +531,33 @@ getLineasPackage = async (id) => {
     return this.state.companiaSeleccionada;
   }
 
-  modificarProducto = (request,id) => {
-    axios.post(`${url}/api/product/update/company/${id}`,
-      request)
-        .then(res => {
-          console.log(res);
+  modificarProducto = async (request, id) => {
+    return await ProductFunctions.modificarProducto(url, request, id);
+    // axios.post(`${url}/api/product/update/company/${id}`,
+    //   request)
+    //     .then(res => {
+    //       console.log(res);
             
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
   }
 
-  eliminarProducto = (id) =>{
-      axios.post(`${url}/api/product/delete/company/${id}`)
-        .then(res => {
-          console.log(res);
+  eliminarProducto = async (id) =>{
+    return await ProductFunctions.eliminarProducto(url, id);
+      // axios.post(`${url}/api/product/delete/company/${id}`)
+      //   .then(res => {
+      //     console.log(res);
             
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
+    console.log('agregarCarrito producto', producto);
     if(producto.companyId === this.state.loggedUser.userCompanyId) return;
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
@@ -589,16 +658,19 @@ getLineasPackage = async (id) => {
                 this.state.shownWindow === 'productsGeneric' ? (
                   <ProductList 
                     flag='productos'
-                    getContent={this.getAllProducts}
+                    getProductos={this.getAllProducts}
+                    getPaquetes={this.getAllPackages}
                     getCategories={this.getProductCategories}
+                    cambiarVentana={this.cambiarVentana2}
                   />
                 ) : (
                   this.state.shownWindow === 'productsCompany' ? (
                     <ProductList 
                       flag='productos'
-                      flagCart={true}
+                      flagCart={this.state.loggedUser.userCompanyId}
                       agregarAlCarrito={this.agregarAlCarrito}
-                      getContent={this.getProductsByCompany}
+                      getProductos={this.getProductsByCompany}
+                      getPaquetes={this.getPackagesByCompany}
                       company={this.state.companiaSeleccionada}
                       getCategories={this.getProductCategories}
                     />
@@ -606,7 +678,10 @@ getLineasPackage = async (id) => {
                     this.state.shownWindow === 'myProducts' ? (
                       <MisProductos
                         getProductos={this.getProductsByCompany}
+                        getPaquetes={this.getPackagesByCompany}
                         company={this.state.loggedUser.userCompanyId}
+                        modificarProducto={this.modificarProducto}
+                        eliminarProducto={this.eliminarProducto}
                       />
                     ) : (
                       this.state.shownWindow === 'carrito' ? (
@@ -640,7 +715,17 @@ getLineasPackage = async (id) => {
                                 url={url}
                               />
                             ) : (
-                              null
+                              this.state.shownWindow === 'productDetalle' ? (
+                                <DetalleProducto 
+                                  getProductsCompanyByCompanies={this.getProductsCompanyByCompanies}
+                                  productId={this.state.productSeleccionado}
+                                  getProductById={this.getProductById}
+                                  agregarAlCarrito={this.agregarAlCarrito}
+                                  //onClick={this.registroProducto}
+                                />
+                              ) : (
+                                null
+                              )
                             )
                           )
                         )

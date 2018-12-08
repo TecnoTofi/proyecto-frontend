@@ -1,5 +1,3 @@
-import React from 'react';
-
 const agregarAlCarrito = (cart, producto, cantidad=1) => {
 	let existeProd = verificarExistenciaProd(cart.contenido, producto);
 

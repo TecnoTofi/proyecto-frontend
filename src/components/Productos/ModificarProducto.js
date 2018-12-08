@@ -29,11 +29,13 @@ class ModificarProducto extends Component{
         super(props);
         this.state = {
             open: false,
-            id:0,
+            id: 0,
+            companyId: 0,
             name: '',
+            productId: 0,
             description: '',
-            price: '',
-            stock: '',
+            price: 0,
+            stock: 0,
             //categories: [],
             image: null,
             nameError: '',
@@ -50,15 +52,17 @@ class ModificarProducto extends Component{
         let product =  this.props.product;
         console.log(product);
          this.setState({
-            id:product.id,
+            id: product.id,
+            companyId: product.companyId,
             name: product.name,
+            productId: product.productId,
             description: product.description,
             price: product.price,
             stock: product.stock,
             // categories: categories,
             image: product.image,
         });
-        console.log(this.state)
+        // console.log(this.state)
     };
 
     validate = () => {
@@ -80,22 +84,22 @@ class ModificarProducto extends Component{
             isError = true;
             errors.descriptionError='Debe tener entre 5 o 50 caracteres';
         }
-        if(this.state.price <= 0){
-            isError = true;
-            errors.priceError='Debe ingresar un precio mayor a 0';
-        }
-        else if(!Validator.isNumeric(this.state.price)){
-            isError = true;
-            errors.priceError='Debe contener unicamente numeros';
-        }
-        if(this.state.stock <= 0){
-            isError = true;
-            errors.stockError='Debe ingresar un stock mayor a 0';
-        }
-        else if(!Validator.isNumeric(this.state.stock)){
-            isError = true;
-            errors.stockError='Debe contener unicamente numeros';
-        }
+        // if(Number(this.state.price) <= 0){
+        //     isError = true;
+        //     errors.priceError='Debe ingresar un precio mayor a 0';
+        // }
+        // else if(!Validator.isNumeric(this.state.price)){
+        //     isError = true;
+        //     errors.priceError='Debe contener unicamente numeros';
+        // }
+        // if(Number(this.state.stock) <= 0){
+        //     isError = true;
+        //     errors.stockError='Debe ingresar un stock mayor a 0';
+        // }
+        // else if(!Validator.isNumeric(this.state.stock)){
+        //     isError = true;
+        //     errors.stockError='Debe contener unicamente numeros';
+        // }
         /*if(this.state.categories.length === 0){
             isError = true;
             errors.categoriesError='Debe seleccionar al menos una categoria';
@@ -118,18 +122,18 @@ class ModificarProducto extends Component{
     handleToggle = () => {
         this.setState({
             open: !this.state.open,
-            name: '',
-            description: '',
-            price: '',
-            stock: '',
-            //categories: [],
-            image: null,
-            nameError: '',
-            descriptionError: '',
-            priceError: '',
-            stockError: '',
-            //categoriesError: '',
-            imageError: '',
+            // name: '',
+            // description: '',
+            // price: '',
+            // stock: '',
+            // //categories: [],
+            // image: null,
+            // nameError: '',
+            // descriptionError: '',
+            // priceError: '',
+            // stockError: '',
+            // //categoriesError: '',
+            // imageError: '',
         });
       }
 
@@ -145,15 +149,18 @@ class ModificarProducto extends Component{
 
             const request = new FormData();
 
+            request.set('productId', this.state.productId)
             request.set('name', this.state.name);
             request.set('description', this.state.description);
             request.set('price', this.state.price);
             request.set('stock', this.state.stock);
+            request.set('companyId', this.state.companyId);
             //request.set('categories', this.state.categories);
 
             //image
-            request.append('image', this.state.image, this.state.image.name);
-            this.props.props.modificarProducto(request,this.state.id);
+            console.log(this.props)
+            if(this.state.image) request.append('image', this.state.image, this.state.image.name);
+            this.props.modificar(request,this.state.id);
             this.handleToggle();
         }
     }
@@ -172,7 +179,7 @@ class ModificarProducto extends Component{
         const { classes } = this.props;
         return(
             <div>
-                <IconButton color='inherit' onClick={this.handleToggle}>
+                <IconButton onClick={this.handleToggle}>
                     <EditIcon />
                 </IconButton>
                 <Dialog
@@ -185,8 +192,8 @@ class ModificarProducto extends Component{
                     <TextField
                         autoFocus
                         margin='dense'
-                        id='productName'
-                        name='productName'
+                        id='name'
+                        name='name'
                         label='Nombre del producto'
                         type='text'
                         fullWidth
@@ -198,8 +205,8 @@ class ModificarProducto extends Component{
                     />
                     <TextField
                         margin='dense'
-                        id='productDescription'
-                        name='productDescription'
+                        id='description'
+                        name='description'
                         label='Descripcion del producto'
                         type='text'
                         value={this.state.description}
@@ -211,10 +218,10 @@ class ModificarProducto extends Component{
                     />
                     <TextField
                         margin='dense'
-                        id='productPrice'
-                        name='productPrice'
+                        id='price'
+                        name='price'
                         label='Precio del producto'
-                        type='text'
+                        type='number'
                         value={this.state.price}
                         fullWidth
                         helperText={this.state.productPriceError}
@@ -224,10 +231,10 @@ class ModificarProducto extends Component{
                     />
                     <TextField
                         margin='dense'
-                        id='productStock'
-                        name='productStock'
+                        id='stock'
+                        name='stock'
                         label='stock del producto'
-                        type='text'
+                        type='number'
                         value={this.state.stock}
                         fullWidth
                         helperText={this.state.productStockError}

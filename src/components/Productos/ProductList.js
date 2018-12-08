@@ -48,7 +48,11 @@ class List extends Component{
         // let listado = [];
         // if(!this.props.company && this.props.company !== 0){
             // console.log('companyId', this.props.company);
-            let listado = await this.props.getContent(this.props.company);
+            
+            //revisar porque si productos es undefined no se agregan paquetes tampoco
+            let productos = await this.props.getProductos(this.props.company);
+            let paquetes = await this.props.getPaquetes(this.props.company);
+            let listado = productos.concat(paquetes);
         // }
         // else
         //     listado = await this.props.getContent();
@@ -131,6 +135,7 @@ class List extends Component{
                                     onCompanyClick={this.props.onCompanyClick}
                                     flagCart={this.props.flagCart}
                                     agregarAlCarrito={this.props.agregarAlCarrito}
+                                    cambiarVentana={this.props.cambiarVentana}
                                     />
                                 </Grid>
                             ))}

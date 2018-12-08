@@ -8,9 +8,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import EditIcon from "@material-ui/icons/Create";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
+// import EditIcon from "@material-ui/icons/Create";
+// import DeleteIcon from "@material-ui/icons/Delete";
+// import IconButton from "@material-ui/core/IconButton";
+import Alert from './AlertDialog';
+import Modificar from './ModificarProducto'
 
 const styles = theme => ({
     root: {
@@ -31,14 +33,24 @@ class MisProductos extends Component{
 
     async componentWillMount(){
         let productos = await this.props.getProductos(this.props.company);
+        let paquetes = await this.props.getPaquetes(this.props.company);
+        // console.log(paquetes);
+        let listado = productos.concat(paquetes);
         await this.setState({
-            productos: productos
+            productos: listado
         })
     }
 
-    handleDelete = () =>{
-        console.log("borrar")
+    handleDelete = (id) =>{
+        // console.log('llegue', id);
+        // this.render(<Alert product={id} props={this.props.eliminarProducto} onClick={this.handleClickOpen} />); 
+        this.props.eliminarProducto(id);
+        let listado = this.state.productos.filter(prod => {
+            return prod.id !== id;
+        });
+        this.setState({productos: listado});
     }
+
 
     handleEdit= () => {
         console.log("editar")
@@ -69,7 +81,7 @@ class MisProductos extends Component{
                         {this.state.productos.map(product => (
                             <TableRow key={product.id}>
                                 <TableCell>
-                                    {product.code}
+                                {product.code ? product.code : 'Paquete'}
                                 </TableCell>
                                 <TableCell>
                                     {product.name}    
@@ -78,12 +90,26 @@ class MisProductos extends Component{
                                     {product.price}    
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={this.handleEdit}>
+                                    {/* <IconButton onClick={() =>{
+                                         this.setState({productoSeleccionado:product});
+                                         this.handleEdit();
+                                     }}>
                                         <EditIcon />
-                                    </IconButton>
-                                    <IconButton onClick={this.handleDelete}>
+                                    </IconButton>*/}
+                                    {/* <IconButton onClick={() =>{
+                                         this.setState({productoSeleccionado:product});
+                                         this.handleEdit();
+                                     }}>
+                                        <EditIcon />
+                                    </IconButton> */}
+                                    
+                                    <Modificar product={product} modificar={this.props.modificarProducto} />
+                                    
+                                    <Alert productId={product.id} eliminar={this.handleDelete} />
+                                
+                                    {/*<IconButton onClick={this.handleDelete}>
                                         <DeleteIcon />
-                                    </IconButton> 
+                                    </IconButton> */}
                                 </TableCell>
                             </TableRow>
                         ))}

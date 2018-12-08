@@ -28,6 +28,12 @@ class ProductItem extends Component {
     this.props.onCompanyClick(this.props.item.id);
   }
 
+  verDetalle =()=>{
+    let productId = this.props.item.id
+    console.log(productId);
+    this.props.cambiarVentana("productDetalle", productId);
+  }
+
   agregarAlCarrito = () => {
     this.props.agregarAlCarrito(this.props.item);
   }
@@ -76,10 +82,10 @@ class ProductItem extends Component {
           </Fragment>
         ) : (
           <Fragment>
-            <Button size="small" color="primary">
+            <Button size="small" color="primary" onClick={this.verDetalle}>
               Ver
             </Button>
-            {this.props.flagCart ? (
+            {this.props.flagCart && this.props.flagCart !== this.props.item.companyId ? (
               <Button size="small" color="primary" onClick={this.agregarAlCarrito}>
                 <CartIcon className={classes.leftIcon} />
                 Agregar
