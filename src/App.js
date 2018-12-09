@@ -6,7 +6,7 @@ import ProductList from './components/Productos/ProductList';
 // import axios from 'axios';
 import Home from './components/PaginasPrincipales/Home';
 import Dashboard from './components/PaginasPrincipales/Dashboard';
-import Profile from './components/Profile/Profile';
+import Profile from './components/User/Profile';
 import AuthFunctions from './components/Auth/Functions';
 import UserFunctions from './components/User/Functions';
 import CompanyFunctions from './components/Companies/Functions';
@@ -375,7 +375,7 @@ getLineasPackage = async (id) => {
 
   login = async (userEmail, userPassword) => {
     let { result, status } = await AuthFunctions.login(url, userEmail, userPassword);
-
+    // console.log()
     if(result && status === 200) {
       cookies.set('access_token', result.token, { path: '/' });
       this.setState({
@@ -388,7 +388,7 @@ getLineasPackage = async (id) => {
     }
     else{
       console.log('Error al iniciar sesion'); //devolver response status para no cerrar diaog y mostar error
-      this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
+      // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
     }
 
     // let request = new Request(`${url}/api/auth/login`, {
@@ -444,7 +444,7 @@ getLineasPackage = async (id) => {
     }
     else{
       console.log('Error al cerrar sesion');
-      this.setearSnackbar(true, 'Error al cerrar sesion', 'error');
+      // this.setearSnackbar(true, 'Error al cerrar sesion', 'error');
     }
     // let request = new Request(`${url}/api/auth/logout`, {
     //   method: 'POST',

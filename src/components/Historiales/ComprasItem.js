@@ -29,7 +29,7 @@ const HistorialComprasItem = (props) => {
                 <Fragment key={transaction.id}>
                     {transaction.productos.map(product => (
                         <Typography variant='body1' key={product.id}>
-                            {`${product.id} - ${product.quantity}`}
+                            {`${product.name} - ${product.quantity}`}
                         </Typography>
                     ))}
                     <Divider />
