@@ -26,7 +26,40 @@ const getCompanyCategories = async (url) => {
     return categories;
 };
 
+const getAllCompanies = async (url) => {
+  let companias = await fetch(`${url}/api/company`)
+                          .then(response => (
+                            response.json()
+                          ))
+                          .then(data => {
+                            let companias = data.map(comp => {
+                              comp.imageUrl = `${url}/${comp.imagePath}`;
+                              return comp;
+                            });
+                            // console.log('companias', companias);
+                            return companias;
+                            // this.setState({companies: companias});
+                          })
+                          .catch(err => console.log(err));
+  return companias;
+};
+
+const getCompanyById = async (url, id) => {
+  let compania = await fetch(`${url}/api/company/${id}`)
+            .then(res => (
+              res.json()
+            ))
+            .then(data => {
+              return data;
+            })
+            .catch(err => console.log(`Error al buscar Company : ${err}`));
+  return compania;
+};
+
+
 export default {
     getCompanyTypes,
-    getCompanyCategories
+    getCompanyCategories,
+    getAllCompanies,
+    getCompanyById
 }

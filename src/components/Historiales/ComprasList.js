@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-import HCFunctions from './HistorialComprasFunctions';
-import Item from './HistorialComprasItem';
+import HCFunctions from './Functions';
+import Item from './ComprasItem';
 
 class HistorialCompras extends Component{
 

@@ -3,12 +3,13 @@ import 'typeface-roboto';
 import { Header } from './components/Layouts/';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
-import axios from 'axios';
+// import axios from 'axios';
 import Home from './components/PaginasPrincipales/Home';
 import Dashboard from './components/PaginasPrincipales/Dashboard';
 import Profile from './components/Profile/Profile';
 import AuthFunctions from './components/Auth/Functions';
-import CompanyFunctions from './components/ListadoEmpresas/Functions';
+import UserFunctions from './components/User/Functions';
+import CompanyFunctions from './components/Companies/Functions';
 import ProductFunctions from './components/Productos/Functions';
 import DetalleProducto from './components/Productos/DetalleProducto';
 import PackageFunctions from './components/Paquetes/Functions';
@@ -16,8 +17,8 @@ import Carrito from './components/Cart/Cart';
 import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
 import ProductForm from './components/Productos/ProductForm';
-import HistorialCompras from './components/HistorialCompras/HistorialCompras';
-import HistorialComprasFunctions from './components/HistorialCompras/HistorialComprasFunctions';
+import HistorialCompras from './components/Historiales/ComprasList';
+// import HistorialFunctions from './components/Historiales/Functions';
 // import Snackbar from '@material-ui/core/Snackbar';
 import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
@@ -71,14 +72,11 @@ class App extends Component {
     }
   }
 
-  cambiarVentana = (ventana) => {
-    this.setState({shownWindow: ventana});
+  cambiarVentana = (ventana, id) => {
+    if(id) this.setState({shownWindow: ventana, productSeleccionado: id});
+    else this.setState({shownWindow: ventana});
+    
   }
-
-  cambiarVentana2 = (ventana, id) => {
-    this.setState({shownWindow: ventana});
-    this.setState({productSeleccionado: id});
-  } 
 
   verificarToken = async (token) => {
     let { valido, data } = await AuthFunctions.verificarToken(url, token);
@@ -169,35 +167,37 @@ class App extends Component {
   }
 
   getUserTypes = async () => {
-    let userTypes = await fetch(`${url}/api/user/role/signup`)
-                            .then(response => (
-                              response.json()
-                            ))
-                            .then(data => {
-                              // console.log('user Types', data);
-                              return data;
-                              // this.setState({userTypes: data});
-                            })
-                            .catch(err => console.log(err));
-    return userTypes;
+    return await UserFunctions.getUserTypes(url);
+    // let userTypes = await fetch(`${url}/api/user/role/signup`)
+    //                         .then(response => (
+    //                           response.json()
+    //                         ))
+    //                         .then(data => {
+    //                           // console.log('user Types', data);
+    //                           return data;
+    //                           // this.setState({userTypes: data});
+    //                         })
+    //                         .catch(err => console.log(err));
+    // return userTypes;
   }
 
   getAllCompanies = async () => {
-    let companias = await fetch(`${url}/api/company`)
-                            .then(response => (
-                              response.json()
-                            ))
-                            .then(data => {
-                              let companias = data.map(comp => {
-                                comp.imageUrl = `${url}/${comp.imagePath}`;
-                                return comp;
-                              });
-                              // console.log('companias', companias);
-                              return companias;
-                              // this.setState({companies: companias});
-                            })
-                            .catch(err => console.log(err));
-    return companias;
+    return await CompanyFunctions.getAllCompanies(url);
+    // let companias = await fetch(`${url}/api/company`)
+    //                         .then(response => (
+    //                           response.json()
+    //                         ))
+    //                         .then(data => {
+    //                           let companias = data.map(comp => {
+    //                             comp.imageUrl = `${url}/${comp.imagePath}`;
+    //                             return comp;
+    //                           });
+    //                           // console.log('companias', companias);
+    //                           return companias;
+    //                           // this.setState({companies: companias});
+    //                         })
+    //                         .catch(err => console.log(err));
+    // return companias;
   }
 
   getAllProducts = async () => {
@@ -280,29 +280,31 @@ class App extends Component {
   }
 
 getCompanyById = async () => {
-  let compania = await fetch(`${url}/api/company/${this.state.loggedUser.userCompanyId}`)
-            .then(res => (
-              res.json()
-            ))
-            .then(data => {
-              return data;
-            })
-            .catch(err => console.log(`Error al buscar Company : ${err}`));
-  return compania;
+  return await CompanyFunctions.getCompanyById(url, this.state.loggedUser.userCompanyId);
+  // let compania = await fetch(`${url}/api/company/${this.state.loggedUser.userCompanyId}`)
+  //           .then(res => (
+  //             res.json()
+  //           ))
+  //           .then(data => {
+  //             return data;
+  //           })
+  //           .catch(err => console.log(`Error al buscar Company : ${err}`));
+  // return compania;
 }
 
 getUserById = async () => {
-  let usuario = await fetch(`${url}/api/user/${this.state.loggedUser.userId}`)
-            .then(res => (
-              res.json()
-            ))
-            .then(data => {
-              return data;
-            })
-            .catch(err => {
-              console.log(`Error al buscar Usuario : ${err}`);
-            });
-  return usuario;
+  return await UserFunctions.getUserById(url, this.state.loggedUser.userId);
+  // let usuario = await fetch(`${url}/api/user/${this.state.loggedUser.userId}`)
+  //           .then(res => (
+  //             res.json()
+  //           ))
+  //           .then(data => {
+  //             return data;
+  //           })
+  //           .catch(err => {
+  //             console.log(`Error al buscar Usuario : ${err}`);
+  //           });
+  // return usuario;
 }
 
 getPackagesByCompany = async (id) => {
@@ -347,93 +349,132 @@ getLineasPackage = async (id) => {
   //   }
 }
 
-  registroUsuarioEmpresa = (request) => {
-    axios.post(`${url}/api/auth/signup`, request)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  registroUsuarioEmpresa = async (request) => {
+    return await UserFunctions.registroUsuarioEmpresa(url, request);
+    // axios.post(`${url}/api/auth/signup`, request)
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
   }
 
-  modificarPerfil = (request) => {
+  modificarPerfil = async (request) => {
+    return await UserFunctions.modificarPerfil(url, this.state.loggedUser.userId, this.state.loggedUser.companyId, request);
     // console.log(request.getAll());
-    axios.post(`${url}/api/auth/update/user/${this.state.loggedUser.userId}/company/${this.state.loggedUser.userCompanyId}`,
-    request)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
+    // axios.post(`${url}/api/auth/update/user/${this.state.loggedUser.userId}/company/${this.state.loggedUser.userCompanyId}`,
+    // request)
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+  }
+
+  login = async (userEmail, userPassword) => {
+    let { result, status } = await AuthFunctions.login(url, userEmail, userPassword);
+
+    if(result && status === 200) {
+      cookies.set('access_token', result.token, { path: '/' });
+      this.setState({
+        shownWindow: 'dashboard',
+        logged: true,
+        loggedUser: {
+          ...result.userData
+        }
       });
+    }
+    else{
+      console.log('Error al iniciar sesion'); //devolver response status para no cerrar diaog y mostar error
+      this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
+    }
+
+    // let request = new Request(`${url}/api/auth/login`, {
+    //   method: 'POST',
+    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+    //   credentials: 'same-origin',
+    //   body: JSON.stringify({userEmail, userPassword})
+    // });
+    // let status = '';
+    // fetch(request)
+    //     .then((res) => {
+    //       status = res.status;
+    //       return res.json()
+    //     })
+    //     .then(data => {
+    //       if(data && status === 200) {
+    //         cookies.set('access_token', data.token, { path: '/' });
+    //         this.setState({
+    //           shownWindow: 'dashboard',
+    //           logged: true,
+    //           loggedUser: {
+    //             ...data.userData
+    //           }
+    //         });
+    //       }
+    //       else{
+    //         console.log('fallo'); //devolver response status para no cerrar diaog y mostar error
+    //         // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(`Error al enviar inicio de sesion : ${err}`);
+    //       this.setearSnackbar(true, 'Error al iniciar sesion', 'error');
+    //     });
   }
 
-  login = (userEmail, userPassword) => {
-    let request = new Request(`${url}/api/auth/login`, {
-      method: 'POST',
-      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-      credentials: 'same-origin',
-      body: JSON.stringify({userEmail, userPassword})
-    });
-    let status = '';
-    fetch(request)
-        .then((res) => {
-          status = res.status;
-          return res.json()
-        })
-        .then(data => {
-          if(data && status === 200) {
-            cookies.set('access_token', data.token, { path: '/' });
-            this.setState({
-              shownWindow: 'dashboard',
-              logged: true,
-              loggedUser: {
-                ...data.userData
-              }
-            });
-          }
-          else{
-            console.log('fallo'); //devolver response status para no cerrar diaog y mostar error
-            // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
-          }
-        })
-        .catch(err => {
-          console.log(`Error al enviar inicio de sesion : ${err}`);
-          this.setearSnackbar(true, 'Error al iniciar sesion', 'error');
-        });
-  }
+  logout = async () => {
+    let { result, status } = await AuthFunctions.logout(url);
 
-  logout = () => {
-    let request = new Request(`${url}/api/auth/logout`, {
-      method: 'POST',
-      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-      credentials: 'same-origin'
-    });
+    if(result && status === 200){
+      this.setState({
+        logged: false,
+        loggedUser: {
+          userType: '',
+          userName: '',
+          userEmail: '',
+          userId: 0,
+          userCompanyName: '',
+          userCompanyId: 0
+        }
+      });
+      cookies.remove('access_token', { path: '/' })
+    }
+    else{
+      console.log('Error al cerrar sesion');
+      this.setearSnackbar(true, 'Error al cerrar sesion', 'error');
+    }
+    // let request = new Request(`${url}/api/auth/logout`, {
+    //   method: 'POST',
+    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+    //   credentials: 'same-origin'
+    // });
 
-    fetch(request)
-      .then((res) => {
-        res.json()
-          .then(data => {
+    // fetch(request)
+    //   .then((res) => {
+    //     res.json()
+    //       .then(data => {
             
-            this.setState({
-              logged: false,
-              loggedUser: {
-                userType: '',
-                userName: '',
-                userEmail: '',
-                userId: 0,
-                userCompanyName: '',
-                userCompanyId: 0
-              }
-            });
-            cookies.remove('access_token', { path: '/' })
-            console.log(data);
-          })
-          .catch(err => {
-            console.log(`Error al enviar cierre de sesion : ${err}`);
-          });
-      });
+    //         this.setState({
+    //           logged: false,
+    //           loggedUser: {
+    //             userType: '',
+    //             userName: '',
+    //             userEmail: '',
+    //             userId: 0,
+    //             userCompanyName: '',
+    //             userCompanyId: 0
+    //           }
+    //         });
+    //         cookies.remove('access_token', { path: '/' })
+    //         console.log(data);
+    //       })
+    //       .catch(err => {
+    //         console.log(`Error al enviar cierre de sesion : ${err}`);
+    //       });
+    //   });
   }
 
   registroProducto = async (request) => {
@@ -661,7 +702,7 @@ getLineasPackage = async (id) => {
                     getProductos={this.getAllProducts}
                     getPaquetes={this.getAllPackages}
                     getCategories={this.getProductCategories}
-                    cambiarVentana={this.cambiarVentana2}
+                    cambiarVentana={this.cambiarVentana}
                   />
                 ) : (
                   this.state.shownWindow === 'productsCompany' ? (

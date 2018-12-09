@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormHelperText from '@material-ui/core/FormHelperText';
+// import FormHelperText from '@material-ui/core/FormHelperText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '../Helpers/SelectForm';
+// import Select from '../Helpers/SelectForm';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 import IconButton from "@material-ui/core/IconButton";
@@ -176,7 +176,7 @@ class ModificarProducto extends Component{
     }
 
     render(){
-        const { classes } = this.props;
+        // const { classes } = this.props;
         return(
             <div>
                 <IconButton onClick={this.handleToggle}>
