@@ -43,7 +43,7 @@ class ProductItem extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardActionArea>
+        <CardActionArea onClick={this.verDetalle}>
           <CardMedia
             component="img"
             alt={this.props.item.name}
