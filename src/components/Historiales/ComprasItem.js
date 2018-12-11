@@ -17,21 +17,50 @@ const styles = ({
     //   },
 })
 
+function formatDate(date) {
+    let monthNames = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+    let dayNames = [
+        "Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"
+    ]
+    let weekDay = date.getDay();
+    let day = date.getDate();
+    console.log(day);
+    let month = date.getMonth();
+    let year = date.getFullYear();
+  
+    return `${dayNames[weekDay]} ${day} de ${monthNames[month]} del ${year}`;
+  }
+
 const HistorialComprasItem = (props) => {
     const { classes } = props;
     return(
         <div className={classes.root}>
-            <Typography variant='h4'>
-                Pedido - {props.pedido.timestamp}
+            <Typography variant='h5'>
+                Realizado el - {formatDate(new Date(props.pedido.timestamp))}
+            </Typography>
+            <Typography variant='h5'>
+                Total - ${props.pedido.amount}
             </Typography>
             <Divider />
             {props.pedido.transactions.map(transaction => (
                 <Fragment key={transaction.id}>
-                    {transaction.productos.map(product => (
-                        <Typography variant='body1' key={product.id}>
-                            {`${product.name} - ${product.quantity}`}
-                        </Typography>
-                    ))}
+                    {transaction.productos ? (
+                        transaction.productos.map(prod => (
+                            <Typography variant='body1' key={prod.id}>
+                                {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
+                            </Typography>
+                        ))
+                    ) : null}
+                    {transaction.paquetes ? (
+                        transaction.paquetes.map(pack => (
+                            <Typography variant='body1' key={pack.id}>
+                                {`${pack.name} x ${pack.quantity}`}
+                            </Typography>
+                        ))
+                    ) : null}
                     <Divider />
                 </Fragment>
             ))}

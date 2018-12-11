@@ -22,7 +22,6 @@ const getPedidos = async (url, userId) => {
                             .then(data => {
                                 if(data){
                                     if(status === 200){
-                                        console.log('pedidos de un usuario', data); //usar message
                                         return data;
                                     }
                                     console.log('User no tiene pedidos');
@@ -37,7 +36,6 @@ const getPedidos = async (url, userId) => {
                                 console.log(err);
                                 return null;
                             });
-    console.log('pedidos', pedidos);
     return pedidos;
 };
 

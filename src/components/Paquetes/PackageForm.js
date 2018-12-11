@@ -211,7 +211,7 @@ export default class PackageForm extends Component{
             <div>
                 <ListItem button onClick={this.handleToggle}>
                     <ListItemIcon><AddIcon /></ListItemIcon>
-                    <ListItemText primary='Alta paquete' />
+                    <ListItemText primary='Nuevo paquete' />
                 </ListItem>
                 <Dialog
                      open={this.state.open}

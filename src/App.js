@@ -18,7 +18,7 @@ import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
 import ProductForm from './components/Productos/ProductForm';
 import HistorialCompras from './components/Historiales/ComprasList';
-// import HistorialFunctions from './components/Historiales/Functions';
+import HistorialFunctions from './components/Historiales/Functions';
 // import Snackbar from '@material-ui/core/Snackbar';
 import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
@@ -375,7 +375,7 @@ getLineasPackage = async (id) => {
 
   login = async (userEmail, userPassword) => {
     let { result, status } = await AuthFunctions.login(url, userEmail, userPassword);
-    // console.log()
+
     if(result && status === 200) {
       cookies.set('access_token', result.token, { path: '/' });
       this.setState({
@@ -386,10 +386,7 @@ getLineasPackage = async (id) => {
         }
       });
     }
-    else{
-      console.log('Error al iniciar sesion'); //devolver response status para no cerrar diaog y mostar error
-      // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
-    }
+    
     return status;
 
     // let request = new Request(`${url}/api/auth/login`, {
@@ -671,6 +668,10 @@ getLineasPackage = async (id) => {
     console.log(response);
   }
 
+  getHistorialPedidos = async () => {
+    return await HistorialFunctions.getPedidos(url, this.state.loggedUser.userId);
+  }
+
   setearSnackbar = (status, message, variant) => {
     this.setState({
       snackbarStatus: status,
@@ -778,7 +779,7 @@ getLineasPackage = async (id) => {
                             this.state.shownWindow === 'historialCompras' ? (
                               <HistorialCompras
                                 userId={this.state.loggedUser.userId}
-                                url={url}
+                                getPedidos={this.getHistorialPedidos}
                               />
                             ) : (
                               this.state.shownWindow === 'productDetalle' ? (

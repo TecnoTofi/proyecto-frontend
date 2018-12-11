@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-import HCFunctions from './Functions';
+// import HCFunctions from './Functions';
 import Item from './ComprasItem';
 
 class HistorialCompras extends Component{
@@ -11,9 +11,7 @@ class HistorialCompras extends Component{
 
     //Recibir data
     async componentWillMount(){
-        console.log('entramos a component will mount');
-        let pedidos = await HCFunctions.getPedidos(this.props.url, this.props.userId);
-        console.log('pedidos: ', pedidos);
+        let pedidos = await this.props.getPedidos(this.props.url, this.props.userId);
         if(pedidos) this.setState({pedidos: pedidos});
     }
 
