@@ -55,6 +55,7 @@ function Header(props) {
               getProducts={props.getProducts}
               companies={props.companies}
               onClickAssociate={props.registroEmpresaProducto}
+              onClickProductAssociate={props.registroProductoAsociacion}
               getProductosByCompany={props.getProductosByCompany}
               crearPaquete = {props.crearPaquete}
             />

@@ -3,7 +3,7 @@ import 'typeface-roboto';
 import { Header } from './components/Layouts/';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
-// import axios from 'axios';
+import axios from 'axios';
 import Home from './components/PaginasPrincipales/Home';
 import Dashboard from './components/PaginasPrincipales/Dashboard';
 import Profile from './components/User/Profile';
@@ -526,6 +526,30 @@ getLineasPackage = async (id) => {
     // else{
     //   console.log('No hay token')
     // }
+  }
+
+  registroProductoAsociacion = (request) => {
+    let token = cookies.get('access_token');
+    
+    if(token){
+    
+      let instance = axios.create({
+                        baseURL: `${url}/api/product/company/asociacion/`,
+                        method: 'post',
+                        headers: {token: token},
+                        data: request
+                      });
+      instance()
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+    else{
+      console.log('No hay token');
+    }
   }
 
   crearPaquete = async (request) =>{

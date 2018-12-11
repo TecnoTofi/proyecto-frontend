@@ -21,6 +21,7 @@ import CamionIcon from '@material-ui/icons/LocalShipping';
 import ProductForm from '../Productos/ProductForm';
 import AssociateForm from '../Productos/AssociateForm';
 import PackageForm from '../Paquetes/PackageForm';
+import AltaProducto from '../Productos/AltaProducto';
 
 const styles = {
   list: {
@@ -95,9 +96,10 @@ class Drawer extends React.Component {
               <ListItemIcon><ProductsIcon /></ListItemIcon>
               <ListItemText primary='Mis productos' />
            </ListItem>
-          <ProductForm 
+          <AltaProducto
+            companyId={this.props.companyId}
             getCategories={this.props.getCategories}
-            onClick={this.props.onClickProduct}
+            onClick={this.props.onClickProductAssociate}
           />
           <AssociateForm
             companyId={this.props.companyId}
