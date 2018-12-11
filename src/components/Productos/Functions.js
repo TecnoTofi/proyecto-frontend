@@ -122,7 +122,7 @@ const getProductById = async (url, id) =>{
 };
 
 const getProductsCompanyByCompanies = async (url, id) => {
-    let productos = await fetch(`${url}/api/product/companies/${id}`)
+    let productos = await fetch(`${url}/api/product/${id}/companies`)
                                 .then(response => (
                                   response.json()
                                 ))

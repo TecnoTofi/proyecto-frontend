@@ -17,12 +17,15 @@ import Button from '@material-ui/core/Button';
 const styles = theme => ({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit * 3,
+    //   marginTop: theme.spacing.unit * 3,
       overflowX: 'auto'
     },
     table: {
       minWidth: 700,
     },
+    media: {
+        maxWidth: 400,
+    }
   });
 
 class DetalleProducto extends Component{
@@ -36,17 +39,17 @@ class DetalleProducto extends Component{
     async componentWillMount(){
         let productos = await this.props.getProductsCompanyByCompanies(this.props.productId);
         let producto = await this.props.getProductById(this.props.productId);
-        console.log(producto);
+        // console.log(producto);
         //concat
         await this.setState({
             companyProduct: productos,
             producto:producto
-        })
-        console.log(this.state);
+        });
+        // console.log(this.state);
     }
 
     agregarAlCarrito = (i) => {
-        console.log('producto detalle', this.state.companyProduct[i]);
+        // console.log('producto detalle', this.state.companyProduct[i]);
         this.props.agregarAlCarrito(this.state.companyProduct[i]);
     }
 
@@ -62,7 +65,7 @@ class DetalleProducto extends Component{
                         component='img'
                         height='10%'
                         width='20%'
-                        className={classes.cover}
+                        className={classes.media}
                         src={`${this.state.producto.imageUrl}`}
                         title={this.state.producto.name}
                     />
@@ -72,7 +75,7 @@ class DetalleProducto extends Component{
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                Codigo
+                                Empresa
                             </TableCell>
                             <TableCell>
                                 Nombre
@@ -84,12 +87,6 @@ class DetalleProducto extends Component{
                                 Descripcion
                             </TableCell>
                             <TableCell>
-                                Stock
-                            </TableCell>
-                            <TableCell> productos = await this.props.getProductsCompanyByCompanies(this.props.productId);
-                                Imagen
-                            </TableCell>
-                            <TableCell>
                                 Acciones
                             </TableCell>
                         </TableRow>
@@ -98,7 +95,7 @@ class DetalleProducto extends Component{
                         {this.state.companyProduct.map((product, i) => (
                             <TableRow key={i}>
                                 <TableCell>
-                                    {this.state.producto.code}
+                                    {product.companyName}
                                 </TableCell>
                                 <TableCell>
                                     {product.name}    
@@ -108,12 +105,6 @@ class DetalleProducto extends Component{
                                 </TableCell>
                                 <TableCell>
                                     {product.description}    
-                                </TableCell>
-                                <TableCell>
-                                    {product.stock}    
-                                </TableCell>
-                                <TableCell /*component = 'img' src={product.imageUrl}*/>
-                                      aca va la imagen pero no la puedo achicar.  
                                 </TableCell>
                                 <TableCell>
                                 <Button size="small" color="primary" 
