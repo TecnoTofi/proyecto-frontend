@@ -390,6 +390,7 @@ getLineasPackage = async (id) => {
       console.log('Error al iniciar sesion'); //devolver response status para no cerrar diaog y mostar error
       // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
     }
+    return status;
 
     // let request = new Request(`${url}/api/auth/login`, {
     //   method: 'POST',

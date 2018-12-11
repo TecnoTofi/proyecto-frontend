@@ -92,14 +92,17 @@ class LoginForm extends Component {
       return isError;
     };
 
-    onSubmit = (e) =>{
+    onSubmit = async (e) =>{
         e.preventDefault();
         
         const error = this.validate();
 
         if (!error){
-          this.props.onClick(this.state.userEmail, this.state.userPassword)
-          this.handleToggle();
+          let result = await this.props.onClick(this.state.userEmail, this.state.userPassword);
+          if(result === 400){
+            this.setState({userEmailError: 'Email y/o contraseña ingresados son incorrectos', userPasswordError: ' '})
+          }
+          else this.handleToggle();
         }      
     }
   
