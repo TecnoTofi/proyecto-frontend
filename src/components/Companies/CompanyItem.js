@@ -65,6 +65,7 @@ class CompanyItem extends Component {
             {/* </NavLink> */}
           </Fragment>
         ) : (
+          //esto ya se puede ir
           <Fragment>
             <Button size="small" color="primary">
               Ver
