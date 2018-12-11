@@ -24,7 +24,7 @@ class CartSelect extends Component{
 
     handleChange = (event) => {        
         this.setState({selected: event.target.value}, () => {
-            this.props.onChange(this.props.product.id, this.props.product.code, this.props.product.companyId, this.state.selected);
+            this.props.onChange(this.props.product.id, this.props.product.esPackage, this.props.product.companyId, this.state.selected);
         })
     }
     

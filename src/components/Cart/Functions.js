@@ -2,7 +2,7 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 	let existeProd = verificarExistenciaProd(cart.contenido, producto);
 
 	if(existeProd.res){
-		if(producto.code){
+		if(!producto.esPackage){
 			existeProd.res.productos[existeProd.productoPos].quantity += cantidad;
 			cart.contenido[existeProd.sellerPos] = existeProd.res;
 		}
@@ -21,7 +21,7 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 
 		if(existeSeller.res){
 
-			if(producto.code) existeSeller.res.productos.push(producto);
+			if(!producto.esPackage) existeSeller.res.productos.push(producto);
 			else existeSeller.res.paquetes.push(producto);
 
 			cart.contenido[existeSeller.sellerPos] = existeSeller.res;
@@ -32,7 +32,7 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 				productos: [],
 				paquetes: []
 			}
-			if(producto.code) seller.productos.push(producto);
+			if(!producto.esPackage) seller.productos.push(producto);
 			else seller.paquetes.push(producto);
 
 			cart.contenido.push(seller);
@@ -51,7 +51,7 @@ const verificarExistenciaProd = (contenido, producto) => {
 		if(seller.sellerId === producto.companyId){
 			sellerPos = i;
 			let x = 0;
-			if(producto.code){
+			if(!producto.esPackage){
 				while(x < seller.productos.length && !encontrado){
 					if(seller.productos[x].id === producto.id){
 						encontrado = true;
@@ -89,9 +89,9 @@ const verificarExistenciaSeller = (contenido, id) => {
 	return { res, sellerPos };
 }
 
-const borrarItemCarrito = (cart, prodId, prodCode, companyId) => {
+const borrarItemCarrito = (cart, prodId, esPackage, companyId) => {
 	let seller = verificarExistenciaSeller(cart.contenido, companyId);
-	if(prodCode){
+	if(!esPackage){
 		let productos = seller.res.productos.filter(item => {
 			return item.id !== prodId;
 		});
@@ -107,11 +107,11 @@ const borrarItemCarrito = (cart, prodId, prodCode, companyId) => {
 	return cart;
 }
 
-const cambiarCantidadProdCarrito = (cart, prodId, prodCode, companyId, cantidad) => {
-	let product = {id: prodId, code: prodCode, companyId};
+const cambiarCantidadProdCarrito = (cart, prodId, esPackage, companyId, cantidad) => {
+	let product = {id: prodId, code: esPackage, companyId};
 	let seller = verificarExistenciaProd(cart.contenido, product);
 
-	if(prodCode) seller.res.productos[seller.productoPos].quantity = cantidad;
+	if(!esPackage) seller.res.productos[seller.productoPos].quantity = cantidad;
 	else seller.res.paquetes[seller.productoPos].quantity = cantidad;
 
 	cart.contenido[seller.sellerPos] = seller.res;

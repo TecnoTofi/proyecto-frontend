@@ -6,13 +6,14 @@ const getAllPackages = async (url) => {
                                 res.json()
                               ))
                               .then(data => {
-                                // let response = data.map(prod => {
-                                //             prod.imageUrl = `${url}/${prod.imagePath}`;
-                                //             return prod;
-                                //           });
-                                // console.log('productos', response);
-                                // return response;
-                                return data;
+                                let response = data.map(pack => {
+                                            // pack.imageUrl = `${url}/${pack.imagePath}`;
+                                            pack.esPackage = true;
+                                            return pack;
+                                          });
+                                // console.log('paquetes', response);
+                                return response;
+                                // return data;
                               })
                               .catch(err => console.log(err));
     return paquetes;
@@ -25,12 +26,13 @@ const getPackagesByCompany = async (url, id) => {
                           ))
                           .then(data => {
                             // console.log('data', data);
-                            // let response = data.map(pack => {
-                            //             pack.imageUrl = `${url}/${pack.imagePath}`;
-                            //             return pack;
-                            //           });
-                            // return response;
-                            return data
+                            let response = data.map(pack => {
+                                        // pack.imageUrl = `${url}/${pack.imagePath}`;
+                                        pack.esPackage = true;
+                                        return pack;
+                                      });
+                            return response;
+                            // return data
                           })
                           .catch(err => console.log(err));
     return paquetes;

@@ -8,6 +8,7 @@ const getAllProducts = async (url) => {
                                 .then(data => {
                                 let response = data.map(prod => {
                                             prod.imageUrl = `${url}/${prod.imagePath}`;
+                                            prod.esPackage = false;
                                             return prod;
                                             });
                                 // console.log('productos', response);
@@ -41,6 +42,7 @@ const getProductsByCompany = async (url, id) => {
                                 // console.log('data', data);
                                 let response = data.map(prod => {
                                             prod.imageUrl = `${url}/${prod.imagePath}`;
+                                            prod.esPackage = false;
                                             return prod;
                                         });
                                 return response;
@@ -128,6 +130,7 @@ const getProductsCompanyByCompanies = async (url, id) => {
                                   // console.log('data', data);
                                   let response = data.map(prod => {
                                               prod.imageUrl = `${url}/${prod.imagePath}`;
+                                              prod.esPackage = false;
                                               return prod;
                                             });
                                   return response;

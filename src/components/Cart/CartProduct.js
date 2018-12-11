@@ -57,7 +57,7 @@ function MediaControlCard(props) {
                     variant='contained'
                     color='primary'
                     onClick={() => (
-                        props.onClick(props.product.id, props.product.code, props.product.companyId)
+                        props.onClick(props.product.id, props.product.esPackage, props.product.companyId)
                     )}
                 >
                     Borrar
