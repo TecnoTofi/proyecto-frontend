@@ -1,13 +1,13 @@
 //retornar algo
 const verificarToken = async (url, token) => {
     //cambiar a GET
-    let requestAuth = new Request(`${url}/api/auth`, {
+    let request = new Request(`${url}/api/auth`, {
         method: 'POST',
         headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-        credentials: 'same-origin'
+        credentials: 'same-origin',
       })
       let valido = false;
-      let data = await fetch(requestAuth)
+      let data = await fetch(request)
                     .then(res => {
                         if(res.status === 200) valido = true;
                         // console.log('status', res.status);
