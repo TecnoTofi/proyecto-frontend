@@ -1,4 +1,4 @@
-const   getCompanyTypes = async (url) => {
+const   getTypes = async (url) => {
     let tipos = await fetch(`${url}/api/company/type`)
                             .then(response => (
                               response.json()
@@ -13,7 +13,7 @@ const   getCompanyTypes = async (url) => {
 };
 
 const getCompanyCategories = async (url) => {
-    let categories = await fetch(`${url}/api/company/category`)
+    let categories = await fetch(`${url}/api/company/rubros`)
                             .then(response => (
                               response.json()
                             ))
@@ -58,7 +58,7 @@ const getCompanyById = async (url, id) => {
 
 
 export default {
-    getCompanyTypes,
+    getTypes,
     getCompanyCategories,
     getAllCompanies,
     getCompanyById

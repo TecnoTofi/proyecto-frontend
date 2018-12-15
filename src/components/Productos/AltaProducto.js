@@ -167,10 +167,15 @@ export default class ProductForm extends Component{
     // }
 
     onSelectChange = (seleccionados) => {
+        console.log('seleccionados', seleccionados);
+        console.log('seleccionados tipo', typeof seleccionados);
         let selectedCategories = seleccionados.map(selected => {
             return selected.id;
         })
-        this.setState({categories: selectedCategories});
+        this.setState({categories: selectedCategories}, () => {
+            console.log('categories', this.state.categories);
+            console.log('categories tipo', typeof this.state.categories);
+        });
     }
 
     onChange = (e) => {
@@ -202,7 +207,7 @@ export default class ProductForm extends Component{
             
 
             this.props.onClick(request);
-            this.handleToggle();
+            // this.handleToggle();
         } 
     }
     

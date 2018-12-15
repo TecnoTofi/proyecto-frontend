@@ -51,11 +51,11 @@ function Header(props) {
               cambiarVentana={props.cambiarVentana}
               companyId={props.loggedUser.userCompanyId}
               getCategories={props.getProductCategories}
-              onClickProduct={props.registrarProducto}
+              // onClickProduct={props.registrarProducto}
               getProducts={props.getProducts}
               companies={props.companies}
               onClickAssociate={props.registroEmpresaProducto}
-              onClickProductAssociate={props.registroProductoAsociacion}
+              onClickProductAssociate={props.registrarProducto}
               getProductosByCompany={props.getProductosByCompany}
               crearPaquete = {props.crearPaquete}
             />
@@ -114,9 +114,9 @@ function Header(props) {
             <Fragment>
               <LoginForm onClick={props.login} />
               <SignupForm onClick={props.signup}
-                  getCompanyTypes={props.getCompanyTypes} 
+                  getTypes={props.getTypes} 
                   getCategories={props.getCompanyCategories} 
-                  getUserTypes={props.getUserTypes}
+                  // getUserTypes={props.getUserTypes}
               />
             </Fragment>
           )}

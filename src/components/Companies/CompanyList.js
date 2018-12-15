@@ -93,7 +93,7 @@ class List extends Component{
 
         if(this.state.selectedCategory.length > 0){
             filteredList = filteredList.filter(item => {
-                return this.state.selectedCategory.includes(item.categoryId);
+                return this.state.selectedCategory.includes(item.rubroId);
             });
         }
 

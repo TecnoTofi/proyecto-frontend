@@ -31,7 +31,7 @@ const getProductCategories = async (url) => {
                                 })
                                 .catch(err => console.log(err));
     return categories;
-};
+}; 
 
 const getProductsByCompany = async (url, id) => {
     let productos = await fetch(`${url}/api/product/company/${id}`)

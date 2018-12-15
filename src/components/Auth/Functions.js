@@ -4,8 +4,7 @@ const verificarToken = async (url, token) => {
     let requestAuth = new Request(`${url}/api/auth`, {
         method: 'POST',
         headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-        credentials: 'same-origin',
-        body: JSON.stringify({message: 'AuthToken'})
+        credentials: 'same-origin'
       })
       let valido = false;
       let data = await fetch(requestAuth)

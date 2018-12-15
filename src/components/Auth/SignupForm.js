@@ -34,6 +34,8 @@ class SignupForm extends Component{
         super(props);
         this.state = {
             open: false,
+            types: [],
+            categories: [],
             userName: '',
             userEmail: '',
             userPassword: '',
@@ -42,16 +44,16 @@ class SignupForm extends Component{
             userFirstStreet: '',
             userSecondStreet: '',
             userDoorNumber: '',
-            role: 0, 
+            type: 0, 
             companyName: '',
             companyRut: '',
             companyPhone: '',
             companyFirstStreet: '',
             companySecondStreet: '',
             companyDoorNumber: '',
-            companyType: 0,
+            // companyType: 0,
             companyDescription:'',
-            companyCategory: 0,
+            rubro: 0,
             companyImage: null,
             userNameError: '',
             userEmailError: '',
@@ -67,8 +69,8 @@ class SignupForm extends Component{
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            companyTypeError: '',
-            companyCategoryError: '',
+            typeError: '',
+            rubroError: '',
             companyDescriptionError:'',
             companyImageError: '',
             showPassword: false
@@ -77,13 +79,14 @@ class SignupForm extends Component{
 
     async componentWillMount(){
         let categories = await this.props.getCategories();
-        let userTypes = await this.props.getUserTypes();
-        let companyTypes = await this.props.getCompanyTypes();
-
+        // let userTypes = await this.props.getUserTypes();
+        let types = await this.props.getTypes();
+        console.log('categories', categories);
+        console.log('types', types);
         await this.setState({ //ver porque da error de no-op
-            categories: categories,
-            userTypes: userTypes,
-            companyTypes: companyTypes
+            categories,
+            // userTypes: userTypes,
+            types
         })
     }
 
@@ -104,10 +107,10 @@ class SignupForm extends Component{
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            companyTypeError: '',
+            typeError: '',
             companyImageError: '',
             companyDescriptionError:'',
-            companyCategoryError: ''
+            rubroError: ''
         };
 
         if(!this.state.userName){
@@ -248,15 +251,15 @@ class SignupForm extends Component{
             errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
         }
         
-        if(this.state.companyType === 0 || this.state.role === 0){
+        if(this.state.type === 0 || this.state.type === 0){
             isError = true;
-            errors.companyTypeError="Debe seleccionar el tipo de empresa";
+            errors.typeError="Debe seleccionar el tipo de empresa";
         }
 
-        if(this.state.companyCategory === 0){
+        if(this.state.rubro === 0){
             isError = true;
-            errors.companyCategoryError="Debe seleccionar el rubro de la empresa";
-            console.log('error en companyCategory === 0');
+            errors.rubroError="Debe seleccionar el rubro de la empresa";
+            console.log('error en Rubro === 0');
         }
         
         if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
@@ -283,17 +286,17 @@ class SignupForm extends Component{
             userFirstStreet: '',
             userSecondStreet: '',
             userDoorNumber: '',
-            role: 0,
+            type: 0,
             companyName: '',
             companyRut: '',
             companyPhone: '',
             companyFirstStreet: '',
             companySecondStreet: '',
             companyDoorNumber: '',
-            companyType: 0,
+            // companyType: 0,
             companyImage: null,
             companyDescription:'',
-            companyCategory: 0,
+            rubro: 0,
             userNameError: '',
             userEmailError: '',
             userPasswordError: '',
@@ -308,10 +311,10 @@ class SignupForm extends Component{
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            companyTypeError: '',
+            typeError: '',
             companyImageError: '',
             companyDescriptionError:'',
-            companyCategoryError: ''
+            rubroError: ''
         });
       }
 
@@ -320,14 +323,13 @@ class SignupForm extends Component{
     }
 
     onSelectTypeChange = (id) => {
-        let companyTypeName = this.state.companyTypes.find(type => type.id === id).name;
-        let role = this.state.userTypes.find(rol => rol.name === companyTypeName);
-        this.setState({companyType: Number(id), role: Number(role.id)});
+        // let companyTypeName = this.state.companyTypes.find(type => type.id === id).name;
+        // let role = this.state.userTypes.find(rol => rol.name === companyTypeName);
+        this.setState({type: Number(id)});
     }
 
-    onSelectCategoryChange = (tipo) => {
-        let cat = Number(tipo);
-        this.setState({companyCategory: cat});
+    onSelectCategoryChange = (r) => {
+        this.setState({rubro: Number(r)});
     }
 
     onSubmit = (e) => {
@@ -346,7 +348,7 @@ class SignupForm extends Component{
             request.set('userFirstStreet', this.state.userFirstStreet);
             request.set('userSecondStreet', this.state.userSecondStreet);
             request.set('userDoorNumber', this.state.userDoorNumber);
-            request.set('role', this.state.role);
+            request.set('type', this.state.type);
             //company
             request.set('companyName', this.state.companyName);
             request.set('companyRut', this.state.companyRut);
@@ -354,8 +356,8 @@ class SignupForm extends Component{
             request.set('companyFirstStreet', this.state.companyFirstStreet);
             request.set('companySecondStreet', this.state.companySecondStreet);
             request.set('companyDoorNumber', this.state.companyDoorNumber);
-            request.set('companyType', this.state.companyType);
-            request.set('companyCategory', this.state.companyCategory);
+            // request.set('companyType', this.state.companyType);
+            request.set('rubro', this.state.rubro);
             request.set('companyDescription', this.state.companyDescription);
 
             //image
@@ -603,16 +605,16 @@ class SignupForm extends Component{
                         onKeyPress={this.onEnterPress}
                     />
                     <SelectSignup 
-                        content={this.state.companyTypes}
+                        content={this.state.types}
                         onChange={this.onSelectTypeChange}
-                        selectError={this.state.companyTypeError}
+                        selectError={this.state.typeError}
                         label={'Tipo de empresa'}
                         helper={'Seleccione el tipo de empresa'}
                     />
                     <SelectSignup 
                         content={this.state.categories}
                         onChange={this.onSelectCategoryChange}
-                        selectError={this.state.companyCategoryError}
+                        selectError={this.state.rubroError}
                         label={'Rubro de la empresa'}
                         helper={'Seleccione el rubro de la empresa'}
                     />

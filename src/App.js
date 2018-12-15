@@ -136,8 +136,8 @@ class App extends Component {
     //     });
   }
 
-  getCompanyTypes = async () => {
-    return await CompanyFunctions.getCompanyTypes(url);
+  getTypes = async () => {
+    return await CompanyFunctions.getTypes(url);
     // let tipos = await fetch(`${url}/api/company/type`)
     //                         .then(response => (
     //                           response.json()
@@ -532,7 +532,7 @@ getLineasPackage = async (id) => {
     if(token){
     
       let instance = axios.create({
-                        baseURL: `${url}/api/product/company/asociacion/`,
+                        baseURL: `${url}/api/product`,
                         method: 'post',
                         headers: {token: token},
                         data: request
@@ -696,11 +696,11 @@ getLineasPackage = async (id) => {
             login={this.login}
             logout={this.logout}
             signup={this.registroUsuarioEmpresa}
-            getCompanyTypes={this.getCompanyTypes}
+            getTypes={this.getTypes}
             getCompanyCategories={this.getCompanyCategories}
-            getUserTypes={this.getUserTypes}
+            // getUserTypes={this.getUserTypes}
             getProductCategories={this.getProductCategories}
-            registrarProducto={this.registroProducto}
+            registrarProducto={this.registroProductoAsociacion}
             getProducts={this.getAllProducts}
             companies={this.state.companies}
             registroEmpresaProducto={this.asociarProducto}
@@ -718,7 +718,7 @@ getLineasPackage = async (id) => {
                   flag='companias'
                   getContent={this.getAllCompanies}
                   getCategories={this.getCompanyCategories}
-                  getTipos={this.getCompanyTypes}
+                  getTipos={this.getTypes}
                   onCompanyClick={this.seleccionarCompany}
                 />
               ) : (
