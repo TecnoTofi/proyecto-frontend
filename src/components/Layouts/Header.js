@@ -50,7 +50,7 @@ function Header(props) {
             <Drawer
               cambiarVentana={props.cambiarVentana}
               companyId={props.loggedUser.userCompanyId}
-              getCategories={props.getProductCategories}
+              getCategories={props.getCategories}
               // onClickProduct={props.registrarProducto}
               getProducts={props.getProducts}
               companies={props.companies}
@@ -115,7 +115,7 @@ function Header(props) {
               <LoginForm onClick={props.login} />
               <SignupForm onClick={props.signup}
                   getTypes={props.getTypes} 
-                  getCategories={props.getCompanyCategories} 
+                  getCategories={props.getRubros} 
                   // getUserTypes={props.getUserTypes}
               />
             </Fragment>

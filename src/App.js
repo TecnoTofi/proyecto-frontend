@@ -8,6 +8,7 @@ import Home from './components/PaginasPrincipales/Home';
 import Dashboard from './components/PaginasPrincipales/Dashboard';
 import Profile from './components/User/Profile';
 import AuthFunctions from './components/Auth/Functions';
+import HelperFunctions from './components/Helpers/Functions';
 import UserFunctions from './components/User/Functions';
 import CompanyFunctions from './components/Companies/Functions';
 import ProductFunctions from './components/Productos/Functions';
@@ -81,7 +82,6 @@ class App extends Component {
   verificarToken = async (token) => {
     let { valido, data } = await AuthFunctions.verificarToken(url, token);
     if(valido){
-      // console.log('entre en valido status');
       cookies.set('access_token', data.token, { path: '/' });
 				
       this.setState({
@@ -99,124 +99,26 @@ class App extends Component {
     else{
       console.log('error en auth de token, o vencido');
     }
-
-    // let requestAuth = new Request(`${url}/api/auth`, {
-    //     method: 'POST',
-    //     headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-    //     credentials: 'same-origin',
-    //     body: JSON.stringify({message: 'AuthToken'})
-    //   })
-      
-    //   fetch(requestAuth)
-    //     .then(res => {
-    //       res.json()
-    //         .then(data => {
-		// 		if(res.status === 200){
-		// 			cookies.set('access_token', data.token, { path: '/' });
-				
-		// 			this.setState({
-		// 				logged: true,
-		// 				loggedUser: {
-		// 					userType: data.userData.userType,
-		// 					userName: data.userData.userName,
-		// 					userEmail: data.userData.userEmail,
-		// 					userId: data.userData.userId,
-		// 					userCompanyName: data.userData.userCompanyName,
-		// 					userCompanyId: data.userData.userCompanyId
-		// 				}
-		// 			})
-		// 		}
-		// 	})
-    //         .catch(err => {
-    //           console.log(err);
-    //         });
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
   }
 
   getTypes = async () => {
-    return await CompanyFunctions.getTypes(url);
-    // let tipos = await fetch(`${url}/api/company/type`)
-    //                         .then(response => (
-    //                           response.json()
-    //                         ))
-    //                         .then(data => {
-    //                           // console.log('tipos empresa', data);
-    //                           return data;
-    //                           // this.setState({companyTypes: data});
-    //                         })
-    //                         .catch(err => console.log(err));
-    // return tipos;
+    return await HelperFunctions.getTypes(url);
   }
 
-  getCompanyCategories = async () => {
-    return await CompanyFunctions.getCompanyCategories(url);
-    // let categories = await fetch(`${url}/api/company/category`)
-    //                         .then(response => (
-    //                           response.json()
-    //                         ))
-    //                         .then(data => {
-    //                           // console.log('categorias empresa', data);
-    //                           return data;
-    //                           // this.setState({companyCategories: data});
-    //                         })
-    //                         .catch(err => console.log(err));
-    // return categories;
+  getRubros = async () => {
+    return await HelperFunctions.getRubros(url);
   }
 
   getUserTypes = async () => {
     return await UserFunctions.getUserTypes(url);
-    // let userTypes = await fetch(`${url}/api/user/role/signup`)
-    //                         .then(response => (
-    //                           response.json()
-    //                         ))
-    //                         .then(data => {
-    //                           // console.log('user Types', data);
-    //                           return data;
-    //                           // this.setState({userTypes: data});
-    //                         })
-    //                         .catch(err => console.log(err));
-    // return userTypes;
   }
 
   getAllCompanies = async () => {
     return await CompanyFunctions.getAllCompanies(url);
-    // let companias = await fetch(`${url}/api/company`)
-    //                         .then(response => (
-    //                           response.json()
-    //                         ))
-    //                         .then(data => {
-    //                           let companias = data.map(comp => {
-    //                             comp.imageUrl = `${url}/${comp.imagePath}`;
-    //                             return comp;
-    //                           });
-    //                           // console.log('companias', companias);
-    //                           return companias;
-    //                           // this.setState({companies: companias});
-    //                         })
-    //                         .catch(err => console.log(err));
-    // return companias;
   }
 
   getAllProducts = async () => {
     return await ProductFunctions.getAllProducts(url);
-    // let productos = await fetch(`${url}/api/product`)
-    //                           .then(response => (
-    //                             response.json()
-    //                           ))
-    //                           .then(data => {
-    //                             let response = data.map(prod => {
-    //                                         prod.imageUrl = `${url}/${prod.imagePath}`;
-    //                                         return prod;
-    //                                       });
-    //                             // console.log('productos', response);
-    //                             return response;
-    //                             // this.setState({products: response});
-    //                           })
-    //                           .catch(err => console.log(err));
-    // return productos;
   }
 
   getProductById = async (id) => {
@@ -229,148 +131,39 @@ class App extends Component {
 
   getAllPackages = async () => {
     return await PackageFunctions.getAllPackages(url);
-    // let paquetes = await fetch(`${url}/api/package`)
-    //                           .then(res => (
-    //                             res.json()
-    //                           ))
-    //                           .then(data => {
-    //                             // let response = data.map(prod => {
-    //                             //             prod.imageUrl = `${url}/${prod.imagePath}`;
-    //                             //             return prod;
-    //                             //           });
-    //                             // console.log('productos', response);
-    //                             // return response;
-    //                             return data;
-    //                           })
-    //                           .catch(err => console.log(err));
-    // return paquetes;
   }
 
-  getProductCategories = async () => {
-    return await ProductFunctions.getProductCategories(url);
-    // let categories = await fetch(`${url}/api/product/category`)
-    //                           .then(response => (
-    //                             response.json()
-    //                           ))
-    //                           .then(data => {
-    //                             // console.log('categorias productos', data);
-    //                             return data;
-    //                             // this.setState({productCategories: data})
-    //                           })
-    //                           .catch(err => console.log(err));
-    // return categories;
+  getCategories = async () => {
+    return await HelperFunctions.getCategories(url);
   }
 
   getProductsByCompany = async (id) => {
     return await ProductFunctions.getProductsByCompany(url, id);
-    // let productos = await fetch(`${url}/api/product/company/${id}`)
-    //                             .then(response => (
-    //                               response.json()
-    //                             ))
-    //                             .then(data => {
-    //                               // console.log('data', data);
-    //                               let response = data.map(prod => {
-    //                                           prod.imageUrl = `${url}/${prod.imagePath}`;
-    //                                           return prod;
-    //                                         });
-    //                               return response;
-    //                             })
-    //                             .catch(err => console.log(err));
-    //   return productos;
   }
 
 getCompanyById = async () => {
   return await CompanyFunctions.getCompanyById(url, this.state.loggedUser.userCompanyId);
-  // let compania = await fetch(`${url}/api/company/${this.state.loggedUser.userCompanyId}`)
-  //           .then(res => (
-  //             res.json()
-  //           ))
-  //           .then(data => {
-  //             return data;
-  //           })
-  //           .catch(err => console.log(`Error al buscar Company : ${err}`));
-  // return compania;
 }
 
 getUserById = async () => {
   return await UserFunctions.getUserById(url, this.state.loggedUser.userId);
-  // let usuario = await fetch(`${url}/api/user/${this.state.loggedUser.userId}`)
-  //           .then(res => (
-  //             res.json()
-  //           ))
-  //           .then(data => {
-  //             return data;
-  //           })
-  //           .catch(err => {
-  //             console.log(`Error al buscar Usuario : ${err}`);
-  //           });
-  // return usuario;
 }
 
 getPackagesByCompany = async (id) => {
   return await PackageFunctions.getPackagesByCompany(url, id);
-  // let paquetes = await fetch(`${url}/api/package/company/${id}`)
-  //                       .then(res => (
-  //                         res.json()
-  //                       ))
-  //                       .then(data => {
-  //                         // console.log('data', data);
-  //                         // let response = data.map(pack => {
-  //                         //             pack.imageUrl = `${url}/${pack.imagePath}`;
-  //                         //             return pack;
-  //                         //           });
-  //                         // return response;
-  //                         return data
-  //                       })
-  //                       .catch(err => console.log(err));
-  // return paquetes;
 }
 
 getLineasPackage = async (id) => {
   let token = cookies.get('access_token');
   return await PackageFunctions.getLineasPackage(url, token, id);
-  //   if(token){
-  //   let request = new Request(`${url}/api/package/products/${id}`, {
-  //     method: 'GET',
-  //     headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-  //     credentials: 'same-origin'
-  //     });
-      
-  //     let packages = await fetch(request)
-  //                             .then(response => (
-  //                               response.json()
-  //                             ))
-  //                             .then(data => {
-  //                               console.log(data);
-  //                               return data;
-  //                             })
-  //                             .catch(err => console.log(err));
-  //     return packages;
-  //   }
 }
 
   registroUsuarioEmpresa = async (request) => {
     return await UserFunctions.registroUsuarioEmpresa(url, request);
-    // axios.post(`${url}/api/auth/signup`, request)
-    //   .then(res => {
-    //     console.log(res);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
   }
 
   modificarPerfil = async (request) => {
     return await UserFunctions.modificarPerfil(url, this.state.loggedUser.userId, this.state.loggedUser.companyId, request);
-    // console.log(request.getAll());
-    // axios.post(`${url}/api/auth/update/user/${this.state.loggedUser.userId}/company/${this.state.loggedUser.userCompanyId}`,
-    // request)
-    //   .then(res => {
-    //     console.log(res);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
   }
 
   login = async (userEmail, userPassword) => {
@@ -388,39 +181,6 @@ getLineasPackage = async (id) => {
     }
     
     return status;
-
-    // let request = new Request(`${url}/api/auth/login`, {
-    //   method: 'POST',
-    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-    //   credentials: 'same-origin',
-    //   body: JSON.stringify({userEmail, userPassword})
-    // });
-    // let status = '';
-    // fetch(request)
-    //     .then((res) => {
-    //       status = res.status;
-    //       return res.json()
-    //     })
-    //     .then(data => {
-    //       if(data && status === 200) {
-    //         cookies.set('access_token', data.token, { path: '/' });
-    //         this.setState({
-    //           shownWindow: 'dashboard',
-    //           logged: true,
-    //           loggedUser: {
-    //             ...data.userData
-    //           }
-    //         });
-    //       }
-    //       else{
-    //         console.log('fallo'); //devolver response status para no cerrar diaog y mostar error
-    //         // this.setearSnackbar(true, 'Error al iniciar sesion', 'error'); //no se llama, probablemente por el cierre del dialog
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(`Error al enviar inicio de sesion : ${err}`);
-    //       this.setearSnackbar(true, 'Error al iniciar sesion', 'error');
-    //     });
   }
 
   logout = async () => {
@@ -444,86 +204,16 @@ getLineasPackage = async (id) => {
       console.log('Error al cerrar sesion');
       // this.setearSnackbar(true, 'Error al cerrar sesion', 'error');
     }
-    // let request = new Request(`${url}/api/auth/logout`, {
-    //   method: 'POST',
-    //   headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-    //   credentials: 'same-origin'
-    // });
-
-    // fetch(request)
-    //   .then((res) => {
-    //     res.json()
-    //       .then(data => {
-            
-    //         this.setState({
-    //           logged: false,
-    //           loggedUser: {
-    //             userType: '',
-    //             userName: '',
-    //             userEmail: '',
-    //             userId: 0,
-    //             userCompanyName: '',
-    //             userCompanyId: 0
-    //           }
-    //         });
-    //         cookies.remove('access_token', { path: '/' })
-    //         console.log(data);
-    //       })
-    //       .catch(err => {
-    //         console.log(`Error al enviar cierre de sesion : ${err}`);
-    //       });
-    //   });
   }
 
   registroProducto = async (request) => {
     let token = cookies.get('access_token');
     return await ProductFunctions.registroProducto(url, token, request);
-    // if(token){
-    
-    //   let instance = axios.create({
-    //                     baseURL: `${url}/api/product`,
-    //                     method: 'post',
-    //                     headers: {token: token},
-    //                     data: request
-    //                   });
-    //   instance()
-    //     .then(res => {
-    //       console.log(res);
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    // }
-    // else{
-    //   console.log('No hay token');
-    // }
   }
 
   asociarProducto = async (request) => {
     let token = cookies.get('access_token');
     return await ProductFunctions.asociarProducto(url, token, request);
-    // if(token){
-
-    //   let request = new Request(`${url}/api/product/company`, {
-    //     method: 'POST',
-    //     headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-    //     body: JSON.stringify(body)
-    //   });
-  
-    //   fetch(request)
-    //     .then((res) => {
-    //       res.json()
-    //         .then(data => {
-    //           console.log(data);
-    //         })
-    //         .catch(err => {
-    //           console.log(`Error al enviar registro de productoEmpresa : ${err}`);
-    //         });
-    //     });
-    // }
-    // else{
-    //   console.log('No hay token')
-    // }
   }
 
   registroProductoAsociacion = (request) => {
@@ -553,37 +243,6 @@ getLineasPackage = async (id) => {
   crearPaquete = async (request) =>{
     let token = cookies.get('access_token');
     return await PackageFunctions.crearPaquete(url, token, request);
-    // console.log('token enviado',token);
-    // console.log(request);
-    // if(token){
-    //   let instance = axios.create({
-    //     baseURL: `${url}/api/package`,
-    //     method: 'post',
-    //     headers: {token: token},
-    //     data: request
-    //   });
-    //   instance()
-    //   .then(res => {
-    //   console.log(res);
-    //   })
-    //   .catch(err => {
-    //   console.log(err);
-    //   });
-    // }
-    // else{
-    // console.log('No hay token');
-    // }
-    /*axios.post(`${url}/api/package`, request)
-      .then(res => {
-        console.log(res);
-        //return res.status;
-        if(res.status === 201){
-          return <Snacks />
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });*/
   }
 
   seleccionarCompany = (id) => {
@@ -596,27 +255,10 @@ getLineasPackage = async (id) => {
 
   modificarProducto = async (request, id) => {
     return await ProductFunctions.modificarProducto(url, request, id);
-    // axios.post(`${url}/api/product/update/company/${id}`,
-    //   request)
-    //     .then(res => {
-    //       console.log(res);
-            
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
   }
 
   eliminarProducto = async (id) =>{
     return await ProductFunctions.eliminarProducto(url, id);
-      // axios.post(`${url}/api/product/delete/company/${id}`)
-      //   .then(res => {
-      //     console.log(res);
-            
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
@@ -697,9 +339,8 @@ getLineasPackage = async (id) => {
             logout={this.logout}
             signup={this.registroUsuarioEmpresa}
             getTypes={this.getTypes}
-            getCompanyCategories={this.getCompanyCategories}
-            // getUserTypes={this.getUserTypes}
-            getProductCategories={this.getProductCategories}
+            getRubros={this.getRubros}
+            getCategories={this.getCategories}
             registrarProducto={this.registroProductoAsociacion}
             getProducts={this.getAllProducts}
             companies={this.state.companies}
@@ -717,7 +358,7 @@ getLineasPackage = async (id) => {
                 <CompanyList
                   flag='companias'
                   getContent={this.getAllCompanies}
-                  getCategories={this.getCompanyCategories}
+                  getCategories={this.getRubros}
                   getTipos={this.getTypes}
                   onCompanyClick={this.seleccionarCompany}
                 />
@@ -727,7 +368,7 @@ getLineasPackage = async (id) => {
                     flag='productos'
                     getProductos={this.getAllProducts}
                     getPaquetes={this.getAllPackages}
-                    getCategories={this.getProductCategories}
+                    getCategories={this.getCategories}
                     cambiarVentana={this.cambiarVentana}
                   />
                 ) : (
@@ -739,7 +380,7 @@ getLineasPackage = async (id) => {
                       getProductos={this.getProductsByCompany}
                       getPaquetes={this.getPackagesByCompany}
                       company={this.state.companiaSeleccionada}
-                      getCategories={this.getProductCategories}
+                      getCategories={this.getCategories}
                     />
                   ) : (
                     this.state.shownWindow === 'myProducts' ? (
@@ -766,13 +407,13 @@ getLineasPackage = async (id) => {
                             getCompany = {this.getCompanyById}
                             userId = {this.state.loggedUser.userId}
                             companyId = {this.state.loggedUser.userCompanyId}
-                            getCategories={this.getCompanyCategories}
+                            getCategories={this.getRubros}
                             modificarPerfil={this.modificarPerfil}
                           />
                         ) : (
                           this.state.shownWindow === 'productForm' ? (
                             <ProductForm 
-                              getCategories={this.getProductCategories}
+                              getCategories={this.getCategories}
                               onClick={this.registroProducto}
                             />
                           ) : (

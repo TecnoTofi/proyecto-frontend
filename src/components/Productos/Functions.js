@@ -6,32 +6,35 @@ const getAllProducts = async (url) => {
                                 response.json()
                                 ))
                                 .then(data => {
-                                let response = data.map(prod => {
+                                    if(!data.message){
+                                        let response = data.map(prod => {
                                             prod.imageUrl = `${url}/${prod.imagePath}`;
                                             prod.esPackage = false;
                                             return prod;
                                             });
-                                // console.log('productos', response);
-                                return response;
-                                // this.setState({products: response});
+                                        return response;
+                                    }
+                                    else{
+                                        return null;
+                                    }
                                 })
                                 .catch(err => console.log(err));
     return productos;
 };
 
-const getProductCategories = async (url) => {
-    let categories = await fetch(`${url}/api/product/category`)
-                                .then(response => (
-                                response.json()
-                                ))
-                                .then(data => {
-                                // console.log('categorias productos', data);
-                                return data;
-                                // this.setState({productCategories: data})
-                                })
-                                .catch(err => console.log(err));
-    return categories;
-}; 
+// const getProductCategories = async (url) => {
+//     let categories = await fetch(`${url}/api/product/category`)
+//                                 .then(response => (
+//                                 response.json()
+//                                 ))
+//                                 .then(data => {
+//                                 // console.log('categorias productos', data);
+//                                 return data;
+//                                 // this.setState({productCategories: data})
+//                                 })
+//                                 .catch(err => console.log(err));
+//     return categories;
+// }; 
 
 const getProductsByCompany = async (url, id) => {
     let productos = await fetch(`${url}/api/product/company/${id}`)
@@ -164,7 +167,7 @@ const eliminarProducto = async (url, id) =>{
 export default {
     getAllProducts,
     getProductsByCompany,
-    getProductCategories,
+    // getProductCategories,
     registroProducto,
     asociarProducto,
     modificarProducto,

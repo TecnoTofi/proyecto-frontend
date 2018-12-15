@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Item from './ProductItem';
 import SelectMultiple from '../Helpers/SelectMultiple';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
     container: {
@@ -44,19 +45,15 @@ class List extends Component{
     }
 
     async getInfo(){
-        
-        // let listado = [];
-        // if(!this.props.company && this.props.company !== 0){
-            // console.log('companyId', this.props.company);
-            
-            //revisar porque si productos es undefined no se agregan paquetes tampoco
-            let productos = await this.props.getProductos(this.props.company);
-            let paquetes = await this.props.getPaquetes(this.props.company);
-            let listado = productos.concat(paquetes);
-        // }
-        // else
-        //     listado = await this.props.getContent();
+        let productos = await this.props.getProductos(this.props.company);
+        let paquetes = await this.props.getPaquetes(this.props.company);
         let categorias = await this.props.getCategories();
+        
+        let listado = [];
+        if(productos && paquetes) listado = productos.concat(paquetes);
+        else if(productos && !paquetes) listado = productos;
+        else if(!productos && paquetes) listado = paquetes;
+        else listado = [];
         
         await this.setState({
             listado: listado,
@@ -109,7 +106,12 @@ class List extends Component{
 
         return(
             <Fragment>
-                {filteredList ? (
+            {this.state.listado.length === 0 ? (
+                <Typography>
+                    No hay productos
+                </Typography>
+            ) : (
+                filteredList ? (
                     <Fragment>
                         <div className={classes.container}>
                             <TextField
@@ -141,7 +143,8 @@ class List extends Component{
                             ))}
                         </Grid>
                     </Fragment>
-                ) : `No hay ${this.props.flag} registradas aun` }
+                ) : `No hay ${this.props.flag} registradas aun` 
+                )}
             </Fragment>
         );
     }
