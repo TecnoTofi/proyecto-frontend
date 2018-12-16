@@ -158,8 +158,8 @@ getLineasPackage = async (id) => {
   return await PackageFunctions.getLineasPackage(url, token, id);
 }
 
-  registroUsuarioEmpresa = async (request) => {
-    return await UserFunctions.registroUsuarioEmpresa(url, request);
+  signup = async (request) => {
+    return await AuthFunctions.signup(url, request);
   }
 
   modificarPerfil = async (request) => {
@@ -337,7 +337,7 @@ getLineasPackage = async (id) => {
             loggedUser={this.state.loggedUser}
             login={this.login}
             logout={this.logout}
-            signup={this.registroUsuarioEmpresa}
+            signup={this.signup}
             getTypes={this.getTypes}
             getRubros={this.getRubros}
             getCategories={this.getCategories}
@@ -403,10 +403,10 @@ getLineasPackage = async (id) => {
                       ) : (
                         this.state.shownWindow === 'profile' ? (
                           <Profile 
-                            getUser = {this.getUserById}
-                            getCompany = {this.getCompanyById}
-                            userId = {this.state.loggedUser.userId}
-                            companyId = {this.state.loggedUser.userCompanyId}
+                            getUser={this.getUserById}
+                            getCompany={this.getCompanyById}
+                            userId={this.state.loggedUser.userId}
+                            companyId={this.state.loggedUser.userCompanyId}
                             getCategories={this.getRubros}
                             modificarPerfil={this.modificarPerfil}
                           />

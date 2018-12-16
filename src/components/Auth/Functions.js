@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 //retornar algo
 const verificarToken = async (url, token) => {
     //cambiar a GET
@@ -70,8 +72,19 @@ const logout = async (url) => {
     return { result, status };
 };
 
+const signup = async (url, request) => {
+    await axios.post(`${url}/api/auth/signup`, request)
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+}
+
 export default {
     verificarToken,
     login,
-    logout
+    logout,
+    signup
 }

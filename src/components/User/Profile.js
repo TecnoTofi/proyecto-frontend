@@ -82,11 +82,11 @@ const styles = theme => ({
 
     async componentWillMount(){
         let company= await this.props.getCompany(this.props.companyId);
-        console.log('comapny', company);
+        // console.log('comapny', company);
         let user = await this.props.getUser(this.props.userId);
-        console.log('user', user);
+        // console.log('user', user);
         let categories = await this.props.getCategories();
-        console.log('categories', categories);
+        // console.log('categories', categories);
         
         this.setState({
             userName: user.name,
