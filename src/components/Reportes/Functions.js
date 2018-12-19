@@ -11,7 +11,7 @@ const getListadoTransacciones = async (url, userId) => {
     return transacciones;
 };
 
-const getPedidos = async (url, token, userId) => {
+const getPedidosByUser = async (url, token, userId) => {
     console.log('getPedidos')
 
     let request = new Request(`${url}/api/pedido/user/${userId}`, {
@@ -87,7 +87,7 @@ const getTransactionPackages = async (url, transactionId) => {
 }
 
 export default {
-    getPedidos,
+    getPedidosByUser,
     getTransactionsPedido,
     getTransactionProducts,
     getTransactionPackages,

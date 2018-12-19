@@ -319,7 +319,7 @@ getLineasPackage = async (id) => {
   getReporteCompras = async () => {
     let token = cookies.get('access_token');
     if(!token) return
-    return await ReportesFunctions.getPedidos(url, token, this.state.loggedUser.userId);
+    return await ReportesFunctions.getPedidosByUser(url, token, this.state.loggedUser.userId);
   }
 
   setearSnackbar = (status, message, variant) => {
