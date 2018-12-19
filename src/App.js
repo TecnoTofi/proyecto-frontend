@@ -293,7 +293,7 @@ getLineasPackage = async (id) => {
       contenido: this.state.cart.contenido,
       specialDiscount: 0 //luego se trabajara este valor que debera ir dentro de cada seller
     }
-    let cart = CartFunctions.calcularTotal(url, token, request, cart);
+    let cart = CartFunctions.calcularTotal(url, token, request, this.state.cart);
     this.setState({cart: cart});
   }
 

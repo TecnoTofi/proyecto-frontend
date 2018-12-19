@@ -142,10 +142,10 @@ const calcularTotal = async (url, token, req, cart) => {
 		body: JSON.stringify(req)
 	});
 
-	let status = '';
+	// let status = '';
 	let response = await fetch(request)
 							.then(res => {
-								status = res.status;
+								// status = res.status;
 								return res.json();
 							})
 							.then(data => {

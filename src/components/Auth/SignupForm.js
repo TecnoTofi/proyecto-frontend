@@ -83,7 +83,7 @@ class SignupForm extends Component{
         let types = await this.props.getTypes();
         // console.log('categories', categories);
         // console.log('types', types);
-        await this.setState({ //ver porque da error de no-op
+        this.setState({ //ver porque da error da no-op
             categories,
             // userTypes: userTypes,
             types
