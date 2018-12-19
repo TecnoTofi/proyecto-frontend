@@ -47,15 +47,15 @@ const HistorialComprasItem = (props) => {
             <Divider />
             {props.pedido.transactions.map(transaction => (
                 <Fragment key={transaction.id}>
-                    {transaction.productos ? (
-                        transaction.productos.map(prod => (
+                    {transaction.products ? (
+                        transaction.products.map(prod => (
                             <Typography variant='body1' key={prod.id}>
                                 {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
                             </Typography>
                         ))
                     ) : null}
-                    {transaction.paquetes ? (
-                        transaction.paquetes.map(pack => (
+                    {transaction.packages ? (
+                        transaction.packages.map(pack => (
                             <Typography variant='body1' key={pack.id}>
                                 {`${pack.name} x ${pack.quantity}`}
                             </Typography>

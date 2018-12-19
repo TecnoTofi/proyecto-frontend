@@ -11,10 +11,17 @@ const getListadoTransacciones = async (url, userId) => {
     return transacciones;
 };
 
-const getPedidos = async (url, userId) => {
+const getPedidos = async (url, token, userId) => {
     console.log('getPedidos')
+
+    let request = new Request(`${url}/api/pedido/user/${userId}`, {
+		method: 'GET',
+		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+		credentials: 'same-origin'
+	  });
+
     let status = '';
-    let pedidos = await fetch(`${url}/api/pedido/user/${userId}`)
+    let pedidos = await fetch(request)
                             .then(response => {
                                 status = response.status;
                                 return response.json();
@@ -22,6 +29,7 @@ const getPedidos = async (url, userId) => {
                             .then(data => {
                                 if(data){
                                     if(status === 200){
+                                        console.log(data);
                                         return data;
                                     }
                                     console.log('User no tiene pedidos');

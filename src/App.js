@@ -18,8 +18,8 @@ import Carrito from './components/Cart/Cart';
 import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
 import ProductForm from './components/Productos/ProductForm';
-import HistorialCompras from './components/Historiales/ComprasList';
-import HistorialFunctions from './components/Historiales/Functions';
+import ReporteCompras from './components/Reportes/ComprasList';
+import ReportesFunctions from './components/Reportes/Functions';
 // import Snackbar from '@material-ui/core/Snackbar';
 import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
@@ -310,8 +310,10 @@ getLineasPackage = async (id) => {
     console.log(response);
   }
 
-  getHistorialPedidos = async () => {
-    return await HistorialFunctions.getPedidos(url, this.state.loggedUser.userId);
+  getReporteCompras = async () => {
+    let token = cookies.get('access_token');
+    if(!token) return
+    return await ReportesFunctions.getPedidos(url, token, this.state.loggedUser.userId);
   }
 
   setearSnackbar = (status, message, variant) => {
@@ -417,10 +419,10 @@ getLineasPackage = async (id) => {
                               onClick={this.registroProducto}
                             />
                           ) : (
-                            this.state.shownWindow === 'historialCompras' ? (
-                              <HistorialCompras
+                            this.state.shownWindow === 'reporteCompras' ? (
+                              <ReporteCompras
                                 userId={this.state.loggedUser.userId}
-                                getPedidos={this.getHistorialPedidos}
+                                getPedidos={this.getReporteCompras}
                               />
                             ) : (
                               this.state.shownWindow === 'productDetalle' ? (

@@ -75,7 +75,7 @@ class Drawer extends React.Component {
           </ListItem> */}
           <ListItem button onClick={() => {
              this.toggleDrawer(); //por alguna razon no se esta llamando
-             this.props.cambiarVentana('historialCompras');
+             this.props.cambiarVentana('reporteCompras');
            }}>
               <ListItemIcon><HistorialIcon /></ListItemIcon>
               <ListItemText primary='Historial de compras' />
