@@ -286,7 +286,13 @@ getLineasPackage = async (id) => {
   // }
 
   cartTotalCalculate = () => {
-    let cart = CartFunctions.calcularTotal(this.state.cart);
+    let token = cookies.get('access_token');
+    if(!token) return
+    let request = {
+      contenido: this.state.cart.contenido,
+      specialDiscount: 0 //luego se trabajara este valor que debera ir dentro de cada seller
+    }
+    let cart = CartFunctions.calcularTotal(url, token, request, cart);
     this.setState({cart: cart});
   }
 

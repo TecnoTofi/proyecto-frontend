@@ -133,29 +133,49 @@ const cambiarCantidadProdCarrito = (cart, prodId, esPackage, companyId, cantidad
 //   // this.setState({cart: cart}, () => this.cartTotalCalculate());
 // }
 
-const calcularTotal = (cart) => {
-	let subTotal = 0;
+const calcularTotal = async (url, token, req, cart) => {
+
+	let request = new Request(`${url}/api/pedido/calcular`,{
+		method: 'POST',
+		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json' , token: token}),
+		credentials: 'same-origin',
+		body: JSON.stringify(req)
+	});
+
+	let status = '';
+	let response = await fetch(request)
+							.then(res => {
+								status = res.status;
+								return res.json();
+							})
+							.then(data => {
+								return data;
+							})
+							.catch(err => {
+								console.log('Error en fetch de calculo de carrito');
+							});
+	// let subTotal = 0;
 	let subTotalEnvios = 0;
-	let total = 0;
+	// let total = 0;
 
 	cart.contenido.map(seller => {
 		seller.productos.map(prod => {
-			subTotal += prod.price * prod.quantity;
+			// subTotal += prod.price * prod.quantity;
 			if(prod.envio) subTotalEnvios += prod.priceEnvio
 			return true
 		});
 
 		seller.paquetes.map(pack => {
-			subTotal += pack.price * pack.quantity;
+			// subTotal += pack.price * pack.quantity;
 			if(pack.envio) subTotalEnvios += pack.priceEnvio
 			return true
 		});
 		return true;
 	});
-	total = subTotal + subTotalEnvios;
-	cart.subTotal = subTotal;
+	// total = subTotal + subTotalEnvios;
+	cart.subTotal = response.total;
 	cart.subTotalEnvios = subTotalEnvios;
-	cart.total = total;
+	cart.total = cart.subTotal + subTotalEnvios;
 	return cart;
 }
 
@@ -169,7 +189,6 @@ const realizarPedido = async (req, url, token) => {
 	  let status = '';
 	  let response = await fetch(request)
 					.then(res => {
-						console.log(res.status);
 						status = res.status;
 						return res.json()
 					})
@@ -184,7 +203,7 @@ const realizarPedido = async (req, url, token) => {
 						// }
 					})
 					.catch(err => {
-						console.log(`Error en fetch realizar peido: ${err}`);
+						console.log(`Error en fetch realizar pedido: ${err}`);
 						//hacer llamado a snackbar para mostrar mensaje
 					})
 	return { response, status };
