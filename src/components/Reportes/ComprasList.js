@@ -3,7 +3,7 @@ import 'typeface-roboto';
 // import HCFunctions from './Functions';
 import Item from './ComprasItem';
 
-class HistorialCompras extends Component{
+class ReporteCompras extends Component{
 
     state = {
         pedidos: []
@@ -11,7 +11,7 @@ class HistorialCompras extends Component{
 
     //Recibir data
     async componentWillMount(){
-        let pedidos = await this.props.getPedidos(this.props.url, this.props.userId);
+        let pedidos = await this.props.getPedidos();
         if(pedidos) this.setState({pedidos: pedidos});
     }
 
@@ -27,4 +27,4 @@ class HistorialCompras extends Component{
     }
 }
 
-export default HistorialCompras;
+export default ReporteCompras;

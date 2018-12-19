@@ -43,12 +43,17 @@ const getProductsByCompany = async (url, id) => {
                             ))
                             .then(data => {
                                 // console.log('data', data);
-                                let response = data.map(prod => {
-                                            prod.imageUrl = `${url}/${prod.imagePath}`;
-                                            prod.esPackage = false;
-                                            return prod;
-                                        });
-                                return response;
+                                if(data){ //ver que pasa aca
+                                    let response = data.map(prod => {
+                                        prod.imageUrl = `${url}/${prod.imagePath}`;
+                                        prod.esPackage = false;
+                                        return prod;
+                                    });
+                                    return response;
+                                }
+                                else{
+                                    return null;
+                                }                                
                             })
                             .catch(err => console.log(err));
     return productos;

@@ -19,6 +19,7 @@ import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
 import ProductForm from './components/Productos/ProductForm';
 import ReporteCompras from './components/Reportes/ComprasList';
+import ReporteVentas from './components/Reportes/VentasList';
 import ReportesFunctions from './components/Reportes/Functions';
 // import Snackbar from '@material-ui/core/Snackbar';
 import Snackbar from './components/Helpers/Snackbar';
@@ -322,6 +323,12 @@ getLineasPackage = async (id) => {
     return await ReportesFunctions.getPedidosByUser(url, token, this.state.loggedUser.userId);
   }
 
+  getReporteVentas = async () => {
+    let token = cookies.get('access_token');
+    if(!token) return
+    return await ReportesFunctions.getTransactionsByCompany(url, token, this.state.loggedUser.userCompanyId);
+  }
+
   setearSnackbar = (status, message, variant) => {
     this.setState({
       snackbarStatus: status,
@@ -427,20 +434,25 @@ getLineasPackage = async (id) => {
                           ) : (
                             this.state.shownWindow === 'reporteCompras' ? (
                               <ReporteCompras
-                                userId={this.state.loggedUser.userId}
                                 getPedidos={this.getReporteCompras}
                               />
                             ) : (
-                              this.state.shownWindow === 'productDetalle' ? (
-                                <DetalleProducto 
-                                  getProductsCompanyByCompanies={this.getProductsCompanyByCompanies}
-                                  productId={this.state.productSeleccionado}
-                                  getProductById={this.getProductById}
-                                  agregarAlCarrito={this.agregarAlCarrito}
-                                  //onClick={this.registroProducto}
+                              this.state.shownWindow === 'reporteVentas' ? (
+                                <ReporteVentas
+                                  getTransactions={this.getReporteVentas}
                                 />
                               ) : (
-                                null
+                                this.state.shownWindow === 'productDetalle' ? (
+                                  <DetalleProducto 
+                                    getProductsCompanyByCompanies={this.getProductsCompanyByCompanies}
+                                    productId={this.state.productSeleccionado}
+                                    getProductById={this.getProductById}
+                                    agregarAlCarrito={this.agregarAlCarrito}
+                                    //onClick={this.registroProducto}
+                                  />
+                                ) : (
+                                  null
+                                )
                               )
                             )
                           )

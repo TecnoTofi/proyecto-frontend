@@ -12,8 +12,6 @@ const getListadoTransacciones = async (url, userId) => {
 };
 
 const getPedidosByUser = async (url, token, userId) => {
-    console.log('getPedidos')
-
     let request = new Request(`${url}/api/pedido/user/${userId}`, {
 		method: 'GET',
 		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
@@ -36,7 +34,7 @@ const getPedidosByUser = async (url, token, userId) => {
                                     return null;
                                 }
                                 else{
-                                    console.log('ver este error')
+                                    console.log('Ocurrio un error en fetch de pedidos de un usuario');
                                     return null;
                                 }
                             })
@@ -45,6 +43,40 @@ const getPedidosByUser = async (url, token, userId) => {
                                 return null;
                             });
     return pedidos;
+};
+
+const getTransactionsByCompany = async (url, token, companyId) => {
+    let request = new Request(`${url}/api/pedido/company/${companyId}`, {
+		method: 'GET',
+		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+		credentials: 'same-origin'
+	  });
+
+    let status = '';
+    let transacciones = await fetch(request)
+                            .then(response => {
+                                status = response.status;
+                                return response.json();
+                            })
+                            .then(data => {
+                                if(data){
+                                    if(status === 200){
+                                        console.log(data);
+                                        return data;
+                                    }
+                                    console.log('Company no tiene ventas');
+                                    return null;
+                                }
+                                else{
+                                    console.log('Ocurrio un error en fetch de trasacciones de una compania');
+                                    return null;
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                return null;
+                            });
+    return transacciones;
 };
 
 const getTransactionsPedido = async (url, pedidoId) => {
@@ -88,8 +120,9 @@ const getTransactionPackages = async (url, transactionId) => {
 
 export default {
     getPedidosByUser,
-    getTransactionsPedido,
-    getTransactionProducts,
-    getTransactionPackages,
-    getListadoTransacciones
+    getTransactionsByCompany,
+    // getTransactionsPedido,
+    // getTransactionProducts,
+    // getTransactionPackages,
+    // getListadoTransacciones
 }

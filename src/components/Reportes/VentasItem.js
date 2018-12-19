@@ -34,42 +34,38 @@ function formatDate(date) {
     return `${dayNames[weekDay]} ${day} de ${monthNames[month]} del ${year}`;
   }
 
-const ReporteComprasItem = (props) => {
+const ReporteVentasItem = (props) => {
     const { classes } = props;
     return(
         <div className={classes.root}>
             <Typography variant='h5'>
-                Realizado el - {formatDate(new Date(props.pedido.timestamp))}
+                Realizada el - {formatDate(new Date(props.transaction.timestamp))}
             </Typography>
             <Typography variant='h5'>
-                Total - ${props.pedido.amount}
+                Total - ${props.transaction.amount}
             </Typography>
             <Divider />
-            {props.pedido.transactions.map(transaction => (
-                <Fragment key={transaction.id}>
-                    {transaction.products ? (
-                        transaction.products.map(prod => (
+                    {props.transaction.products ? (
+                        props.transaction.products.map(prod => (
                             <Typography variant='body1' key={prod.id}>
                                 {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
                             </Typography>
                         ))
                     ) : null}
-                    {transaction.packages ? (
-                        transaction.packages.map(pack => (
+                    {props.transaction.packages ? (
+                        props.transaction.packages.map(pack => (
                             <Typography variant='body1' key={pack.id}>
                                 {`${pack.name} x ${pack.quantity}`}
                             </Typography>
                         ))
                     ) : null}
                     <Divider />
-                </Fragment>
-            ))}
         </div>
     );
 };
 
-ReporteComprasItem.propTypes = {
+ReporteVentasItem.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(ReporteComprasItem);
+export default withStyles(styles)(ReporteVentasItem);
