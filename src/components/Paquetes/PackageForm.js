@@ -190,7 +190,7 @@ export default class PackageForm extends Component{
             let prod = {'id':this.state.productId , 'cantidad': Number(this.state.cantidad)};
             productosSeleccionados.push(prod);
         }
-        this.setState({'cantidad': '', 'productId': 0, productosSeleccionados}, () => console.log(this.state.productosSeleccionados));
+        this.setState({'cantidad': '', 'productId': 0, productosSeleccionados});
         //SelectForm.setState.type = 0;
     }
 
