@@ -106,44 +106,45 @@ class List extends Component{
 
         return(
             <Fragment>
-            {this.state.listado.length === 0 ? (
-                <Typography>
-                    No hay productos
-                </Typography>
-            ) : (
-                filteredList ? (
-                    <Fragment>
-                        <div className={classes.container}>
-                            <TextField
-                                // margin='dense'
-                                className={classes.textField}
-                                name='searchName'
-                                placeholder='Nombre empresa'
-                                onChange={this.onSearchNameChange}
-                            />
-                            <SelectMultiple
-                                flagType={this.props.flag}
-                                flagForm={false}
-                                content={this.state.categorias}
-                                onChange={this.handleSelectCategories}
-                            />
-                        </div>
-                        <Grid container spacing={24} style={{padding: 24}}>
-                            {filteredList.map(item => (
-                                <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
-                                    <Item
-                                    item={item}
-                                    flag={this.props.flag}
-                                    onCompanyClick={this.props.onCompanyClick}
-                                    flagCart={this.props.flagCart}
-                                    agregarAlCarrito={this.props.agregarAlCarrito}
-                                    cambiarVentana={this.props.cambiarVentana}
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Fragment>
-                ) : `No hay ${this.props.flag} registradas aun` 
+                {this.state.listado.length === 0 ? (
+                    <Typography>
+                        Cargando productos...
+                        {/* cambiar esto por una loading animation */}
+                    </Typography>
+                ) : (
+                    filteredList ? (
+                        <Fragment>
+                            <div className={classes.container}>
+                                <TextField
+                                    // margin='dense'
+                                    className={classes.textField}
+                                    name='searchName'
+                                    placeholder='Nombre empresa'
+                                    onChange={this.onSearchNameChange}
+                                />
+                                <SelectMultiple
+                                    flagType={this.props.flag}
+                                    flagForm={false}
+                                    content={this.state.categorias}
+                                    onChange={this.handleSelectCategories}
+                                />
+                            </div>
+                            <Grid container spacing={24} style={{padding: 24}}>
+                                {filteredList.map(item => (
+                                    <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
+                                        <Item
+                                        item={item}
+                                        flag={this.props.flag}
+                                        onCompanyClick={this.props.onCompanyClick}
+                                        flagCart={this.props.flagCart}
+                                        agregarAlCarrito={this.props.agregarAlCarrito}
+                                        cambiarVentana={this.props.cambiarVentana}
+                                        />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Fragment>
+                    ) : `No hay productos que cumplan esos criterios` 
                 )}
             </Fragment>
         );

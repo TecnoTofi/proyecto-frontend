@@ -155,10 +155,10 @@ export default class AssociateForm extends Component{
 			let request = {
 				companyId: this.props.companyId,
 				productId: this.state.productId,
-				productName: this.state.productName,
-				productDescription: this.state.productDescription,
-				productPrice: this.state.productPrice,
-                productStock: this.state.productStock,
+				name: this.state.productName,
+				description: this.state.productDescription,
+				price: this.state.productPrice,
+                stock: this.state.productStock,
                 imageName: imageName,
                 imagePath: imagePath
 			}

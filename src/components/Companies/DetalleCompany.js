@@ -33,8 +33,9 @@ const styles = theme => ({
     maxWidth: 400,
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
+    // height: 0,
+    // paddingTop: '56.25%', // 16:9
+    objectFit: 'cover',
   },
   actions: {
     display: 'flex',
@@ -93,22 +94,20 @@ class DetalleCompany extends Component {
                 //subheader="September 14, 2016"
             /> */}
             <CardMedia
-                className={classes.media}
-                image={this.props.company.imageUrl}
+                //className={classes.media}
+                //image={this.props.company.imageUrl}
                 //title="Paella dish"
+                component="img"
+                alt={this.props.company.name}
+                className={classes.media}
+                height="140"
+                src={`${this.props.company.imageUrl}`}
+                title={this.props.company.name}
             />
             <CardContent>
             <Typography>
                 {this.props.company.description}
             </Typography>
-            <Typography>
-               rut :
-                {this.props.company.rut}
-            </Typography>
-            <Typography>
-                {this.props.company.firstStreet}
-            </Typography>
-                
              </CardContent>
             <CardActions className={classes.actions} disableActionSpacing>
                 <IconButton aria-label="Add to favorites">

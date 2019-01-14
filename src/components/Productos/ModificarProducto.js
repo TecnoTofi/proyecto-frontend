@@ -50,7 +50,7 @@ class ModificarProducto extends Component{
     componentWillMount(){
         
         let product =  this.props.product;
-        console.log(product);
+        // console.log(product);
          this.setState({
             id: product.id,
             companyId: product.companyId,

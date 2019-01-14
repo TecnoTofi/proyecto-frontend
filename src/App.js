@@ -3,7 +3,6 @@ import 'typeface-roboto';
 import { Header } from './components/Layouts/';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
-import axios from 'axios';
 import Home from './components/PaginasPrincipales/Home';
 import Dashboard from './components/PaginasPrincipales/Dashboard';
 import Profile from './components/User/Profile';
@@ -13,6 +12,7 @@ import UserFunctions from './components/User/Functions';
 import CompanyFunctions from './components/Companies/Functions';
 import ProductFunctions from './components/Productos/Functions';
 import DetalleProducto from './components/Productos/DetalleProducto';
+import DetallePackage from './components/Paquetes/DetallePackage';
 import PackageFunctions from './components/Paquetes/Functions';
 import Carrito from './components/Cart/Cart';
 import CartFunctions from './components/Cart/Functions';
@@ -95,7 +95,7 @@ class App extends Component {
           userCompanyName: data.userData.userCompanyName,
           userCompanyId: data.userData.userCompanyId
         }
-      })
+      });
     }
     else{
       console.log('error en auth de token, o vencido');
@@ -126,8 +126,12 @@ class App extends Component {
     return await ProductFunctions.getProductById(url, id);
   }
 
-  getProductsCompanyByCompanies = async (id) => {
-    return await ProductFunctions.getProductsCompanyByCompanies(url, id);
+  getPackageById = async (id) => {
+    return await PackageFunctions.getPackageById(url, id);
+  }
+
+  getCompanyProductsByProduct = async (id) => {
+    return await ProductFunctions.getCompanyProductsByProduct(url, id);
   }
 
   getAllPackages = async () => {
@@ -217,28 +221,9 @@ getLineasPackage = async (id) => {
     return await ProductFunctions.asociarProducto(url, token, request);
   }
 
-  registroProductoAsociacion = (request) => {
+  registroProductoAsociacion = async (request) => {
     let token = cookies.get('access_token');
-    
-    if(token){
-    
-      let instance = axios.create({
-                        baseURL: `${url}/api/product`,
-                        method: 'post',
-                        headers: {token: token},
-                        data: request
-                      });
-      instance()
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-    else{
-      console.log('No hay token');
-    }
+    return await ProductFunctions.registroProducto(url, token, request);
   }
 
   crearPaquete = async (request) =>{
@@ -254,12 +239,24 @@ getLineasPackage = async (id) => {
     return this.state.companiaSeleccionada;
   }
 
-  modificarProducto = async (request, id) => {
-    return await ProductFunctions.modificarProducto(url, request, id);
+  modificarProducto = async (request, productId) => {
+    let token = cookies.get('access_token');
+    return await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
   }
 
   eliminarProducto = async (id) =>{
-    return await ProductFunctions.eliminarProducto(url, id);
+    let token = cookies.get('access_token');
+    return await ProductFunctions.eliminarProducto(url, token, id);
+  }
+
+  modificarPaquete = async (request, id) => {
+    let token = cookies.get('access_token');
+    return await PackageFunctions.modificarPaquete(url, token, request, id);
+  }
+
+  eliminarPaquete = async (id) =>{
+    let token = cookies.get('access_token');
+    return await PackageFunctions.eliminarPaquete(url, token, id);
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
@@ -371,7 +368,6 @@ getLineasPackage = async (id) => {
             ) : (
               this.state.shownWindow === 'companies' ? (
                 <CompanyList
-                  flag='companias'
                   getContent={this.getAllCompanies}
                   getCategories={this.getRubros}
                   getTipos={this.getTypes}
@@ -380,7 +376,7 @@ getLineasPackage = async (id) => {
               ) : (
                 this.state.shownWindow === 'productsGeneric' ? (
                   <ProductList 
-                    flag='productos'
+                    // flag='productos'
                     getProductos={this.getAllProducts}
                     getPaquetes={this.getAllPackages}
                     getCategories={this.getCategories}
@@ -389,13 +385,14 @@ getLineasPackage = async (id) => {
                 ) : (
                   this.state.shownWindow === 'productsCompany' ? (
                     <ProductList 
-                      flag='productos'
+                      // flag='productos'
                       flagCart={this.state.loggedUser.userCompanyId}
                       agregarAlCarrito={this.agregarAlCarrito}
                       getProductos={this.getProductsByCompany}
                       getPaquetes={this.getPackagesByCompany}
                       company={this.state.companiaSeleccionada}
                       getCategories={this.getCategories}
+                      cambiarVentana={this.cambiarVentana}
                     />
                   ) : (
                     this.state.shownWindow === 'myProducts' ? (
@@ -405,6 +402,9 @@ getLineasPackage = async (id) => {
                         company={this.state.loggedUser.userCompanyId}
                         modificarProducto={this.modificarProducto}
                         eliminarProducto={this.eliminarProducto}
+                        getLineasPackage={this.getLineasPackage}
+                        modificarPaquete={this.modificarPaquete}
+                        eliminarPaquete={this.eliminarPaquete}
                       />
                     ) : (
                       this.state.shownWindow === 'carrito' ? (
@@ -444,14 +444,23 @@ getLineasPackage = async (id) => {
                               ) : (
                                 this.state.shownWindow === 'productDetalle' ? (
                                   <DetalleProducto 
-                                    getProductsCompanyByCompanies={this.getProductsCompanyByCompanies}
+                                    getCompanyProductsByProduct={this.getCompanyProductsByProduct}
                                     productId={this.state.productSeleccionado}
                                     getProductById={this.getProductById}
                                     agregarAlCarrito={this.agregarAlCarrito}
                                     //onClick={this.registroProducto}
                                   />
                                 ) : (
-                                  null
+                                  this.state.shownWindow === 'packageDetalle' ? (
+                                  <DetallePackage 
+                                    packageId={this.state.productSeleccionado}
+                                    getPackageById={this.getPackageById}
+                                    agregarAlCarrito={this.agregarAlCarrito}
+                                    //onClick={this.registroProducto}
+                                  />
+                                  ) : (
+                                    null
+                                  )
                                 )
                               )
                             )

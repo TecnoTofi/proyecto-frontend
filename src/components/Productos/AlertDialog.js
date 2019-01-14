@@ -20,9 +20,9 @@ class AlertDialog extends React.Component {
   };
 
   handleDelete = () =>{
-    this.props.eliminar(this.props.productId);
+    this.props.eliminar(this.props.productId, this.props.esPackage);
     this.handleClose();
-  }
+  };
 
   render() {
     return (

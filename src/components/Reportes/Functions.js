@@ -121,8 +121,8 @@ const getTransactionPackages = async (url, transactionId) => {
 export default {
     getPedidosByUser,
     getTransactionsByCompany,
-    // getTransactionsPedido,
-    // getTransactionProducts,
-    // getTransactionPackages,
-    // getListadoTransacciones
+    getTransactionsPedido,
+    getTransactionProducts,
+    getTransactionPackages,
+    getListadoTransacciones
 }

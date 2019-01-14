@@ -64,7 +64,7 @@ const registroProducto = (url, token, request) => {
     // let token = cookies.get('access_token');
     if(token){
         let instance = axios.create({
-                        baseURL: `${url}/api/product`,
+                        baseURL: `${url}/api/product/company`,
                         method: 'post',
                         headers: {token: token},
                         data: request
@@ -84,10 +84,9 @@ const registroProducto = (url, token, request) => {
 };
 //retornar algo
 const asociarProducto = (url, token, body) => {
-    // let token = cookies.get('access_token');
     if(token){
 
-        let request = new Request(`${url}/api/product/company`, {
+        let request = new Request(`${url}/api/product/associate`, {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', token: token}),
         body: JSON.stringify(body)
@@ -110,7 +109,6 @@ const asociarProducto = (url, token, body) => {
 };
 
 const getProductById = async (url, id) =>{
-    console.log(id);
     let producto = await fetch(`${url}/api/product/${id}`)
                                 .then(response => (
                                   response.json()
@@ -129,7 +127,7 @@ const getProductById = async (url, id) =>{
       return producto;
 };
 
-const getProductsCompanyByCompanies = async (url, id) => {
+const getCompanyProductsByProduct = async (url, id) => {
     let productos = await fetch(`${url}/api/product/${id}/companies`)
                                 .then(response => (
                                   response.json()
@@ -147,26 +145,46 @@ const getProductsCompanyByCompanies = async (url, id) => {
     return productos;
 };
 
-const modificarProducto = async (url, request, id) => {
-    axios.post(`${url}/api/product/update/company/${id}`,
-      request)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+const modificarProducto = async (url, token, request, productId, companyId) => {
+
+    let response = await axios({
+        method: 'put',
+        url: `${url}/api/product/${productId}/company/${companyId}`,
+        headers: { 'Content-Type': 'application/json', token: token },
+        data: request
+    })
+    .then(res => {
+        console.info(res);
+        if (res) return { status: res.status, message: res.data.message };
+        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+    })
+    .catch(err => {
+        console.log(`Error al modificar el producto ${err}`);
+        return {status: 500, message: err};
+    });
+
+    return response;
 };
 
-const eliminarProducto = async (url, id) =>{
-      axios.post(`${url}/api/product/delete/company/${id}`)
-        .then(res => {
-          console.log(res);
-            
-        })
-        .catch(err => {
-          console.log(err);
+const eliminarProducto = async (url, token, id) =>{
+    let request = new Request(`${url}/api/product/company/${id}`, {
+        method: 'DELETE',
+        headers: new Headers({ 'Content-Type': 'application/json', token: token})
         });
+
+        let response = await fetch(request)
+                        .then((response) => {
+                            // console.info('res', response);
+                            return response.json();
+                        })
+                        .then(data => {
+                            if(data) return data.message;
+                            else return null;
+                        })
+                        .catch(err => {
+                            console.log(`Error al eliminar producto : ${err}`);
+                        });
+    return response;
 };
 
 export default {
@@ -178,5 +196,5 @@ export default {
     modificarProducto,
     eliminarProducto,
     getProductById,
-    getProductsCompanyByCompanies
+    getCompanyProductsByProduct
 }

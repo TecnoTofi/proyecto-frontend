@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import "typeface-roboto";
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
@@ -32,18 +32,18 @@ class DetalleProducto extends Component{
 
     state = {
         producto: {},
-        companyProduct:[],
-
+        companyProducts:[],
     }
 
     async componentWillMount(){
-        let productos = await this.props.getProductsCompanyByCompanies(this.props.productId);
+        let companyProducts = await this.props.getCompanyProductsByProduct(this.props.productId);
         let producto = await this.props.getProductById(this.props.productId);
-        // console.log(producto);
+        console.log('companyProducts', companyProducts);
+        console.log('producto', producto);
         //concat
         await this.setState({
-            companyProduct: productos,
-            producto:producto
+            companyProducts: companyProducts,
+            producto: producto
         });
         // console.log(this.state);
     }
@@ -57,68 +57,77 @@ class DetalleProducto extends Component{
         const { classes } = this.props;
 
         return (
-            <Paper className={classes.root}>
-            <div>
-                <Typography variant='h4'>{this.state.producto.name}</Typography>
-                <div>
-                    <CardMedia
-                        component='img'
-                        height='10%'
-                        width='20%'
-                        className={classes.media}
-                        src={`${this.state.producto.imageUrl}`}
-                        title={this.state.producto.name}
-                    />
-                </div>
-            </div>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                Empresa
-                            </TableCell>
-                            <TableCell>
-                                Nombre
-                            </TableCell>
-                            <TableCell>
-                                Precio
-                            </TableCell>
-                            <TableCell>
-                                Descripcion
-                            </TableCell>
-                            <TableCell>
-                                Acciones
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.state.companyProduct.map((product, i) => (
-                            <TableRow key={i}>
-                                <TableCell>
-                                    {product.companyName}
-                                </TableCell>
-                                <TableCell>
-                                    {product.name}    
-                                </TableCell>
-                                <TableCell>
-                                    {product.price}    
-                                </TableCell>
-                                <TableCell>
-                                    {product.description}    
-                                </TableCell>
-                                <TableCell>
-                                <Button size="small" color="primary" 
-                                    onClick={()=>
-                                            this.agregarAlCarrito(i)}>
-                                    <CartIcon className={classes.leftIcon} />
-                                    Agregar
-                                </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Paper>
+            <Fragment>
+                {this.state.companyProducts.length === 0 ? (
+                    <Typography>
+                        Cargando productos...
+                        {/* cambiar esto por una loading animation */}
+                    </Typography>
+                ) : (
+                    <Paper className={classes.root}>
+                        <div>
+                            <Typography variant='h4'>{this.state.producto.name}</Typography>
+                            <div>
+                                <CardMedia
+                                    component='img'
+                                    height='10%'
+                                    width='20%'
+                                    className={classes.media}
+                                    src={`${this.state.producto.imageUrl}`}
+                                    title={this.state.producto.name}
+                                />
+                            </div>
+                        </div>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>
+                                            Empresa
+                                        </TableCell>
+                                        <TableCell>
+                                            Nombre
+                                        </TableCell>
+                                        <TableCell>
+                                            Precio
+                                        </TableCell>
+                                        <TableCell>
+                                            Descripcion
+                                        </TableCell>
+                                        <TableCell>
+                                            Acciones
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {this.state.companyProducts.map((product, i) => (
+                                        <TableRow key={i}>
+                                            <TableCell>
+                                                {product.companyName}
+                                            </TableCell>
+                                            <TableCell>
+                                                {product.name}    
+                                            </TableCell>
+                                            <TableCell>
+                                                {product.price}    
+                                            </TableCell>
+                                            <TableCell>
+                                                {product.description}    
+                                            </TableCell>
+                                            <TableCell>
+                                            <Button size="small" color="primary" 
+                                                onClick={()=>
+                                                        this.agregarAlCarrito(i)}>
+                                                <CartIcon className={classes.leftIcon} />
+                                                Agregar
+                                            </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Paper>
+                )}
+            </Fragment>
         );
     }
 }

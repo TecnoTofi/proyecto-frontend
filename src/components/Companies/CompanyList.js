@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Item from './CompanyItem';
 import SelectMultiple from '../Helpers/SelectMultiple';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
     container: {
@@ -105,41 +106,48 @@ class List extends Component{
 
         return(
             <Fragment>
-                {filteredList ? (
-                    <Fragment>
-                        <div className={classes.container}>
-                            <TextField
-                                // margin='dense'
-                                className={classes.textField}
-                                name='searchName'
-                                placeholder='Nombre empresa'
-                                onChange={this.onSearchNameChange}
-                            />
-                            <SelectMultiple
-                                flagType={this.props.flag}
-                                flagForm={false}
-                                content={this.state.categorias}
-                                onChange={this.handleSelectCategories}
-                            />
-                            {this.props.flag === 'companias' ? (
+                {this.state.listado.length === 0 ? (
+                    <Typography>
+                        Cargando empresas...
+                        {/* cambiar esto por una loading animation */}
+                    </Typography>
+                ) : (
+                    filteredList ? (
+                        <Fragment>
+                            <div className={classes.container}>
+                                <TextField
+                                    // margin='dense'
+                                    className={classes.textField}
+                                    name='searchName'
+                                    placeholder='Nombre empresa'
+                                    onChange={this.onSearchNameChange}
+                                />
                                 <SelectMultiple
                                     flagType={this.props.flag}
-                                    titulo='Tipo/s'
                                     flagForm={false}
-                                    content={this.state.tipos}
-                                    onChange={this.handleSelectTypes}
+                                    content={this.state.categorias}
+                                    onChange={this.handleSelectCategories}
                                 />
-                            ) : null}
-                        </div>
-                        <Grid container spacing={24} style={{padding: 24}}>
-                            {filteredList.map(item => (
-                                <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
-                                    <Item item={item} flag={this.props.flag} onCompanyClick={this.props.onCompanyClick} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Fragment>
-                ) : `No hay ${this.props.flag} registradas aun` }
+                                {this.props.flag === 'companias' ? (
+                                    <SelectMultiple
+                                        flagType={this.props.flag}
+                                        titulo='Tipo/s'
+                                        flagForm={false}
+                                        content={this.state.tipos}
+                                        onChange={this.handleSelectTypes}
+                                    />
+                                ) : null}
+                            </div>
+                            <Grid container spacing={24} style={{padding: 24}}>
+                                {filteredList.map(item => (
+                                    <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
+                                        <Item item={item} flag={this.props.flag} onCompanyClick={this.props.onCompanyClick} />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Fragment>
+                    ) : `No hay ${this.props.flag} registradas aun` 
+                )}
             </Fragment>
         );
     }

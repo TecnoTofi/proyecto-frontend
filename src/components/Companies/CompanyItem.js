@@ -40,44 +40,24 @@ class CompanyItem extends Component {
             height="140"
             src={`${this.props.item.imageUrl}`}
             title={this.props.item.name}
-            
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {this.props.item.name}
             </Typography>
-            {/* <Typography component="p">
-            {props.item.description}
-            </Typography> */}
           </CardContent>
         </CardActionArea>
         <CardActions>
-        {this.props.flag === 'companias' ? (
           <Fragment >
-            {/* <Button size="small" color="primary">
-              Detalles
-            </Button> */}
             <DetalleCompany company={this.props.item} />
-            {/* <NavLink to='/company/products'> */}
               <Button size="small" color="primary" onClick={this.handleProdClick} >
                 Productos
               </Button>
-            {/* </NavLink> */}
           </Fragment>
-        ) : (
-          //esto ya se puede ir
-          <Fragment>
-            <Button size="small" color="primary">
-              Ver
-            </Button>
-          </Fragment>
-        )}
-          
         </CardActions>
       </Card>
     );
   }
-  
 }
 
 CompanyItem.propTypes = {

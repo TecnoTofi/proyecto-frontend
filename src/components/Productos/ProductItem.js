@@ -29,9 +29,9 @@ class ProductItem extends Component {
   }
 
   verDetalle =()=>{
-    let productId = this.props.item.id
-    console.log(productId);
-    this.props.cambiarVentana("productDetalle", productId);
+    let id = this.props.item.productId ? this.props.item.productId : this.props.item.id;
+    let ventana = this.props.item.esPackage ? 'packageDetalle' : 'productDetalle';
+    this.props.cambiarVentana(ventana, id);
   }
 
   agregarAlCarrito = () => {
@@ -51,36 +51,24 @@ class ProductItem extends Component {
             height="140"
             src={`${this.props.item.imageUrl}`}
             title={this.props.item.name}
-            
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {this.props.item.name}
             </Typography>
-            <Typography gutterBottom variant="caption" component="h2">
-              {this.props.item.price}
-            </Typography>
-            <Typography gutterBottom variant="overline" component="h2">
-              {this.props.item.description}
-            </Typography>
-            {/* <Typography component="p">
-            {props.item.description}
-            </Typography> */}
+            {this.props.item.price ? (
+              <Typography gutterBottom variant="caption" component="h2">
+                ${this.props.item.price}
+              </Typography>
+            ) : null}
+            {this.props.item.description ? (
+              <Typography gutterBottom variant="overline" component="h2">
+                {this.props.item.description}
+              </Typography>
+            ) : null}
           </CardContent>
         </CardActionArea>
         <CardActions>
-        {this.props.flag === 'companias' ? (
-          <Fragment >
-            <Button size="small" color="primary">
-              Detalles
-            </Button>
-            {/* <NavLink to='/company/products'> */}
-              <Button size="small" color="primary" onClick={this.handleProdClick} >
-                Productos
-              </Button>
-            {/* </NavLink> */}
-          </Fragment>
-        ) : (
           <Fragment>
             <Button size="small" color="primary" onClick={this.verDetalle}>
               Ver
@@ -92,8 +80,6 @@ class ProductItem extends Component {
               </Button>
             ) : null}
           </Fragment>
-        )}
-          
         </CardActions>
       </Card>
     );

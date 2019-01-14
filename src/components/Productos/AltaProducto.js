@@ -167,15 +167,10 @@ export default class ProductForm extends Component{
     // }
 
     onSelectChange = (seleccionados) => {
-        console.log('seleccionados', seleccionados);
-        console.log('seleccionados tipo', typeof seleccionados);
         let selectedCategories = seleccionados.map(selected => {
             return selected.id;
         })
-        this.setState({categories: selectedCategories}, () => {
-            console.log('categories', this.state.categories);
-            console.log('categories tipo', typeof this.state.categories);
-        });
+        this.setState({categories: selectedCategories});
     }
 
     onChange = (e) => {
@@ -194,20 +189,19 @@ export default class ProductForm extends Component{
         const error = this.validate();
         // console.log(this.state);
         if (!error){
-
+            console.log('categories', this.state.categories);
             const request = new FormData();
-            request.set('productName', this.state.productName);
-            request.set('productCode', this.state.productCode);
+            request.set('name', this.state.productName);
+            request.set('code', this.state.productCode);
             request.set('categories', this.state.categories);
             request.set('companyId', this.props.companyId);
-            request.set('productDescription', this.state.productDescription);
-            request.set('productPrice', this.state.productPrice);
-            request.set('productStock', this.state.productStock);
-            request.append('productImage', this.state.productImage, this.state.productImage.name);
+            request.set('description', this.state.productDescription);
+            request.set('price', this.state.productPrice);
+            request.set('stock', this.state.productStock);
+            request.append('image', this.state.productImage, this.state.productImage.name);
             
-
             this.props.onClick(request);
-            // this.handleToggle();
+            this.handleToggle();
         } 
     }
     

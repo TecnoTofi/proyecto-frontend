@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import "typeface-roboto";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,11 +8,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
+import { Typography } from '@material-ui/core';
 // import EditIcon from "@material-ui/icons/Create";
 // import DeleteIcon from "@material-ui/icons/Delete";
 // import IconButton from "@material-ui/core/IconButton";
 import Alert from './AlertDialog';
-import Modificar from './ModificarProducto'
+import ModificarProducto from './ModificarProducto'
+import ModificarPaquete from '../Paquetes/ModificarPaquete';
 
 const styles = theme => ({
     root: {
@@ -28,7 +30,8 @@ const styles = theme => ({
 class MisProductos extends Component{
 
     state = {
-        productos: []
+        productos: [],
+        products: []
     }
 
     async componentWillMount(){
@@ -37,85 +40,94 @@ class MisProductos extends Component{
         // console.log(paquetes);
         let listado = productos.concat(paquetes);
         await this.setState({
-            productos: listado
+            productos: listado,
+            products: productos,
         })
     }
 
-    handleDelete = (id) =>{
-        // console.log('llegue', id);
-        // this.render(<Alert product={id} props={this.props.eliminarProducto} onClick={this.handleClickOpen} />); 
-        this.props.eliminarProducto(id);
-        let listado = this.state.productos.filter(prod => {
-            return prod.id !== id;
-        });
+    handleDelete = (id, esPackage) =>{
+        let listado = [];
+        if(esPackage) {
+            this.props.eliminarPaquete(id);
+            listado = this.state.productos.filter(prod => {
+                if(!prod.esPackage) return prod;
+                else return prod.id !== id;
+            });
+        }
+        else{
+            this.props.eliminarProducto(id);
+            listado = this.state.productos.filter(prod => {
+                if(prod.esPackage) return prod;
+                else return prod.id !== id;
+            });
+        }
         this.setState({productos: listado});
     }
 
 
     handleEdit= () => {
-        console.log("editar")
+        //hacer cambios en la lista local
     }
     render(){
         const { classes } = this.props;
 
         return (
-            <Paper className={classes.root}>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                Codigo
-                            </TableCell>
-                            <TableCell>
-                                Nombre
-                            </TableCell>
-                            <TableCell>
-                                Precio
-                            </TableCell>
-                            <TableCell>
-                                Acciones
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.state.productos.map(product => (
-                            <TableRow key={product.id}>
-                                <TableCell>
-                                {product.code ? product.code : 'Paquete'}
-                                </TableCell>
-                                <TableCell>
-                                    {product.name}    
-                                </TableCell>
-                                <TableCell>
-                                    {product.price}    
-                                </TableCell>
-                                <TableCell>
-                                    {/* <IconButton onClick={() =>{
-                                         this.setState({productoSeleccionado:product});
-                                         this.handleEdit();
-                                     }}>
-                                        <EditIcon />
-                                    </IconButton>*/}
-                                    {/* <IconButton onClick={() =>{
-                                         this.setState({productoSeleccionado:product});
-                                         this.handleEdit();
-                                     }}>
-                                        <EditIcon />
-                                    </IconButton> */}
-                                    
-                                    <Modificar product={product} modificar={this.props.modificarProducto} />
-                                    
-                                    <Alert productId={product.id} eliminar={this.handleDelete} />
-                                
-                                    {/*<IconButton onClick={this.handleDelete}>
-                                        <DeleteIcon />
-                                    </IconButton> */}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Paper>
+            <Fragment>
+                {this.state.productos.length === 0 ? (
+                    <Typography>
+                        Cargando productos...
+                        {/* cambiar esto por una loading animation */}
+                    </Typography>
+                ) : (
+                    <Paper className={classes.root}>
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        Codigo
+                                    </TableCell>
+                                    <TableCell>
+                                        Nombre
+                                    </TableCell>
+                                    <TableCell>
+                                        Precio
+                                    </TableCell>
+                                    <TableCell>
+                                        Acciones
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {this.state.productos.map(product => (
+                                    <TableRow key={product.id}>
+                                        <TableCell>
+                                        {product.code ? product.code : 'Paquete'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {product.name}    
+                                        </TableCell>
+                                        <TableCell>
+                                            {product.price}    
+                                        </TableCell>
+                                        <TableCell>
+                                            {!product.esPackage ?
+                                                <ModificarProducto product={product} modificar={this.props.modificarProducto} />
+                                                :
+                                                <ModificarPaquete products={this.state.products}
+                                                    modificarPaquete={this.props.modificarPaquete}
+                                                    company={this.props.company}
+                                                    getLineasPackage={this.props.getLineasPackage}
+                                                    package={product}
+                                            /> }
+                                            <Alert productId={product.id} esPackage={product.esPackage} eliminar={this.handleDelete} />
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                )}
+            </Fragment>
         );
     }
 }
