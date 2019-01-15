@@ -113,12 +113,14 @@ class MisProductos extends Component{
                                             {!product.esPackage ?
                                                 <ModificarProducto product={product} modificar={this.props.modificarProducto} />
                                                 :
-                                                <ModificarPaquete products={this.state.products}
+                                                <ModificarPaquete
+                                                    products={this.state.products}
                                                     modificarPaquete={this.props.modificarPaquete}
-                                                    company={this.props.company}
-                                                    getLineasPackage={this.props.getLineasPackage}
+                                                    // company={this.props.company}
+                                                    // getLineasPackage={this.props.getLineasPackage}
                                                     package={product}
-                                            /> }
+                                                /> 
+                                            }
                                             <Alert productId={product.id} esPackage={product.esPackage} eliminar={this.handleDelete} />
                                         </TableCell>
                                     </TableRow>

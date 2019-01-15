@@ -31,48 +31,44 @@ class ModificarPaquete extends Component{
         super(props);
         this.state = {
             open: false,
+            products: [],
             id: 0,
             companyId: 0,
-            //name: '',
-            price: '',
+            name: '',
             description: '',
-            productosSeleccionados:[],
-            packageImage:null,
-            productId: 0,
+            price: 0,
+            stock: 0,
             //categories: [],
-            //nameError: '',
+            packageImage: null,
+            // productosSeleccionados: [],
+            productId: 0,
+            packageProdcuts: [],
+            cantidad: '',
+            nameError: '',
             descriptionError: '',
             priceError: '',
             //categoriesError: '',
             packageImageError: '',
             companyIdError: '',
-            cantidad:'',
-            products:[],
-            prod:[],
         }
     }
 
-    async componentWillMount(){
-
-        let products = await this.props.products;
-         console.log('products', products);
-        let paquete = await this.props.package;
-        console.log(paquete);
-        let lineasPaquete = await this.props.getLineasPackage(paquete.id);
-        console.log(lineasPaquete);
-        await this.setState({
-                id:paquete.id,
-                products: products,
-                companyId: this.props.company,
-                price:paquete.price,
-                description:paquete.description,
-                //productosSeleccionados:lineasPaquete,
-        }, () => 
-        console.log(this.state))
-        let cargar = await lineasPaquete.map(prod =>(
-            this.cargarLineas(prod)
-        ));
-        ;
+    componentWillMount(){
+        let packageProdcuts = [];
+        for(let p of this.props.package.products){
+            packageProdcuts.push({ id: Number(p.id), nombre: p.name, cantidad: p.quantity });
+        }
+        
+         this.setState({
+            id: this.props.package.id,
+            companyId: this.props.package.companyId,
+            name: this.props.package.name,
+            description: this.props.package.description,
+            price: this.props.package.price,
+            stock: this.props.package.stock,
+            products: this.props.products,
+            packageProdcuts: packageProdcuts,
+        });
     };
 
     validate = () => {
@@ -133,48 +129,52 @@ class ModificarPaquete extends Component{
     }
 
     onSelectChange = (value) => {
-        this.setState({productId: Number(value)});
+        this.setState({ productId: Number(value) });
     }
 
     agregarProducto = () =>{
-        let productosSeleccionados = this.state.productosSeleccionados;
-        let existe = productosSeleccionados.map(prod => {return prod.id}).indexOf(this.state.productId);
+        let packageProdcuts = this.state.packageProdcuts;
+        let existe = packageProdcuts.map(p => p.id).indexOf(this.state.productId);
 
         if(existe > -1){
-            productosSeleccionados[existe].cantidad += Number(this.state.cantidad);
+            packageProdcuts[existe].cantidad += Number(this.state.cantidad);
         }
         else{
-            let prod = {'id':this.state.productId , 'cantidad': Number(this.state.cantidad)};
-            productosSeleccionados.push(prod);
-            this.poductSelect(this.state.productId,this.state.cantidad);
-        }
-        this.setState({'cantidad': '', 'productId': 0, productosSeleccionados}, () => console.log(this.state.productosSeleccionados));
-        //SelectForm.setState.type = 0;
-    }
-
-    poductSelect = (id,cantidad) =>{
-        /*let productos = this.state.products.map(prod =>{
-            this.state.productosSeleccionados.map(prod2 => {
-                if(prod.id == prod2.id){
-                    this.state.prod.push(prod);
+            let length = this.state.products.length;
+            for(let i = 0; i < length; i++) {
+                if (Number(this.state.products[i].id) === this.state.productId) {
+                    let prod = { 'id': this.state.productId, nombre: this.state.products[i].name, 'cantidad': Number(this.state.cantidad) };
+                    packageProdcuts.push(prod);
+                    break;
                 }
-            })
             }
-            );
-            console.log(this.state.prod)*/
-            let productos = this.state.products.map(prod =>{
-                    if(Number(prod.id) == Number(id)){
-                        this.state.prod.push({nombre:prod.name,cantidad:cantidad,id:prod.id});
-                    }
-                })
-                console.log(this.state.prod)
+        }
+        this.setState({'cantidad': '', 'productId': 0, packageProdcuts});
     }
 
-    cargarLineas = (prod) => {
-        let produ = { 'id': prod.productId , 'cantidad': Number(prod.quantity) };
-        this.state.productosSeleccionados.push(produ);
-        this.poductSelect(prod.productId,prod.quantity);
-    };
+    // poductSelect = (id,cantidad) =>{
+    //     /*let productos = this.state.products.map(prod =>{
+    //         this.state.productosSeleccionados.map(prod2 => {
+    //             if(prod.id == prod2.id){
+    //                 this.state.prod.push(prod);
+    //             }
+    //         })
+    //         }
+    //         );
+    //         console.log(this.state.prod)*/
+    //         let productos = this.state.products.map(prod =>{
+    //                 if(Number(prod.id) === Number(id)){
+    //                     this.state.packageProdcuts.push({nombre:prod.name,cantidad:cantidad,id:prod.id});
+    //                 }
+    //             })
+    //             console.log(this.state.packageProdcuts)
+    // }
+
+    // cargarLineas = (prod) => {
+    //     let produ = { 'id': prod.productId , 'cantidad': Number(prod.quantity) };
+    //     this.state.productosSeleccionados.push(produ);
+    //     this.poductSelect(prod.productId,prod.quantity);
+    // };
 
     onSubmit = (e) => {
         e.preventDefault();
@@ -221,19 +221,10 @@ class ModificarPaquete extends Component{
     }
 
     handleDelete = (id) =>{ 
-        console.log(id);
-        let productos = this.state.prod.filter(p => {
+        let packageProdcuts = this.state.packageProdcuts.filter(p => {
             return p.id !== id;
-          });
-        let productos2 = this.state.productosSeleccionados.filter(po => {
-            return Number(po.id) !== Number(id);
-            
-          });
-        console.log('productos', productos);
-        console.log('productos2',productos2)
-        this.setState({prod: productos});
-        this.setState({productosSeleccionados: productos2});
-        //console.log(this.state);
+        });
+        this.setState({ packageProdcuts });
     }
 
     render(){
@@ -250,88 +241,115 @@ class ModificarPaquete extends Component{
                 >
                     <DialogTitle id="form-dialog-title">Modificar paquete</DialogTitle>
                     <DialogContent>
-                    
-                    <TextField
-                        autoFocus
-                        margin='dense'
-                        id='price'
-                        name='price'
-                        label='Precio del paquete'
-                        type='text'
-                        fullWidth
-                        required
-                        value={this.state.price}
-                        helperText={this.state.priceError}
-                        error={this.state.priceError ? true : false}
-                        onChange={this.onChange}
-                        onKeyPress={this.onEnterPress}
-                    />
-                    <TextField
-                        margin='dense'
-                        id='description'
-                        name='description'
-                        label='Descripcion del paquete'
-                        type='text'
-                        fullWidth
-                        required
-                        value={this.state.description}
-                        helperText={this.state.descriptionError}
-                        error={this.state.descriptionError ? true : false}
-                        onChange={this.onChange}
-                        onKeyPress={this.onEnterPress}
-                    />
-                      <ul>
-                        {this.state.prod.map(prods => (
-                            <li key={prods.id} >
-                            {'Nombre :' + prods.nombre + ' -'}
-                            {'Cantidad :' + prods.cantidad}
-                            <IconButton id={prods.id} onClick={() => {
-                                this.handleDelete(prods.id);
-
-                                }}>
-                            <DeleteIcon />
-                            </IconButton>
-                            </li>
-                        ))}
-                      </ul>
-                    <SelectForm
-                            content={this.state.products}
-                            onChange={this.onSelectChange}
-                            //selected={this.state.productId}
+                        <TextField
+                            margin='dense'
+                            id='name'
+                            name='name'
+                            label='Nombre del paquete'
+                            type='text'
+                            fullWidth
                             required
-                            value= {this.state.productId}
-                            label={'Productos'}
-                            selectError={this.state.productIdError}
-                            helper={'Seleccione el producto'}
-                    />
-                    <TextField
-                        margin='dense'
-                        id='cantidad'
-                        name='cantidad'
-                        label='cantidad del producto'
-                        type='number'
-                        value={this.state.cantidad}
-                        fullWidth
-                        required
-                        //helperText={this.state.descriptionError}
-                        //error={this.state.descriptionError ? true : false}
-                        onChange={this.onChange}
-                        onKeyPress={this.onEnterPress}
-                    />
-                    <Button onClick={this.agregarProducto} color="primary" variant='contained'>
-                        Agregar
-                    </Button> 
-                    <UploadImage onImageUpload={this.onImageUpload} />
+                            value={this.state.name}
+                            helperText={this.state.nameError}
+                            error={this.state.nameError ? true : false}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                        />
+                        <TextField
+                            margin='dense'
+                            id='description'
+                            name='description'
+                            label='Descripcion del paquete'
+                            type='text'
+                            fullWidth
+                            required
+                            value={this.state.description}
+                            helperText={this.state.descriptionError}
+                            error={this.state.descriptionError ? true : false}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                        />
+                        <TextField
+                            autoFocus
+                            margin='dense'
+                            id='price'
+                            name='price'
+                            label='Precio del paquete'
+                            type='text'
+                            fullWidth
+                            required
+                            value={this.state.price}
+                            helperText={this.state.priceError}
+                            error={this.state.priceError ? true : false}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                        />
+                        <TextField
+                            autoFocus
+                            margin='dense'
+                            id='stock'
+                            name='stock'
+                            label='Stock del paquete'
+                            type='text'
+                            fullWidth
+                            required
+                            value={this.state.stock}
+                            helperText={this.state.stockError}
+                            error={this.state.stockError ? true : false}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                        />
+                        <ul>
+                            {this.state.packageProdcuts.map(p => (
+                                <li key={p.id}>
+                                    {p.nombre}
+                                    {' x ' + p.cantidad}
+                                    <IconButton id={p.id} onClick={() => {
+                                        this.handleDelete(p.id);
+                                        }}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </li>
+                            ))}
+                        </ul>
+                        <SelectForm
+                                content={this.state.products}
+                                onChange={this.onSelectChange}
+                                //selected={this.state.productId}
+                                required
+                                value= {this.state.productId}
+                                label={'Productos'}
+                                selectError={this.state.productIdError}
+                                helper={'Seleccione el producto'}
+                        />
+                        <TextField
+                            margin='dense'
+                            id='cantidad'
+                            name='cantidad'
+                            label='Cantidad del producto'
+                            type='number'
+                            value={this.state.cantidad}
+                            fullWidth
+                            required
+                            //helperText={this.state.descriptionError}
+                            //error={this.state.descriptionError ? true : false}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                        />
+                        <Button onClick={this.agregarProducto} color="primary" variant='contained'>
+                            Agregar
+                        </Button> 
+                        <UploadImage onImageUpload={this.onImageUpload} />
                     </DialogContent>
-                     <DialogActions>
-                     <Button onClick={this.handleToggle} color="primary">
-                        Cancelar
-                    </Button>
-                    <Button onClick={this.onSubmit} color="primary" variant='contained'>
-                        Aceptar
-                    </Button>
-                     </DialogActions>
-                    </Dialog>
+                    <DialogActions>
+                        <Button onClick={this.handleToggle} color="primary">
+                            Cancelar
+                        </Button>
+                        <Button onClick={this.onSubmit} color="primary" variant='contained'>
+                            Aceptar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }

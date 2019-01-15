@@ -53,27 +53,27 @@ const getPackagesByCompany = async (url, id) => {
     return paquetes;
 };
 
-const getLineasPackage = async (url, token, id) => {
-    // let token = cookies.get('access_token');
-      if(token){
-      let request = new Request(`${url}/api/package/products/${id}`, {
-        method: 'GET',
-        headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-        credentials: 'same-origin'
-        });
+// const getLineasPackage = async (url, token, id) => {
+//     // let token = cookies.get('access_token');
+//       if(token){
+//       let request = new Request(`${url}/api/package/products/${id}`, {
+//         method: 'GET',
+//         headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+//         credentials: 'same-origin'
+//         });
         
-        let packages = await fetch(request)
-                                .then(response => (
-                                  response.json()
-                                ))
-                                .then(data => {
-                                  console.log(data);
-                                  return data;
-                                })
-                                .catch(err => console.log(err));
-        return packages;
-      }
-};
+//         let packages = await fetch(request)
+//                                 .then(response => (
+//                                   response.json()
+//                                 ))
+//                                 .then(data => {
+//                                   console.log(data);
+//                                   return data;
+//                                 })
+//                                 .catch(err => console.log(err));
+//         return packages;
+//       }
+// };
 
 const crearPaquete = (url, token, request) =>{
     // let token = cookies.get('access_token');
@@ -173,7 +173,7 @@ export default {
     getAllPackages,
     getPackageById,
     getPackagesByCompany,
-    getLineasPackage,
+    // getLineasPackage,
     crearPaquete,
     modificarPaquete,
     eliminarPaquete,

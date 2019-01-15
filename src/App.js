@@ -158,10 +158,10 @@ getPackagesByCompany = async (id) => {
   return await PackageFunctions.getPackagesByCompany(url, id);
 }
 
-getLineasPackage = async (id) => {
-  let token = cookies.get('access_token');
-  return await PackageFunctions.getLineasPackage(url, token, id);
-}
+// getLineasPackage = async (id) => {
+//   let token = cookies.get('access_token');
+//   return await PackageFunctions.getLineasPackage(url, token, id);
+// }
 
   signup = async (request) => {
     return await AuthFunctions.signup(url, request);
@@ -402,7 +402,7 @@ getLineasPackage = async (id) => {
                         company={this.state.loggedUser.userCompanyId}
                         modificarProducto={this.modificarProducto}
                         eliminarProducto={this.eliminarProducto}
-                        getLineasPackage={this.getLineasPackage}
+                        // getLineasPackage={this.getLineasPackage}
                         modificarPaquete={this.modificarPaquete}
                         eliminarPaquete={this.eliminarPaquete}
                       />
