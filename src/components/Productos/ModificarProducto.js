@@ -12,6 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // import Select from '../Helpers/SelectForm';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
+import SelectMultiple from '../Helpers/SelectMultiple';
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Create";
 
@@ -30,39 +31,35 @@ class ModificarProducto extends Component{
         this.state = {
             open: false,
             id: 0,
-            companyId: 0,
             name: '',
-            productId: 0,
             description: '',
             price: 0,
             stock: 0,
-            //categories: [],
             image: null,
+            categories: [],
+            productId: 0,
             nameError: '',
             descriptionError: '',
             priceError: '',
             stockError: '',
-            //categoriesError: '',
+            categoriesError: '',
             imageError: '',
         }
     }
 
     componentWillMount(){
+
+        let categories = this.props.product.categories.map(c => Number(c.id));
         
-        let product =  this.props.product;
-        // console.log(product);
          this.setState({
-            id: product.id,
-            companyId: product.companyId,
-            name: product.name,
-            productId: product.productId,
-            description: product.description,
-            price: product.price,
-            stock: product.stock,
-            // categories: categories,
-            image: product.image,
+            id: this.props.product.id,
+            name: this.props.product.name,
+            description: this.props.product.description,
+            price: this.props.product.price,
+            stock: this.props.product.stock,
+            productId: this.props.product.productId,
+            categories
         });
-        // console.log(this.state)
     };
 
     validate = () => {
@@ -72,48 +69,59 @@ class ModificarProducto extends Component{
             descriptionError: '',
             priceError: '',
             stockError: '',
-            //categoriesError: '',
+            categoriesError: '',
             imageError: '',
         };
 
-        if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
+        if(!this.state.name){
             isError = true;
-            errors.nameError='Debe tener 3 y 30 caracteres';
+            errors.nameError = 'Debe ingresar un nombre';
         }
-        if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
+        else if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
             isError = true;
-            errors.descriptionError='Debe tener entre 5 o 50 caracteres';
+            errors.nameError = 'Debe tener 3 y 30 caracteres';
         }
-        // if(Number(this.state.price) <= 0){
-        //     isError = true;
-        //     errors.priceError='Debe ingresar un precio mayor a 0';
-        // }
-        // else if(!Validator.isNumeric(this.state.price)){
-        //     isError = true;
-        //     errors.priceError='Debe contener unicamente numeros';
-        // }
-        // if(Number(this.state.stock) <= 0){
-        //     isError = true;
-        //     errors.stockError='Debe ingresar un stock mayor a 0';
-        // }
-        // else if(!Validator.isNumeric(this.state.stock)){
-        //     isError = true;
-        //     errors.stockError='Debe contener unicamente numeros';
-        // }
-        /*if(this.state.categories.length === 0){
+
+        if(!this.state.description){
             isError = true;
-            errors.categoriesError='Debe seleccionar al menos una categoria';
-        }*/
+            errors.nameError = 'Debe ingresar una descripcion';
+        }
+        else if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
+            isError = true;
+            errors.descriptionError = 'Debe tener entre 5 o 50 caracteres';
+        }
+        
+        if(!this.state.price || this.state.price <= 0){
+            isError = true;
+            errors.priceError = 'Debe ingresar un precio mayor a 0';
+        }
+        else if(isNaN(this.state.price)){
+            isError = true;
+            errors.priceError = 'Debe contener unicamente numeros';
+        }
+
+        if(!this.state.stock || this.state.stock <= 0){
+            isError = true;
+            errors.stockError = 'Debe ingresar un stock mayor a 0';
+        }
+        else if(isNaN(this.state.stock)){
+            isError = true;
+            errors.stockError = 'Debe contener unicamente numeros';
+        }
+
+        if(this.state.categories.length === 0){
+            isError = true;
+            errors.categoriesError = 'Debe seleccionar al menos una categoria';
+        }
+
         if(this.state.image && this.state.image.type !== 'image/jpeg' && this.state.image.type !== 'image/jpg' && this.state.image.type !== 'image/png'){
             isError = true;
-            errors.imageError="Debe subir una imagen JPEG, JPG o PNG";
+            errors.packageImageError="Debe subir una imagen JPEG, JPG o PNG";
         }
 
         this.setState({
             ...this.state,
             ...errors
-        }, () => {
-            console.log(this.state);
         });
 
         return isError;
@@ -141,7 +149,14 @@ class ModificarProducto extends Component{
         this.setState({[e.target.name]: e.target.value});
     }
 
-    onSubmit = (e) => {
+    onMultipleSelectChange = (seleccionados) => {
+        let selectedCategories = seleccionados.map(selected => {
+            return selected.id;
+        })
+        this.setState({categories: selectedCategories});
+    }
+
+    onSubmit = async (e) => {
         e.preventDefault();
         const error = this.validate();
 
@@ -149,25 +164,29 @@ class ModificarProducto extends Component{
 
             const request = new FormData();
 
-            request.set('productId', this.state.productId)
+            // request.set('productId', this.state.productId)
             request.set('name', this.state.name);
             request.set('description', this.state.description);
             request.set('price', this.state.price);
             request.set('stock', this.state.stock);
-            request.set('companyId', this.state.companyId);
-            //request.set('categories', this.state.categories);
+            // request.set('companyId', this.state.companyId);
+            request.set('categories', this.state.categories);
 
             //image
-            console.log(this.props)
+            // console.log(this.props)
             if(this.state.image) request.append('image', this.state.image, this.state.image.name);
-            this.props.modificar(request,this.state.id);
-            this.handleToggle();
+            let { status, message, producto } = await this.props.modificar(request, this.state.id);
+
+            if(status === 200){
+                this.props.actualizarLista(producto, this.props.posicion);
+                this.handleToggle();
+            }
         }
     }
 
     onImageUpload = (image) => {
         this.setState({
-            productImage: image
+            image
         })
     }
 
@@ -233,7 +252,7 @@ class ModificarProducto extends Component{
                         margin='dense'
                         id='stock'
                         name='stock'
-                        label='stock del producto'
+                        label='Stock del producto'
                         type='number'
                         value={this.state.stock}
                         fullWidth
@@ -242,14 +261,15 @@ class ModificarProducto extends Component{
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
-                    {/*<SelectMultiple
+                    <SelectMultiple
                         flagType='productos'
                         flagForm={true}
                         content={this.props.categories}
-                        onChange={this.onSelectChange}
+                        seleccionados={this.props.product.categories}
+                        onChange={this.onMultipleSelectChange}
                         selectError={this.state.categoriesError}
                         helper={'Seleccione categorias para el producto'}
-                    />*/}
+                    />
                     <UploadImage onImageUpload={this.onImageUpload} />
                 </DialogContent>
                 <DialogActions>

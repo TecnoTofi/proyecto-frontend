@@ -155,7 +155,7 @@ const modificarProducto = async (url, token, request, productId, companyId) => {
     })
     .then(res => {
         console.info(res);
-        if (res) return { status: res.status, message: res.data.message };
+        if (res) return { status: res.status, message: res.data.message, producto: res.data.product };
         else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
     })
     .catch(err => {

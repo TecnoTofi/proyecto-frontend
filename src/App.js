@@ -400,6 +400,7 @@ getPackagesByCompany = async (id) => {
                         getProductos={this.getProductsByCompany}
                         getPaquetes={this.getPackagesByCompany}
                         company={this.state.loggedUser.userCompanyId}
+                        getCategories={this.getCategories}
                         modificarProducto={this.modificarProducto}
                         eliminarProducto={this.eliminarProducto}
                         // getLineasPackage={this.getLineasPackage}

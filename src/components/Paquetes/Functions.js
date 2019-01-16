@@ -120,8 +120,9 @@ const modificarPaquete = async (url, token, request, id) => {
   })
   .then(res => {
       console.info(res);
-      if (res) return { status: res.status, message: res.data.message };
-      else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+      
+      if (res) return { status: res.status, message: res.data.message, paquete: res.data.package };
+      else return { status: 500, message: 'Ocurrio un error al procesar la solicitud' };
   })
   .catch(err => {
       console.log(`Error al modificar el paquete ${err}`);

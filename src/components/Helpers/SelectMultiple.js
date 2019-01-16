@@ -47,9 +47,16 @@ class MultipleSelect extends React.Component {
     type: [],
   };
 
+  componentWillMount(){
+    if(this.props.seleccionados){
+      this.setState({type: this.props.seleccionados});
+    }
+  }
+
   handleChange = event => {
     this.setState({ type: event.target.value }, () => {
         this.props.onChange(this.state.type);
+        console.info(this.state.type);
     });
   };
 

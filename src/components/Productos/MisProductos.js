@@ -31,18 +31,21 @@ class MisProductos extends Component{
 
     state = {
         productos: [],
-        products: []
+        products: [],
+        categories: []
     }
 
     async componentWillMount(){
         let productos = await this.props.getProductos(this.props.company);
         let paquetes = await this.props.getPaquetes(this.props.company);
+        let categories = await this.props.getCategories(this.props.getCategories);
         // console.log(paquetes);
         let listado = productos.concat(paquetes);
-        await this.setState({
+        this.setState({
             productos: listado,
             products: productos,
-        })
+            categories
+        });
     }
 
     handleDelete = (id, esPackage) =>{
@@ -65,9 +68,15 @@ class MisProductos extends Component{
     }
 
 
-    handleEdit= () => {
-        //hacer cambios en la lista local
+    handleEdit = (product, pos) => {
+        console.info(product);
+        console.info(pos);
+        let listado = this.state.productos;
+        console.log(this.state.productos);
+        listado[pos] = product;
+        this.setState({ productos: listado });
     }
+
     render(){
         const { classes } = this.props;
 
@@ -98,7 +107,7 @@ class MisProductos extends Component{
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.productos.map(product => (
+                                {this.state.productos.map((product, indice) => (
                                     <TableRow key={product.id}>
                                         <TableCell>
                                         {product.code ? product.code : 'Paquete'}
@@ -111,13 +120,20 @@ class MisProductos extends Component{
                                         </TableCell>
                                         <TableCell>
                                             {!product.esPackage ?
-                                                <ModificarProducto product={product} modificar={this.props.modificarProducto} />
+                                                <ModificarProducto
+                                                    product={product}
+                                                    categories={this.state.categories}
+                                                    modificar={this.props.modificarProducto}
+                                                    actualizarLista={this.handleEdit}
+                                                    posicion={indice}
+                                                />
                                                 :
                                                 <ModificarPaquete
                                                     products={this.state.products}
+                                                    categories={this.state.categories}
                                                     modificarPaquete={this.props.modificarPaquete}
-                                                    // company={this.props.company}
-                                                    // getLineasPackage={this.props.getLineasPackage}
+                                                    actualizarLista={this.handleEdit}
+                                                    posicion={indice}
                                                     package={product}
                                                 /> 
                                             }

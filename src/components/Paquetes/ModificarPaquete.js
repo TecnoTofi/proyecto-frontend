@@ -15,6 +15,7 @@ import Validator from 'validator';
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Create";
 import SelectForm from '../Helpers/SelectForm';
+import SelectMultiple from '../Helpers/SelectMultiple';
 import DeleteIcon from "@material-ui/icons/Delete";
 
 
@@ -33,76 +34,101 @@ class ModificarPaquete extends Component{
             open: false,
             products: [],
             id: 0,
-            companyId: 0,
+            code: '',
+            // companyId: 0,
             name: '',
             description: '',
             price: 0,
             stock: 0,
-            //categories: [],
+            categories: [],
             packageImage: null,
-            // productosSeleccionados: [],
             productId: 0,
             packageProdcuts: [],
             cantidad: '',
             nameError: '',
             descriptionError: '',
             priceError: '',
-            //categoriesError: '',
+            stockError: '',
             packageImageError: '',
-            companyIdError: '',
+            categoriesError: '',
         }
     }
 
     componentWillMount(){
         let packageProdcuts = [];
         for(let p of this.props.package.products){
-            packageProdcuts.push({ id: Number(p.id), nombre: p.name, cantidad: p.quantity });
+            packageProdcuts.push({ productId: Number(p.id), name: p.name, quantity: p.quantity });
         }
         
+        let categories = this.props.package.categories.map(c => Number(c.id));
+
          this.setState({
             id: this.props.package.id,
-            companyId: this.props.package.companyId,
+            code: this.props.package.code,
+            // companyId: this.props.package.companyId,
             name: this.props.package.name,
             description: this.props.package.description,
-            price: this.props.package.price,
-            stock: this.props.package.stock,
+            price: Number(this.props.package.price),
+            stock: Number(this.props.package.stock),
             products: this.props.products,
-            packageProdcuts: packageProdcuts,
+            packageProdcuts,
+            categories,
         });
     };
 
     validate = () => {
         let isError = false;
         const errors = {
-            //nameError: '',
+            nameError: '',
             descriptionError: '',
             priceError: '',
+            stockError: '',
             packageImageError: '',
-            companyIdError:'',
-            //categoriesError: '',
+            categoriesError: '',
             
         };
 
-        /*if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
+        if(!this.state.name){
             isError = true;
-            errors.nameError='Debe tener 3 y 30 caracteres';
-        }*/
-        if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
-            isError = true;
-            errors.descriptionError='Debe tener entre 5 o 50 caracteres';
+            errors.nameError = 'Debe ingresar un nombre';
         }
-        // if(Number(this.state.price) <= 0){
-        //     isError = true;
-        //     errors.priceError='Debe ingresar un precio mayor a 0';
-        // }
-        // else if(!Validator.isNumeric(this.state.price)){
-        //     isError = true;
-        //     errors.priceError='Debe contener unicamente numeros';
-        // }
-        /*if(this.state.categories.length === 0){
+        else if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
             isError = true;
-            errors.categoriesError='Debe seleccionar al menos una categoria';
-        }*/
+            errors.nameError = 'Debe tener 3 y 30 caracteres';
+        }
+
+        if(!this.state.description){
+            isError = true;
+            errors.nameError = 'Debe ingresar una descripcion';
+        }
+        else if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
+            isError = true;
+            errors.descriptionError = 'Debe tener entre 5 o 50 caracteres';
+        }
+        
+        if(!this.state.price || this.state.price <= 0){
+            isError = true;
+            errors.priceError = 'Debe ingresar un precio mayor a 0';
+        }
+        else if(isNaN(this.state.price)){
+            isError = true;
+            errors.priceError = 'Debe contener unicamente numeros';
+        }
+
+        if(!this.state.stock || this.state.stock <= 0){
+            isError = true;
+            errors.stockError = 'Debe ingresar un stock mayor a 0';
+        }
+        else if(isNaN(this.state.stock)){
+            isError = true;
+            errors.stockError = 'Debe contener unicamente numeros';
+        }
+
+        if(this.state.categories.length === 0){
+            isError = true;
+            errors.categoriesError = 'Debe seleccionar al menos una categoria';
+        }
+
         if(this.state.packageImage && this.state.packageImage.type !== 'image/jpeg' && this.state.packageImage.type !== 'image/jpg' && this.state.packageImage.type !== 'image/png'){
             isError = true;
             errors.packageImageError="Debe subir una imagen JPEG, JPG o PNG";
@@ -111,8 +137,6 @@ class ModificarPaquete extends Component{
         this.setState({
             ...this.state,
             ...errors
-        }, () => {
-            console.log(this.state);
         });
 
         return isError;
@@ -122,6 +146,13 @@ class ModificarPaquete extends Component{
         this.setState({
             open: !this.state.open,
         });
+    }
+
+    onMultipleSelectChange = (seleccionados) => {
+        let selectedCategories = seleccionados.map(selected => {
+            return selected.id;
+        })
+        this.setState({categories: selectedCategories});
     }
 
     onChange = (e) => {
@@ -143,7 +174,7 @@ class ModificarPaquete extends Component{
             let length = this.state.products.length;
             for(let i = 0; i < length; i++) {
                 if (Number(this.state.products[i].id) === this.state.productId) {
-                    let prod = { 'id': this.state.productId, nombre: this.state.products[i].name, 'cantidad': Number(this.state.cantidad) };
+                    let prod = { 'productId': this.state.productId, name: this.state.products[i].name, 'quantity': Number(this.state.cantidad) };
                     packageProdcuts.push(prod);
                     break;
                 }
@@ -152,31 +183,7 @@ class ModificarPaquete extends Component{
         this.setState({'cantidad': '', 'productId': 0, packageProdcuts});
     }
 
-    // poductSelect = (id,cantidad) =>{
-    //     /*let productos = this.state.products.map(prod =>{
-    //         this.state.productosSeleccionados.map(prod2 => {
-    //             if(prod.id == prod2.id){
-    //                 this.state.prod.push(prod);
-    //             }
-    //         })
-    //         }
-    //         );
-    //         console.log(this.state.prod)*/
-    //         let productos = this.state.products.map(prod =>{
-    //                 if(Number(prod.id) === Number(id)){
-    //                     this.state.packageProdcuts.push({nombre:prod.name,cantidad:cantidad,id:prod.id});
-    //                 }
-    //             })
-    //             console.log(this.state.packageProdcuts)
-    // }
-
-    // cargarLineas = (prod) => {
-    //     let produ = { 'id': prod.productId , 'cantidad': Number(prod.quantity) };
-    //     this.state.productosSeleccionados.push(produ);
-    //     this.poductSelect(prod.productId,prod.quantity);
-    // };
-
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
         e.preventDefault();
         const error = this.validate();
 
@@ -195,19 +202,27 @@ class ModificarPaquete extends Component{
             console.log(this.props)
             if(this.state.packageImage) request.append('image', this.state.packageImage, this.state.packageImage.name);
             */
-           let request = {
-            id:this.state.id,
-            price: this.state.price,
-            description: this.state.description,
-            companyId: this.state.companyId,
-            products: this.state.productosSeleccionados,
-           }
-           if(this.state.image) request.append('image', this.state.image, this.state.image.name);
-           console.log(this.props)
-           this.props.modificarPaquete(request,this.state.id);
-           /*this.props.modificar(request,this.state.id);
-           this.handleToggle();*/
-    }
+            let request = {
+                // id: this.state.id,
+                // companyId: this.state.companyId,
+                code: this.state.code,
+                name: this.state.name,
+                description: this.state.description,
+                price: this.state.price,
+                stock: this.state.stock,
+                products: this.state.packageProdcuts,
+                categories: this.state.categories
+            }
+            // if(this.state.image) request.append('image', this.state.image, this.state.image.name);
+            // console.log(this.props)
+            let { status, message, paquete } = await this.props.modificarPaquete(request, this.state.id);
+            
+            if(status === 200){
+
+                this.props.actualizarLista(paquete, this.props.posicion)
+                this.handleToggle();
+            }
+        }
     }
 
     onImageUpload = (image) => {
@@ -299,11 +314,20 @@ class ModificarPaquete extends Component{
                             onChange={this.onChange}
                             onKeyPress={this.onEnterPress}
                         />
+                        <SelectMultiple
+                            flagType='productos'
+                            flagForm={true}
+                            content={this.props.categories}
+                            seleccionados={this.props.package.categories}
+                            onChange={this.onMultipleSelectChange}
+                            selectError={this.state.categoriesError}
+                            helper={'Seleccione categorias para el producto'}
+                        />
                         <ul>
                             {this.state.packageProdcuts.map(p => (
-                                <li key={p.id}>
-                                    {p.nombre}
-                                    {' x ' + p.cantidad}
+                                <li key={p.productId}>
+                                    {p.name}
+                                    {' x ' + p.quantity}
                                     <IconButton id={p.id} onClick={() => {
                                         this.handleDelete(p.id);
                                         }}>
