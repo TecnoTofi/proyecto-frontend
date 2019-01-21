@@ -22,20 +22,6 @@ const getAllProducts = async (url) => {
     return productos;
 };
 
-// const getProductCategories = async (url) => {
-//     let categories = await fetch(`${url}/api/product/category`)
-//                                 .then(response => (
-//                                 response.json()
-//                                 ))
-//                                 .then(data => {
-//                                 // console.log('categorias productos', data);
-//                                 return data;
-//                                 // this.setState({productCategories: data})
-//                                 })
-//                                 .catch(err => console.log(err));
-//     return categories;
-// }; 
-
 const getProductsByCompany = async (url, id) => {
     let productos = await fetch(`${url}/api/product/company/${id}`)
                             .then(response => (
@@ -61,7 +47,6 @@ const getProductsByCompany = async (url, id) => {
 
 //revisar, que retorne algo, ver res.json
 const registroProducto = (url, token, request) => {
-    // let token = cookies.get('access_token');
     if(token){
         let instance = axios.create({
                         baseURL: `${url}/api/product/company`,
@@ -145,6 +130,22 @@ const getCompanyProductsByProduct = async (url, id) => {
     return productos;
 };
 
+const getNotAssociated = async(url, id) => {
+    let productos = await fetch(`${url}/api/product/company/${id}/notassociated`)
+                            .then(response => (response.json()))
+                            .then(data => {
+                            // console.log('data', data);
+                            let response = data.map(prod => {
+                                        prod.imageUrl = `${url}/${prod.imagePath}`;
+                                        prod.esPackage = false;
+                                        return prod;
+                                        });
+                            return response;
+                            })
+                            .catch(err => console.log(err));
+    return productos;
+}
+
 const modificarProducto = async (url, token, request, productId, companyId) => {
 
     let response = await axios({
@@ -196,5 +197,6 @@ export default {
     modificarProducto,
     eliminarProducto,
     getProductById,
-    getCompanyProductsByProduct
+    getCompanyProductsByProduct,
+    getNotAssociated,
 }

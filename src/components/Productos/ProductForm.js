@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import UploadImage from '../Helpers/UploadImage';
-// import SelectType from './SelectForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -14,7 +13,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/AddBox';
 import Validator from 'validator';
-// import InputLabel from '@material-ui/core/InputLabel';
 
 
 export default class ProductForm extends Component{
@@ -23,15 +21,21 @@ export default class ProductForm extends Component{
         super(props);
         this.state = {
             open: false,
-            productName: '',
-            productCode: '',
-            categories: [],
             categoryList:[],
-            productImage: null,
-            productNameError: '',
-            productCodeError: '',
+            code: '',
+            name: '',
+            description: '',
+            price: '',
+            stock: '',
+            categories: [],
+            image: null,
+            codeError: '',
+            nameError: '',
+            descriptionError: '',
+            priceError: '',
+            stockError: '',
             categoriesError: '',
-            productImageError: ''
+            imageError: ''
         };
     }
 
@@ -45,47 +49,79 @@ export default class ProductForm extends Component{
 
     getInfo = async () => {
         let categories = await this.props.getCategories();
-        await this.setState({categoryList: categories});
+        this.setState({categoryList: categories});
     }
 
     validate = () => {
         let isError = false;
         const errors = {
-            productNameError: '',
-            productCodeError: '',
+            codeError: '',
+            nameError: '',
+            descriptionError: '',
+            priceError: '',
+            stockError: '',
             categoriesError: '',
-            productImageError: ''
+            imageError: ''
         };
-        if(!this.state.productName){
+
+        if (!this.state.code) {
             isError = true;
-            errors.productNameError = 'Debe ingresar un nombre';
+            errors.codeError ='Debe ingresar un codigo';
         }
-        else if(!Validator.isLength(this.state.productName, {min: 3, max: 30})){
+        else if(!Validator.isAlphanumeric(this.state.code)){
             isError = true;
-            errors.productNameError='Debe tener 3 y 30 caracteres';
+            errors.codeError='Debe contener unicamente numeros y letras';
         }
-        if (!this.state.productCode) {
+
+        if(!this.state.name){
             isError = true;
-            errors.productCodeError ='Debe ingresar un codigo';
+            errors.nameError = 'Debe ingresar un nombre';
         }
-        else if(!Validator.isAlphanumeric(this.state.productCode)){
+        else if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
             isError = true;
-            errors.productCodeError='Debe contener unicamente numeros y letras';
+            errors.nameError='Debe tener 3 y 30 caracteres';
         }
+
+        if(!this.state.description){
+            isError = true;
+            errors.descriptionError='Debe ingresar una descripcion';
+        }
+        else if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
+            isError = true;
+            errors.descriptionError='Debe tener entre 5 o 50 caracteres';
+        }
+
+        if(this.state.price <= 0){
+            isError = true;
+            errors.priceError='Debe ingresar un precio mayor a 0';
+        }
+        else if(!Validator.isNumeric(this.state.price)){
+            isError = true;
+            errors.priceError='Debe contener unicamente numeros';
+        }
+
+        if(this.state.stock <= 0){
+            isError = true;
+            errors.stockError='Debe ingresar un stock mayor a 0';
+        }
+        else if(!Validator.isNumeric(this.state.stock)){
+            isError = true;
+            errors.stockError='Debe contener unicamente numeros';
+        }
+
         if(this.state.categories.length === 0){
             isError = true;
             errors.categoriesError='Debe seleccionar al menos una categoria';
         }
+
         if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
             isError = true;
-            errors.productImageError="Debe subir una imagen JPEG, JPG o PNG";
+            errors.imageError="Debe subir una imagen JPEG, JPG o PNG";
         }
 
         this.setState({
             ...this.state,
             ...errors
-        }, () => {
-            console.log(this.state);
         });
 
         return isError;
@@ -94,21 +130,23 @@ export default class ProductForm extends Component{
 
     handleToggle = () => {
         this.setState({
-          open: !this.state.open,
-          productName: '',
-          productCode: '',
-          categories: [],
-          productImage: null,
-          productNameError: '',
-          productCodeError: '',
-          categoriesError: '',
-          productImageError: ''
+            open: !this.state.open,
+            code: '',
+            name: '',
+            description: '',
+            price: '',
+            stock: '',
+            categories: [],
+            image: null,
+            codeError: '',
+            nameError: '',
+            descriptionError: '',
+            priceError: '',
+            stockError: '',
+            categoriesError: '',
+            imageError: ''
         });
-      }
-
-    // onSelectChange = (tipo) => {
-    //     this.setState({category: Number(tipo)});
-    // }
+      };
 
     onSelectChange = (seleccionados) => {
         let selectedCategories = seleccionados.map(selected => {
@@ -123,7 +161,7 @@ export default class ProductForm extends Component{
 
     onImageUpload = (image) => {
         this.setState({
-            productImage: image
+            image: image
         })
     }
 
@@ -136,11 +174,11 @@ export default class ProductForm extends Component{
 
             const request = new FormData();
       
-            request.set('name', this.state.productName);
-            request.set('code', this.state.productCode);
+            request.set('name', this.state.name);
+            request.set('code', this.state.code);
             request.set('categories', this.state.categories);
             
-            request.append('image', this.state.productImage, this.state.productImage.name);
+            request.append('image', this.state.image, this.state.image.name);
 
             this.props.onClick(request);
             this.handleToggle();
@@ -166,29 +204,43 @@ export default class ProductForm extends Component{
                 <DialogTitle id="form-dialog-title">Nuevo producto</DialogTitle>
                 <DialogContent>
                     <TextField
-                        autoFocus
                         margin='dense'
-                        id='productName'
-                        name='productName'
-                        label='Nombre del producto'
-                        type='text'
-                        fullWidth
-                        required
-                        helperText={this.state.productNameError}
-                        error={this.state.productNameError ? true : false}
-                        onChange={this.onChange}
-                        onKeyPress={this.onEnterPress}
-                    />
-                    <TextField
-                        margin='dense'
-                        id='productCode'
-                        name='productCode'
+                        id='code'
+                        name='code'
                         label='Codigo del producto'
                         type='text'
                         fullWidth
                         required
-                        helperText={this.state.productCodeError}
-                        error={this.state.productCodeError ? true : false}
+                        helperText={this.state.descriptionError}
+                        error={this.state.descriptionError ? true : false}
+                        onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
+                    />
+                    <TextField
+                        autoFocus
+                        margin='dense'
+                        id='name'
+                        name='name'
+                        label='Nombre del producto'
+                        type='text'
+                        fullWidth
+                        required
+                        helperText={this.state.nameError}
+                        error={this.state.nameError ? true : false}
+                        onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
+                    />
+                    <TextField
+                        autoFocus
+                        margin='dense'
+                        id='description'
+                        name='description'
+                        label='Descrip del producto'
+                        type='text'
+                        fullWidth
+                        required
+                        helperText={this.state.nameError}
+                        error={this.state.nameError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />

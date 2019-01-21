@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -17,6 +17,7 @@ import EditIcon from "@material-ui/icons/Create";
 import SelectForm from '../Helpers/SelectForm';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Typography } from '@material-ui/core';
 
 
 
@@ -218,7 +219,6 @@ class ModificarPaquete extends Component{
             let { status, message, paquete } = await this.props.modificarPaquete(request, this.state.id);
             
             if(status === 200){
-
                 this.props.actualizarLista(paquete, this.props.posicion)
                 this.handleToggle();
             }
@@ -235,10 +235,13 @@ class ModificarPaquete extends Component{
         if(e.key === 'Enter') this.onSubmit(e);
     }
 
-    handleDelete = (id) =>{ 
+    handleDelete = (id) =>{
+        console.log('state packageProducts', this.state.packageProdcuts);
         let packageProdcuts = this.state.packageProdcuts.filter(p => {
-            return p.id !== id;
+            return p.productId !== id;
         });
+        console.log('filtered packageProducts', packageProdcuts);
+        //ver aca porque se estan borrando todos
         this.setState({ packageProdcuts });
     }
 
@@ -323,19 +326,26 @@ class ModificarPaquete extends Component{
                             selectError={this.state.categoriesError}
                             helper={'Seleccione categorias para el producto'}
                         />
-                        <ul>
-                            {this.state.packageProdcuts.map(p => (
-                                <li key={p.productId}>
-                                    {p.name}
-                                    {' x ' + p.quantity}
-                                    <IconButton id={p.id} onClick={() => {
-                                        this.handleDelete(p.id);
-                                        }}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </li>
-                            ))}
-                        </ul>
+                        {this.state.packageProdcuts.length > 0 ? (
+                            <Fragment>
+                                <Typography>Productos seleccionados</Typography>
+                                <ul>
+                                    {this.state.packageProdcuts.map(p => (
+                                        <li key={p.productId}>
+                                            {p.name}
+                                            {' x ' + p.quantity}
+                                            <IconButton id={p.productId} onClick={() => {
+                                                this.handleDelete(p.productId);
+                                                }}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Fragment>
+                        ) : (
+                            <Typography>Debe agregar productos</Typography>
+                        )}                        
                         <SelectForm
                                 content={this.state.products}
                                 onChange={this.onSelectChange}

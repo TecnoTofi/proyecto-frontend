@@ -13,6 +13,8 @@ import TableCell from "@material-ui/core/TableCell";
 import CardMedia from '@material-ui/core/CardMedia';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
     root: {
@@ -38,19 +40,14 @@ class DetalleProducto extends Component{
     async componentWillMount(){
         let companyProducts = await this.props.getCompanyProductsByProduct(this.props.productId);
         let producto = await this.props.getProductById(this.props.productId);
-        console.log('companyProducts', companyProducts);
-        console.log('producto', producto);
-        //concat
         await this.setState({
             companyProducts: companyProducts,
             producto: producto
         });
-        // console.log(this.state);
     }
 
     agregarAlCarrito = (i) => {
-        // console.log('producto detalle', this.state.companyProduct[i]);
-        this.props.agregarAlCarrito(this.state.companyProduct[i]);
+        this.props.agregarAlCarrito(this.state.companyProducts[i]);
     }
 
     render(){
@@ -60,7 +57,7 @@ class DetalleProducto extends Component{
             <Fragment>
                 {this.state.companyProducts.length === 0 ? (
                     <Typography>
-                        Cargando productos...
+                        Cargando producto...
                         {/* cambiar esto por una loading animation */}
                     </Typography>
                 ) : (
@@ -78,54 +75,67 @@ class DetalleProducto extends Component{
                                 />
                             </div>
                         </div>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
+                        <Divider variant="middle" />
+                        {this.state.producto.categories ? (
+                            <div>
+                                <Typography variant='h6'>Categorias</Typography>
+                                <div>
+                                    {this.state.producto.categories.map(c => (
+                                        <Chip key={c.id} label={c.name} className={classes.chip} />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
+                        <Divider variant="middle" />
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        Empresa
+                                    </TableCell>
+                                    <TableCell>
+                                        Nombre
+                                    </TableCell>
+                                    <TableCell>
+                                        Precio
+                                    </TableCell>
+                                    <TableCell>
+                                        Descripcion
+                                    </TableCell>
+                                    <TableCell>
+                                        Acciones
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {this.state.companyProducts.map((product, i) => (
+                                    <TableRow key={i}>
                                         <TableCell>
-                                            Empresa
+                                            {product.companyName}
                                         </TableCell>
                                         <TableCell>
-                                            Nombre
+                                            {product.name}    
                                         </TableCell>
                                         <TableCell>
-                                            Precio
+                                            {product.price}    
                                         </TableCell>
                                         <TableCell>
-                                            Descripcion
+                                            {product.description}    
                                         </TableCell>
                                         <TableCell>
-                                            Acciones
+                                        {product.companyId !== this.props.loggedCompany && this.props.loggedCompany !== 0 ? (
+                                            <Button size="small" color="primary" 
+                                            onClick={()=> this.agregarAlCarrito(i)}>
+                                            <CartIcon className={classes.leftIcon} />
+                                            Agregar
+                                        </Button>
+                                        ) : null}
                                         </TableCell>
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {this.state.companyProducts.map((product, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell>
-                                                {product.companyName}
-                                            </TableCell>
-                                            <TableCell>
-                                                {product.name}    
-                                            </TableCell>
-                                            <TableCell>
-                                                {product.price}    
-                                            </TableCell>
-                                            <TableCell>
-                                                {product.description}    
-                                            </TableCell>
-                                            <TableCell>
-                                            <Button size="small" color="primary" 
-                                                onClick={()=>
-                                                        this.agregarAlCarrito(i)}>
-                                                <CartIcon className={classes.leftIcon} />
-                                                Agregar
-                                            </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Paper>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Paper>
                 )}
             </Fragment>
         );

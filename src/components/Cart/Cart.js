@@ -3,18 +3,18 @@ import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-// import InputAdornment from '@material-ui/core/InputAdornment';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import CartSelect from './CartSelect';
 import CartPickers from './CartPickers';
 import CartProduct from './CartProduct';
 import CartTotal from './CartTotal';
-// import { Input } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -30,6 +30,16 @@ const styles = theme => ({
 
 class Cart extends Component{
 
+    state = {
+        voucher: '',
+        voucherError: '',
+    }
+
+    componentWillMount(){
+        let voucher = this.props.cart.voucher;
+        this.setState({voucher});
+    }
+
     handleSelectChange = (productId, productCode, companyId, quantity) => {
         this.props.cambiarCantidadProdCarrito(productId, productCode, companyId, quantity);
     }
@@ -39,9 +49,23 @@ class Cart extends Component{
         if(Number(selected) !== 1) value = true;
         this.props.cartEnvioChange(productId, value, selected);
     }
+
+    onChange = (e) => {
+        if(e.target.value.length <= 20) this.setState({[e.target.name]: e.target.value});
+    }
+
+    onEnterPress = (e) => {
+        if(e.key === 'Enter') this.sendVoucher(e);
+    }
+
+    sendVoucher = (e) => {
+        e.preventDefault();
+        this.props.sendVoucher(this.state.voucher);
+    }
     
     render(){
         const { contenido, subTotal, subTotalEnvios, total } = this.props.cart;
+        // const { classes } = this.props;
 
         return(
             <Fragment>
@@ -118,6 +142,22 @@ class Cart extends Component{
                         </TableBody>
                     </Table>
                 </Paper>
+                <div>
+                    <TextField
+                        margin='dense'
+                        id='voucher'
+                        name='voucher'
+                        label='Voucher de descuento'
+                        type='text'
+                        helperText={this.state.voucherError}
+                        error={this.state.voucherError ? true : false}
+                        onChange={this.onChange}
+                        onKeyPress={this.onEnterPress}
+                    />
+                    <Button className="btnVoucher" onClick={this.sendVoucher} color="primary" variant='contained'>
+                        Aceptar
+                    </Button>
+                </div>
                 <CartTotal 
                     subTotal={subTotal} 
                     subTotalEnvios={subTotalEnvios} 

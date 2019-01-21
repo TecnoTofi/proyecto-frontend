@@ -57,7 +57,7 @@ const ReporteComprasItem = (props) => {
                     {transaction.packages ? (
                         transaction.packages.map(pack => (
                             <Typography variant='body1' key={pack.id}>
-                                {`${pack.name} x ${pack.quantity}`}
+                                {`${pack.name} x ${pack.quantity} - Total: $${pack.price * pack.quantity} - $${pack.price} la unidad`}
                             </Typography>
                         ))
                     ) : null}

@@ -54,9 +54,22 @@ class MultipleSelect extends React.Component {
   }
 
   handleChange = event => {
-    this.setState({ type: event.target.value }, () => {
+
+    let lista = [];
+    event.target.value.map(c => {
+      if(lista.length === 0){
+        lista.push(c);
+      }
+      else{
+        let existe = lista.map(p => p.id).indexOf(c.id);
+        if(existe === -1){
+          lista.push(c);
+        }
+      }
+      return null;
+    });
+    this.setState({ type: lista }, () => {
         this.props.onChange(this.state.type);
-        console.info(this.state.type);
     });
   };
 
@@ -90,7 +103,7 @@ class MultipleSelect extends React.Component {
           >
             {this.props.content.map(type => (
               <MenuItem key={type.id} value={type}>
-                <Checkbox checked={this.state.type.indexOf(type) > -1} />
+                <Checkbox checked={this.state.type.map(t => t.id).indexOf(type.id) > -1} />
                 <ListItemText primary={type.name} />
               </MenuItem>
             ))}

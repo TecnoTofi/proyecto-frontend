@@ -53,6 +53,7 @@ function Header(props) {
               getCategories={props.getCategories}
               // onClickProduct={props.registrarProducto}
               getProducts={props.getProducts}
+              getNotAssociated={props.getNotAssociated}
               companies={props.companies}
               onClickAssociate={props.registroEmpresaProducto}
               onClickProductAssociate={props.registrarProducto}

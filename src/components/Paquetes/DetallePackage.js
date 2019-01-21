@@ -13,6 +13,14 @@ import TableCell from "@material-ui/core/TableCell";
 import CardMedia from '@material-ui/core/CardMedia';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Divider from '@material-ui/core/Divider';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
     root: {
@@ -32,23 +40,36 @@ class DetallePackage extends Component{
 
     state = {
         paquete: {},
+        dense: false,
+        secondary: true,
         // companyProducts:[],
     }
 
     async componentWillMount(){
         let paquete = await this.props.getPackageById(this.props.packageId);
-        console.log('paquete', paquete);
+        // console.log('paquete', paquete);
         await this.setState({
             paquete: paquete
         });
     }
 
     agregarAlCarrito = () => {
-        this.props.agregarAlCarrito(this.props.packageId);
+        this.props.agregarAlCarrito(this.state.paquete);
     }
+
+    generate = (element) => {
+        return [0, 1, 2].map(value =>
+          React.cloneElement(element, {
+            key: value,
+          }),
+        );
+      }
 
     render(){
         const { classes } = this.props;
+        const { dense } = this.state;
+        // const { categories } = this.state.paquete;
+        // console.log(categories);
 
         return (
             <Fragment>
@@ -72,52 +93,95 @@ class DetallePackage extends Component{
                                 />
                             </div>
                         </div>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            Empresa
-                                        </TableCell>
-                                        <TableCell>
-                                            Nombre
-                                        </TableCell>
-                                        <TableCell>
-                                            Precio
-                                        </TableCell>
-                                        <TableCell>
-                                            Descripcion
-                                        </TableCell>
-                                        <TableCell>
-                                            Acciones
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <TableRow key={0}>
-                                        <TableCell>
-                                            {this.state.paquete.companyName}
-                                        </TableCell>
-                                        <TableCell>
-                                            {this.state.paquete.name}
-                                        </TableCell>
-                                        <TableCell>
-                                            {this.state.paquete.price}
-                                        </TableCell>
-                                        <TableCell>
-                                            {this.state.paquete.description}
-                                        </TableCell>
-                                        <TableCell>
+                        <Divider variant="middle" />
+                        <Typography variant='h6'>Descripcion</Typography>
+                        <Typography variant='body1'>{this.state.paquete.description}</Typography>
+                        <Divider variant="middle" />
+                        {this.state.paquete.categories ? (
+                            <div>
+                                <Typography variant='h6'>Categorias</Typography>
+                                <div>
+                                    {this.state.paquete.categories.map(c => (
+                                        <Chip key={c.id} label={c.name} className={classes.chip} />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
+                        <Divider variant="middle" />
+                        {this.state.paquete.products ? (
+                            <Fragment>
+                                {/* <Grid container spacing={16}> */}
+                                <Grid item xs={12} md={6}>
+                                    <Typography variant="h6" className={classes.title}>
+                                        Productos
+                                    </Typography>
+                                    <div className={classes.demo}>
+                                        <List dense={dense}>
+                                            {this.state.paquete.products.map(p => (
+                                                <ListItem>
+                                                    <ListItemAvatar>
+                                                        <Avatar alt={p.imageName} src={p.imageUrl} className={classes.avatar} />
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        primary={p.name}
+                                                        secondary={p.description}
+                                                    />
+                                                </ListItem>
+                                            ))}
+                                        </List>
+                                    </div>
+                                </Grid>
+                            </Fragment>
+                        ) : null}
+                        <Divider variant="middle" />
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        Empresa
+                                    </TableCell>
+                                    <TableCell>
+                                        Nombre
+                                    </TableCell>
+                                    <TableCell>
+                                        Precio
+                                    </TableCell>
+                                    <TableCell>
+                                        Descripcion
+                                    </TableCell>
+                                    <TableCell>
+                                        Acciones
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow key={0}>
+                                    <TableCell>
+                                        {this.state.paquete.companyName}
+                                    </TableCell>
+                                    <TableCell>
+                                        {this.state.paquete.name}
+                                    </TableCell>
+                                    <TableCell>
+                                        {this.state.paquete.price}
+                                    </TableCell>
+                                    <TableCell>
+                                        {this.state.paquete.description}
+                                    </TableCell>
+                                    <TableCell>
+                                    {this.state.paquete.companyId !== this.props.loggedCompany && this.props.loggedCompany !== 0 ? (
                                         <Button size="small" color="primary" 
                                             onClick={()=>
                                                     this.agregarAlCarrito()}>
                                             <CartIcon className={classes.leftIcon} />
                                             Agregar
                                         </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </Paper>
+                                    ) : null}
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Paper>
                 )}
             </Fragment>
         );

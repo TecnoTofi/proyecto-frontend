@@ -9,6 +9,10 @@ const getAllPackages = async (url) => {
                                 let response = data.map(pack => {
                                             pack.imageUrl = `${url}/${pack.imagePath}`;
                                             pack.esPackage = true;
+                                            pack.products = pack.products.map(p => {
+                                              p.imageUrl = `${url}/${p.imagePath}`;
+                                              return p;
+                                            });
                                             return pack;
                                           });
                                 // console.log('paquetes', response);
@@ -28,6 +32,10 @@ const getPackageById = async (url, id) => {
                             // console.log('data', data);
                             data.imageUrl = `${url}/${data.imagePath}`;
                             data.esPackage = true;
+                            data.products = data.products.map(p => {
+                              p.imageUrl = `${url}/${p.imagePath}`;
+                              return p;
+                            });
                             return data;
                           })
                           .catch(err => console.log(err));
@@ -44,6 +52,10 @@ const getPackagesByCompany = async (url, id) => {
                             let response = data.map(pack => {
                                         pack.imageUrl = `${url}/${pack.imagePath}`;
                                         pack.esPackage = true;
+                                        pack.products = pack.products.map(p => {
+                                          p.imageUrl = `${url}/${p.imagePath}`;
+                                          return p;
+                                        });
                                         return pack;
                                       });
                             return response;
@@ -75,28 +87,47 @@ const getPackagesByCompany = async (url, id) => {
 //       }
 // };
 
-const crearPaquete = (url, token, request) =>{
+const crearPaquete = async (url, token, request) =>{
+
+  let response = await axios({
+    method: 'post',
+    url: `${url}/api/package`,
+    headers: { 'Content-Type': 'application/json', token: token },
+    data: request
+  })
+  .then(res => {
+      console.info(res);
+      
+      if (res) return { status: res.status, message: res.data.message, id: res.data.id };
+      else return { status: 500, message: 'Ocurrio un error al procesar la solicitud' };
+  })
+  .catch(err => {
+      console.log(`Error al modificar el paquete ${err}`);
+      return {status: 500, message: err};
+  });
+
+  return response;
+
     // let token = cookies.get('access_token');
     // console.log('token enviado',token);
     // console.log(request);
-    if(token){
-      let instance = axios.create({
-        baseURL: `${url}/api/package`,
-        method: 'post',
-        headers: {token: token},
-        data: request
-      });
-      instance()
-      .then(res => {
-      console.log(res);
-      })
-      .catch(err => {
-      console.log(err);
-      });
-    }
-    else{
-    console.log('No hay token');
-    }
+    // if(token){
+    //   let instance = axios.create({
+    //     baseURL: `${url}/api/package`,
+    //     method: 'post',
+    //     headers: {token: token},
+    //     data: request
+    //   });
+    //   instance()
+    //     .then(res => {
+    //     console.log(res);
+    //   }).catch(err => {
+    //     console.log(err);
+    //   });
+    // }
+    // else{
+    // console.log('No hay token');
+    // }
     /*axios.post(`${url}/api/package`, request)
       .then(res => {
         console.log(res);

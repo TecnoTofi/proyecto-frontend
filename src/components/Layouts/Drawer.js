@@ -106,7 +106,7 @@ class Drawer extends React.Component {
           />
           <AssociateForm
             companyId={this.props.companyId}
-            getProducts={this.props.getProducts} 
+            getProducts={this.props.getNotAssociated} 
             // companies={this.props.companies} 
             onClick={this.props.onClickAssociate}
           />
@@ -114,6 +114,7 @@ class Drawer extends React.Component {
             getProducts={this.props.getProductosByCompany}
             companyId={this.props.companyId}
             crearPaquete = {this.props.crearPaquete}
+            getCategories={this.props.getCategories}
           />
         <Divider />
         <ListItem button>

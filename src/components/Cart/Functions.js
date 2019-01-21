@@ -1,32 +1,36 @@
 const agregarAlCarrito = (cart, producto, cantidad=1) => {
 	let existeProd = verificarExistenciaProd(cart.contenido, producto);
-
+	console.log('existeProd', existeProd);
 	if(existeProd.res){
 		if(!producto.esPackage){
+			existeProd.res.productos[existeProd.productoPos].timestamp = new Date();
 			existeProd.res.productos[existeProd.productoPos].quantity += cantidad;
 			cart.contenido[existeProd.sellerPos] = existeProd.res;
 		}
 		else{
+			existeProd.res.paquetes[existeProd.productoPos].timestamp = new Date();
 			existeProd.res.paquetes[existeProd.productoPos].quantity += cantidad;
 			cart.contenido[existeProd.sellerPos] = existeProd.res;
 		}
 	}
 	else{
 		let existeSeller = verificarExistenciaSeller(cart.contenido, producto.companyId);
-		
+		console.log('existeSeller', existeSeller);
 		producto.quantity = cantidad;
 		producto.envio = false;
 		producto.envioType = '1';
 		producto.priceEnvio = 100 //esto debe ser parte del producto? o de la empresa?
+		producto.timestamp = new Date();
 
 		if(existeSeller.res){
-
+			console.log('existe seller');
 			if(!producto.esPackage) existeSeller.res.productos.push(producto);
 			else existeSeller.res.paquetes.push(producto);
 
 			cart.contenido[existeSeller.sellerPos] = existeSeller.res;
 		}
 		else{
+			console.log('no existe seller');
 			let seller = {
 				sellerId: producto.companyId,
 				productos: [],
@@ -34,26 +38,30 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 			}
 			if(!producto.esPackage) seller.productos.push(producto);
 			else seller.paquetes.push(producto);
-
+			console.log('seller', seller);
 			cart.contenido.push(seller);
+			console.log('contendio', cart.contenido);
 		}
 	}
 	return cart;
 }
 
 const verificarExistenciaProd = (contenido, producto) => {
-
+	console.log('validando existencia prod')
 	let productoPos = 0;
 	let sellerPos = 0;
 
 	let res = contenido.filter((seller, i) => {
 		let encontrado = false;
 		if(seller.sellerId === producto.companyId){
+			console.log('dentro de if de seller === companyId')
 			sellerPos = i;
 			let x = 0;
 			if(!producto.esPackage){
+				console.log('producto no es paquete')
 				while(x < seller.productos.length && !encontrado){
 					if(seller.productos[x].id === producto.id){
+						console.log('producto ya esta');
 						encontrado = true;
 						productoPos = x;
 					}
@@ -61,8 +69,10 @@ const verificarExistenciaProd = (contenido, producto) => {
 				}
 			}
 			else{
+				console.log('producto es paquete');
 				while(x < seller.paquetes.length && !encontrado){
 					if(seller.paquetes[x].id === producto.id){
+						console.log('paquete ya esta');
 						encontrado = true;
 						productoPos = x;
 					}
@@ -72,14 +82,17 @@ const verificarExistenciaProd = (contenido, producto) => {
 		}
 		return encontrado;
 	})[0];
+	if(!res) res = null;
 	return { res, sellerPos, productoPos };
 }
 
 const verificarExistenciaSeller = (contenido, id) => {
+	console.log('validando existencia seller')
 	let sellerPos = 0;
 
 	let res = contenido.filter((seller, i) => {
 		if(seller.sellerId === id){
+			console.log('dentro if seller === id');
 			sellerPos = i;
 			return true;
 		}
@@ -108,9 +121,10 @@ const borrarItemCarrito = (cart, prodId, esPackage, companyId) => {
 }
 
 const cambiarCantidadProdCarrito = (cart, prodId, esPackage, companyId, cantidad) => {
-	let product = {id: prodId, code: esPackage, companyId};
+	let product = {id: prodId, esPackage: esPackage, companyId};
+	console.log('product', product)
 	let seller = verificarExistenciaProd(cart.contenido, product);
-
+	console.log('seller', seller);
 	if(!esPackage) seller.res.productos[seller.productoPos].quantity = cantidad;
 	else seller.res.paquetes[seller.productoPos].quantity = cantidad;
 
@@ -142,10 +156,10 @@ const calcularTotal = async (url, token, req, cart) => {
 		body: JSON.stringify(req)
 	});
 
-	// let status = '';
+	let status = '';
 	let response = await fetch(request)
 							.then(res => {
-								// status = res.status;
+								status = res.status;
 								return res.json();
 							})
 							.then(data => {
@@ -173,9 +187,10 @@ const calcularTotal = async (url, token, req, cart) => {
 		return true;
 	});
 	// total = subTotal + subTotalEnvios;
-	cart.subTotal = response.total;
+	cart.subTotal = response.sumaProds + response.sumaPacks;
 	cart.subTotalEnvios = subTotalEnvios;
-	cart.total = cart.subTotal + subTotalEnvios;
+	cart.total = response.total + subTotalEnvios;
+	if(status === 200 && req.voucher) cart.voucher = req.voucher;
 	return cart;
 }
 

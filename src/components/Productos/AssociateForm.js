@@ -36,6 +36,7 @@ export default class AssociateForm extends Component{
 
     async componentWillMount() {
         let productos = await this.props.getProducts();
+        // console.log(productos);
         await this.setState({productos: productos});
     }
 
@@ -49,30 +50,11 @@ export default class AssociateForm extends Component{
             productStockError: ''
         };
 
-        /*if(!this.state.companyId){
-            isError = true;
-            errors.companyIdError = 'Debe seleccionar una compania';
-        }
-        else if(!Validator.isNumeric(this.state.companyId)){
-            isError = true;
-            errors.companyIdError='Debe contener unicamente numeros';
-        }
-        else if(!Validator.state.companyId == -1){
-            isError = true;
-            errors.companyIdError='Debe seleccionar una compania2';
-        }*/
         if (!this.state.productId) {
             isError = true;
           errors.productIdError = "Debe seleccionar un producto";
         }
-        /*else if(!Validator.isNumeric(this.state.productId)){
-            isError = true;
-            errors.productIdError='Debe seleccionar un producto2';
-        }
-         if(Validator.state.productId < 0){
-            isError = true;
-            errors.productIdError='Debe seleccionar un producto';
-        }*/
+
         if (!this.state.productName) {
             isError = true;
             errors.productNameError ='Debe ingresar un nombre';
@@ -81,6 +63,7 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productNameError='Debe tener entre 3 o 30 caracteres';
         }
+
         if(!this.state.productDescription){
             isError = true;
             errors.productDescriptionError='Debe ingresar una descripcion';
@@ -89,6 +72,7 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productDescriptionError='Debe tener entre 5 o 50 caracteres';
         }
+
         if(this.state.productPrice <= 0){
             isError = true;
             errors.productPriceError='Debe ingresar un precio mayor a 0';
@@ -97,6 +81,7 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productPriceError='Debe contener unicamente numeros';
         }
+
         if(this.state.productStock <= 0){
             isError = true;
             errors.productStockError='Debe ingresar un stock mayor a 0';
@@ -105,6 +90,7 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productStockError='Debe contener unicamente numeros';
         }
+
         this.setState({
             ...this.state,
             ...errors
@@ -122,7 +108,6 @@ export default class AssociateForm extends Component{
             productDescription: '',
             productPrice:'',
             productStock: '',
-            //companyIdError:0,
             productIdError:0,
             productNameError: '',
             productDescriptionError: '',

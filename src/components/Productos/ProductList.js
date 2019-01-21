@@ -123,7 +123,7 @@ class List extends Component{
                                     onChange={this.onSearchNameChange}
                                 />
                                 <SelectMultiple
-                                    flagType={this.props.flag}
+                                    flagType='productos'
                                     flagForm={false}
                                     content={this.state.categorias}
                                     onChange={this.handleSelectCategories}

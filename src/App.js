@@ -17,7 +17,7 @@ import PackageFunctions from './components/Paquetes/Functions';
 import Carrito from './components/Cart/Cart';
 import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
-import ProductForm from './components/Productos/ProductForm';
+// import ProductForm from './components/Productos/ProductForm';
 import ReporteCompras from './components/Reportes/ComprasList';
 import ReporteVentas from './components/Reportes/VentasList';
 import ReportesFunctions from './components/Reportes/Functions';
@@ -58,7 +58,8 @@ class App extends Component {
         contenido: [],
         subTotal: 0,
         subTotalEnvios: 0,
-        total: 0
+        total: 0,
+        voucher: '',
       },
       companiaSeleccionada: 0,
       productSeleccionado:0
@@ -77,7 +78,6 @@ class App extends Component {
   cambiarVentana = (ventana, id) => {
     if(id) this.setState({shownWindow: ventana, productSeleccionado: id});
     else this.setState({shownWindow: ventana});
-    
   }
 
   verificarToken = async (token) => {
@@ -120,6 +120,10 @@ class App extends Component {
 
   getAllProducts = async () => {
     return await ProductFunctions.getAllProducts(url);
+  }
+
+  getNotAssociatedProducts = async () => {
+    return await ProductFunctions.getNotAssociated(url, this.state.loggedUser.userCompanyId);
   }
 
   getProductById = async (id) => {
@@ -193,6 +197,10 @@ getPackagesByCompany = async (id) => {
 
     if(result && status === 200){
       this.setState({
+        shownWindow: 'home',
+        snackbarStatus: false,
+        snackbarMessage: '',
+        snackbarVariant: '',
         logged: false,
         loggedUser: {
           userType: '',
@@ -201,9 +209,25 @@ getPackagesByCompany = async (id) => {
           userId: 0,
           userCompanyName: '',
           userCompanyId: 0
-        }
+        },
+        companyTypes: [],
+        companyCategories: [],
+        userTypes: [],
+        companies:[],
+        productCategories:[],
+        products:[],
+        myProducts: [],
+        cart: {
+          contenido: [],
+          subTotal: 0,
+          subTotalEnvios: 0,
+          total: 0
+        },
+        companiaSeleccionada: 0,
+        productSeleccionado:0
       });
-      cookies.remove('access_token', { path: '/' })
+      cookies.remove('access_token', { path: '/' });
+      this.cambiarVentana('home');
     }
     else{
       console.log('Error al cerrar sesion');
@@ -263,18 +287,20 @@ getPackagesByCompany = async (id) => {
     console.log('agregarCarrito producto', producto);
     if(producto.companyId === this.state.loggedUser.userCompanyId) return;
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
-    this.setState({cart: cart}, () => this.cartTotalCalculate());
+    this.setState({cart: cart}, async () => {
+      await this.cartTotalCalculate();
+    });
     this.setearSnackbar(true,'Producto agregado al carrito','success');
   }
   
-  borrarItemCarrito = (prodId, prodCode, companyId) => {
-    let cart = CartFunctions.borrarItemCarrito(this.state.cart, prodId, prodCode, companyId);
+  borrarItemCarrito = (id, esPackage, companyId) => {
+    let cart = CartFunctions.borrarItemCarrito(this.state.cart, id, esPackage, companyId);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
     this.setearSnackbar(true,'Producto eliminado del carrito','success');
   }
 
-  cambiarCantidadProdCarrito = async (prodId, prodCode, companyId,  cantidad) => {
-    let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, prodId, prodCode, companyId, cantidad);
+  cambiarCantidadProdCarrito = async (id, esPackage, companyId,  cantidad) => {
+    let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, id, esPackage, companyId, cantidad);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
@@ -283,14 +309,16 @@ getPackagesByCompany = async (id) => {
   //   this.setState({cart: cart}, () => this.cartTotalCalculate());
   // }
 
-  cartTotalCalculate = () => {
+  cartTotalCalculate = async (voucher) => {
     let token = cookies.get('access_token');
     if(!token) return
+
     let request = {
       contenido: this.state.cart.contenido,
-      specialDiscount: 0 //luego se trabajara este valor que debera ir dentro de cada seller
+      voucher: voucher ? voucher : this.state.cart.voucher
     }
-    let cart = CartFunctions.calcularTotal(url, token, request, this.state.cart);
+    console.log('request voucher', request);
+    let cart = await CartFunctions.calcularTotal(url, token, request, this.state.cart);
     this.setState({cart: cart});
   }
 
@@ -301,14 +329,24 @@ getPackagesByCompany = async (id) => {
       userId: this.state.loggedUser.userId,
       buyerId: this.state.loggedUser.userCompanyId,
       amount: this.state.cart.total,
-      specialDiscount: 0, //luego se trabajara este valor que debera ir dentro de cada seller
+      voucher: this.state.cart.voucher,
       deliveryType: 'Comprador', //trabajar este punto
       contenido: this.state.cart.contenido
     }
     let {response, status} = await CartFunctions.realizarPedido(request, url, token);
     console.log('response', response)
     console.log('status', status);
-    if(status === 201 || status === 200) this.setearSnackbar(true,'Pedido realizado con exito','success');
+    if(status === 201 || status === 200) {
+      this.setearSnackbar(true,'Pedido realizado con exito','success');
+      this.setState({
+        cart: {
+          contenido: [],
+          subTotal: 0,
+          subTotalEnvios: 0,
+          total: 0
+        }
+      })
+    }
     else this.setearSnackbar(true, 'Fallo el pedido', 'error');
     
     console.log(response);
@@ -355,10 +393,11 @@ getPackagesByCompany = async (id) => {
             getCategories={this.getCategories}
             registrarProducto={this.registroProductoAsociacion}
             getProducts={this.getAllProducts}
+            getNotAssociated={this.getNotAssociatedProducts}
             companies={this.state.companies}
             registroEmpresaProducto={this.asociarProducto}
             getProductosByCompany = {this.getProductsByCompany}
-            crearPaquete = {this.crearPaquete}
+            crearPaquete={this.crearPaquete}
           />
           {this.state.shownWindow === 'home' ? (
             <Home />
@@ -375,8 +414,7 @@ getPackagesByCompany = async (id) => {
                 />
               ) : (
                 this.state.shownWindow === 'productsGeneric' ? (
-                  <ProductList 
-                    // flag='productos'
+                  <ProductList
                     getProductos={this.getAllProducts}
                     getPaquetes={this.getAllPackages}
                     getCategories={this.getCategories}
@@ -384,8 +422,7 @@ getPackagesByCompany = async (id) => {
                   />
                 ) : (
                   this.state.shownWindow === 'productsCompany' ? (
-                    <ProductList 
-                      // flag='productos'
+                    <ProductList
                       flagCart={this.state.loggedUser.userCompanyId}
                       agregarAlCarrito={this.agregarAlCarrito}
                       getProductos={this.getProductsByCompany}
@@ -403,7 +440,6 @@ getPackagesByCompany = async (id) => {
                         getCategories={this.getCategories}
                         modificarProducto={this.modificarProducto}
                         eliminarProducto={this.eliminarProducto}
-                        // getLineasPackage={this.getLineasPackage}
                         modificarPaquete={this.modificarPaquete}
                         eliminarPaquete={this.eliminarPaquete}
                       />
@@ -415,6 +451,7 @@ getPackagesByCompany = async (id) => {
                           cartEnvioChange={this.cartEnvioChange}
                           cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
                           realizarPedido={this.realizarPedido}
+                          sendVoucher={this.cartTotalCalculate}
                         />
                       ) : (
                         this.state.shownWindow === 'profile' ? (
@@ -427,41 +464,34 @@ getPackagesByCompany = async (id) => {
                             modificarPerfil={this.modificarPerfil}
                           />
                         ) : (
-                          this.state.shownWindow === 'productForm' ? (
-                            <ProductForm 
-                              getCategories={this.getCategories}
-                              onClick={this.registroProducto}
+                          this.state.shownWindow === 'reporteCompras' ? (
+                            <ReporteCompras
+                              getPedidos={this.getReporteCompras}
                             />
                           ) : (
-                            this.state.shownWindow === 'reporteCompras' ? (
-                              <ReporteCompras
-                                getPedidos={this.getReporteCompras}
+                            this.state.shownWindow === 'reporteVentas' ? (
+                              <ReporteVentas
+                                getTransactions={this.getReporteVentas}
                               />
                             ) : (
-                              this.state.shownWindow === 'reporteVentas' ? (
-                                <ReporteVentas
-                                  getTransactions={this.getReporteVentas}
+                              this.state.shownWindow === 'productDetalle' ? (
+                                <DetalleProducto 
+                                  getCompanyProductsByProduct={this.getCompanyProductsByProduct}
+                                  productId={this.state.productSeleccionado}
+                                  getProductById={this.getProductById}
+                                  agregarAlCarrito={this.agregarAlCarrito}
+                                  loggedCompany={this.state.loggedUser.userCompanyId}
                                 />
                               ) : (
-                                this.state.shownWindow === 'productDetalle' ? (
-                                  <DetalleProducto 
-                                    getCompanyProductsByProduct={this.getCompanyProductsByProduct}
-                                    productId={this.state.productSeleccionado}
-                                    getProductById={this.getProductById}
-                                    agregarAlCarrito={this.agregarAlCarrito}
-                                    //onClick={this.registroProducto}
-                                  />
+                                this.state.shownWindow === 'packageDetalle' ? (
+                                <DetallePackage 
+                                  packageId={this.state.productSeleccionado}
+                                  getPackageById={this.getPackageById}
+                                  agregarAlCarrito={this.agregarAlCarrito}
+                                  loggedCompany={this.state.loggedUser.userCompanyId}
+                                />
                                 ) : (
-                                  this.state.shownWindow === 'packageDetalle' ? (
-                                  <DetallePackage 
-                                    packageId={this.state.productSeleccionado}
-                                    getPackageById={this.getPackageById}
-                                    agregarAlCarrito={this.agregarAlCarrito}
-                                    //onClick={this.registroProducto}
-                                  />
-                                  ) : (
-                                    null
-                                  )
+                                  null
                                 )
                               )
                             )
