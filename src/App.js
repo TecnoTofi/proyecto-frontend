@@ -402,97 +402,93 @@ getPackagesByCompany = async (id) => {
           {this.state.shownWindow === 'home' ? (
             <Home />
           ) : (
-            this.state.shownWindow === 'dashboard' ? (
-              <Dashboard />
+            this.state.shownWindow === 'companies' ? (
+              <CompanyList
+                getContent={this.getAllCompanies}
+                getCategories={this.getRubros}
+                getTipos={this.getTypes}
+                onCompanyClick={this.seleccionarCompany}
+              />
             ) : (
-              this.state.shownWindow === 'companies' ? (
-                <CompanyList
-                  getContent={this.getAllCompanies}
-                  getCategories={this.getRubros}
-                  getTipos={this.getTypes}
-                  onCompanyClick={this.seleccionarCompany}
+              this.state.shownWindow === 'productsGeneric' ? (
+                <ProductList
+                  getProductos={this.getAllProducts}
+                  getPaquetes={this.getAllPackages}
+                  getCategories={this.getCategories}
+                  cambiarVentana={this.cambiarVentana}
                 />
               ) : (
-                this.state.shownWindow === 'productsGeneric' ? (
+                this.state.shownWindow === 'productsCompany' ? (
                   <ProductList
-                    getProductos={this.getAllProducts}
-                    getPaquetes={this.getAllPackages}
+                    flagCart={this.state.loggedUser.userCompanyId}
+                    agregarAlCarrito={this.agregarAlCarrito}
+                    getProductos={this.getProductsByCompany}
+                    getPaquetes={this.getPackagesByCompany}
+                    company={this.state.companiaSeleccionada}
                     getCategories={this.getCategories}
                     cambiarVentana={this.cambiarVentana}
                   />
                 ) : (
-                  this.state.shownWindow === 'productsCompany' ? (
-                    <ProductList
-                      flagCart={this.state.loggedUser.userCompanyId}
-                      agregarAlCarrito={this.agregarAlCarrito}
+                  this.state.shownWindow === 'myProducts' ? (
+                    <MisProductos
                       getProductos={this.getProductsByCompany}
                       getPaquetes={this.getPackagesByCompany}
-                      company={this.state.companiaSeleccionada}
+                      company={this.state.loggedUser.userCompanyId}
                       getCategories={this.getCategories}
-                      cambiarVentana={this.cambiarVentana}
+                      modificarProducto={this.modificarProducto}
+                      eliminarProducto={this.eliminarProducto}
+                      modificarPaquete={this.modificarPaquete}
+                      eliminarPaquete={this.eliminarPaquete}
                     />
                   ) : (
-                    this.state.shownWindow === 'myProducts' ? (
-                      <MisProductos
-                        getProductos={this.getProductsByCompany}
-                        getPaquetes={this.getPackagesByCompany}
-                        company={this.state.loggedUser.userCompanyId}
-                        getCategories={this.getCategories}
-                        modificarProducto={this.modificarProducto}
-                        eliminarProducto={this.eliminarProducto}
-                        modificarPaquete={this.modificarPaquete}
-                        eliminarPaquete={this.eliminarPaquete}
+                    this.state.shownWindow === 'carrito' ? (
+                      <Carrito 
+                        cart={this.state.cart}
+                        onDelete={this.borrarItemCarrito}
+                        cartEnvioChange={this.cartEnvioChange}
+                        cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
+                        realizarPedido={this.realizarPedido}
+                        sendVoucher={this.cartTotalCalculate}
                       />
                     ) : (
-                      this.state.shownWindow === 'carrito' ? (
-                        <Carrito 
-                          cart={this.state.cart}
-                          onDelete={this.borrarItemCarrito}
-                          cartEnvioChange={this.cartEnvioChange}
-                          cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
-                          realizarPedido={this.realizarPedido}
-                          sendVoucher={this.cartTotalCalculate}
+                      this.state.shownWindow === 'profile' ? (
+                        <Profile 
+                          getUser={this.getUserById}
+                          getCompany={this.getCompanyById}
+                          userId={this.state.loggedUser.userId}
+                          companyId={this.state.loggedUser.userCompanyId}
+                          getCategories={this.getRubros}
+                          modificarPerfil={this.modificarPerfil}
                         />
                       ) : (
-                        this.state.shownWindow === 'profile' ? (
-                          <Profile 
-                            getUser={this.getUserById}
-                            getCompany={this.getCompanyById}
-                            userId={this.state.loggedUser.userId}
-                            companyId={this.state.loggedUser.userCompanyId}
-                            getCategories={this.getRubros}
-                            modificarPerfil={this.modificarPerfil}
+                        this.state.shownWindow === 'reporteCompras' ? (
+                          <ReporteCompras
+                            getPedidos={this.getReporteCompras}
                           />
                         ) : (
-                          this.state.shownWindow === 'reporteCompras' ? (
-                            <ReporteCompras
-                              getPedidos={this.getReporteCompras}
+                          this.state.shownWindow === 'reporteVentas' ? (
+                            <ReporteVentas
+                              getTransactions={this.getReporteVentas}
                             />
                           ) : (
-                            this.state.shownWindow === 'reporteVentas' ? (
-                              <ReporteVentas
-                                getTransactions={this.getReporteVentas}
+                            this.state.shownWindow === 'productDetalle' ? (
+                              <DetalleProducto 
+                                getCompanyProductsByProduct={this.getCompanyProductsByProduct}
+                                productId={this.state.productSeleccionado}
+                                getProductById={this.getProductById}
+                                agregarAlCarrito={this.agregarAlCarrito}
+                                loggedCompany={this.state.loggedUser.userCompanyId}
                               />
                             ) : (
-                              this.state.shownWindow === 'productDetalle' ? (
-                                <DetalleProducto 
-                                  getCompanyProductsByProduct={this.getCompanyProductsByProduct}
-                                  productId={this.state.productSeleccionado}
-                                  getProductById={this.getProductById}
-                                  agregarAlCarrito={this.agregarAlCarrito}
-                                  loggedCompany={this.state.loggedUser.userCompanyId}
-                                />
+                              this.state.shownWindow === 'packageDetalle' ? (
+                              <DetallePackage 
+                                packageId={this.state.productSeleccionado}
+                                getPackageById={this.getPackageById}
+                                agregarAlCarrito={this.agregarAlCarrito}
+                                loggedCompany={this.state.loggedUser.userCompanyId}
+                              />
                               ) : (
-                                this.state.shownWindow === 'packageDetalle' ? (
-                                <DetallePackage 
-                                  packageId={this.state.productSeleccionado}
-                                  getPackageById={this.getPackageById}
-                                  agregarAlCarrito={this.agregarAlCarrito}
-                                  loggedCompany={this.state.loggedUser.userCompanyId}
-                                />
-                                ) : (
-                                  null
-                                )
+                                null
                               )
                             )
                           )

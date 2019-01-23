@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CartSelect from './CartSelect';
-import CartPickers from './CartPickers';
+// import CartPickers from './CartPickers';
 import CartProduct from './CartProduct';
 import CartTotal from './CartTotal';
 
@@ -76,7 +76,7 @@ class Cart extends Component{
                                 <TableCell>Producto</TableCell>
                                 <TableCell>Precio</TableCell>
                                 <TableCell>Cantidad</TableCell>
-                                <TableCell>Envio</TableCell>
+                                {/* <TableCell>Envio</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -101,7 +101,7 @@ class Cart extends Component{
                                                     onChange={this.handleSelectChange}
                                                 />
                                             </TableCell>
-                                            {i===0 ? (
+                                            {/* {i===0 ? (
                                                 <TableCell>
                                                     <CartPickers 
                                                         priceEnvio={prod.priceEnvio}
@@ -112,7 +112,7 @@ class Cart extends Component{
                                                 </TableCell>
                                             ) : (
                                                 null
-                                            )}
+                                            )} */}
                                         </TableRow>
                                     ))
                                     let packs = seller.paquetes.map(pack => (
