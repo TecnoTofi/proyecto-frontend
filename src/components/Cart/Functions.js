@@ -1,6 +1,6 @@
 const agregarAlCarrito = (cart, producto, cantidad=1) => {
 	let existeProd = verificarExistenciaProd(cart.contenido, producto);
-	console.log('existeProd', existeProd);
+
 	if(existeProd.res){
 		if(!producto.esPackage){
 			existeProd.res.productos[existeProd.productoPos].timestamp = new Date();
@@ -15,7 +15,6 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 	}
 	else{
 		let existeSeller = verificarExistenciaSeller(cart.contenido, producto.companyId);
-		console.log('existeSeller', existeSeller);
 		producto.quantity = cantidad;
 		producto.envio = false;
 		producto.envioType = '1';
@@ -23,14 +22,12 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 		producto.timestamp = new Date();
 
 		if(existeSeller.res){
-			console.log('existe seller');
 			if(!producto.esPackage) existeSeller.res.productos.push(producto);
 			else existeSeller.res.paquetes.push(producto);
 
 			cart.contenido[existeSeller.sellerPos] = existeSeller.res;
 		}
 		else{
-			console.log('no existe seller');
 			let seller = {
 				sellerId: producto.companyId,
 				productos: [],
@@ -38,11 +35,10 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 			}
 			if(!producto.esPackage) seller.productos.push(producto);
 			else seller.paquetes.push(producto);
-			console.log('seller', seller);
 			cart.contenido.push(seller);
-			console.log('contendio', cart.contenido);
 		}
 	}
+
 	return cart;
 }
 
@@ -104,6 +100,7 @@ const verificarExistenciaSeller = (contenido, id) => {
 
 const borrarItemCarrito = (cart, prodId, esPackage, companyId) => {
 	let seller = verificarExistenciaSeller(cart.contenido, companyId);
+
 	if(!esPackage){
 		let productos = seller.res.productos.filter(item => {
 			return item.id !== prodId;
@@ -191,6 +188,7 @@ const calcularTotal = async (url, token, req, cart) => {
 	cart.subTotalEnvios = subTotalEnvios;
 	cart.total = response.total + subTotalEnvios;
 	if(status === 200 && req.voucher) cart.voucher = req.voucher;
+	
 	return cart;
 }
 

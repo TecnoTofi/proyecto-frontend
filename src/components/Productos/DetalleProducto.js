@@ -15,6 +15,7 @@ import CartIcon from '@material-ui/icons/AddShoppingCart';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
     root: {
@@ -38,6 +39,7 @@ class DetalleProducto extends Component{
     }
 
     async componentWillMount(){
+
         let companyProducts = await this.props.getCompanyProductsByProduct(this.props.productId);
         let producto = await this.props.getProductById(this.props.productId);
         await this.setState({
@@ -145,4 +147,4 @@ DetalleProducto.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(DetalleProducto);
+export default withStyles(styles)(withSnackbar(DetalleProducto));

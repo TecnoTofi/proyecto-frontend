@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
+import { withSnackbar } from 'notistack';
 import { Header } from './components/Layouts/';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
@@ -22,10 +23,11 @@ import ReporteCompras from './components/Reportes/ComprasList';
 import ReporteVentas from './components/Reportes/VentasList';
 import ReportesFunctions from './components/Reportes/Functions';
 // import Snackbar from '@material-ui/core/Snackbar';
-import Snackbar from './components/Helpers/Snackbar';
+// import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
 import TopCincoMasVendidos from './components/Reportes/TopCincoMasVendidos';
 import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
+
 const cookies = new Cookies();
 
 // const url = 'https://backend-ort.herokuapp.com';
@@ -281,24 +283,27 @@ getPackagesByCompany = async (id) => {
   }
 
   eliminarPaquete = async (id) =>{
-    let token = cookies.get('access_token');
+    let token = cookies.get('access_token'); 
     return await PackageFunctions.eliminarPaquete(url, token, id);
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
-    console.log('agregarCarrito producto', producto);
     if(producto.companyId === this.state.loggedUser.userCompanyId) return;
+
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
+
     this.setState({cart: cart}, async () => {
       await this.cartTotalCalculate();
     });
-    this.setearSnackbar(true,'Producto agregado al carrito','success');
+    this.props.enqueueSnackbar('Producto agregado al carrito.', { variant: 'success' });
   }
   
   borrarItemCarrito = (id, esPackage, companyId) => {
     let cart = CartFunctions.borrarItemCarrito(this.state.cart, id, esPackage, companyId);
+
     this.setState({cart: cart}, () => this.cartTotalCalculate());
-    this.setearSnackbar(true,'Producto eliminado del carrito','success');
+
+    this.props.enqueueSnackbar('Producto eliminado del carrito.', { variant: 'success' });
   }
 
   cambiarCantidadProdCarrito = async (id, esPackage, companyId,  cantidad) => {
@@ -319,8 +324,9 @@ getPackagesByCompany = async (id) => {
       contenido: this.state.cart.contenido,
       voucher: voucher ? voucher : this.state.cart.voucher
     }
-    console.log('request voucher', request);
+
     let cart = await CartFunctions.calcularTotal(url, token, request, this.state.cart);
+
     this.setState({cart: cart});
   }
 
@@ -336,10 +342,9 @@ getPackagesByCompany = async (id) => {
       contenido: this.state.cart.contenido
     }
     let {response, status} = await CartFunctions.realizarPedido(request, url, token);
-    console.log('response', response)
-    console.log('status', status);
+    
     if(status === 201 || status === 200) {
-      this.setearSnackbar(true,'Pedido realizado con exito','success');
+      this.props.enqueueSnackbar('Pedido realizado con exito.', { variant: 'success' });
       this.setState({
         cart: {
           contenido: [],
@@ -349,9 +354,7 @@ getPackagesByCompany = async (id) => {
         }
       })
     }
-    else this.setearSnackbar(true, 'Fallo el pedido', 'error');
-    
-    console.log(response);
+    else this.props.enqueueSnackbar('Fallo el pedido.', { variant: 'error' });
   }
 
   getReporteCompras = async () => {
@@ -378,23 +381,23 @@ getPackagesByCompany = async (id) => {
     return await ReportesFunctions.getTopCincoMenosVendidos(url, token, this.state.loggedUser.userCompanyId, date);
   }
 
-  setearSnackbar = (status, message, variant) => {
-    this.setState({
-      snackbarStatus: status,
-      snackbarMessage: message,
-      snackbarVariant: variant
-    });
-  }
+  // setearSnackbar = (status, message, variant) => {
+  //   this.setState({
+  //     snackbarStatus: status,
+  //     snackbarMessage: message,
+  //     snackbarVariant: variant
+  //   });
+  // }
 
   render() {
     return (
         <Fragment>
-          <Snackbar
+          {/* <Snackbar
             open={this.state.snackbarStatus}
             message={this.state.snackbarMessage}
             variant={this.state.snackbarVariant}
             onClose={this.setearSnackbar}
-          />
+          /> */}
           <Header 
             cambiarVentana={this.cambiarVentana}
             logged={this.state.logged}
@@ -512,7 +515,9 @@ getPackagesByCompany = async (id) => {
                                       getDatos={this.getTopCincoMenosVendidos}
                                     />
                                   ) : (
-                                    null
+                                    <Dashboard
+                                      getDatos={this.getTopCincoMenosVendidos}
+                                    />
                                   )
                                 )
                               )
@@ -531,4 +536,4 @@ getPackagesByCompany = async (id) => {
   }
 }
 
-export default App;
+export default withSnackbar(App);
