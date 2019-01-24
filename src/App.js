@@ -24,6 +24,8 @@ import ReportesFunctions from './components/Reportes/Functions';
 // import Snackbar from '@material-ui/core/Snackbar';
 import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
+import TopCincoMasVendidos from './components/Reportes/TopCincoMasVendidos';
+import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
 const cookies = new Cookies();
 
 // const url = 'https://backend-ort.herokuapp.com';
@@ -364,6 +366,18 @@ getPackagesByCompany = async (id) => {
     return await ReportesFunctions.getTransactionsByCompany(url, token, this.state.loggedUser.userCompanyId);
   }
 
+  getTopCincoMasVendidos = async (date) => {
+    let token = cookies.get('access_token');
+    if(!token) return
+    return await ReportesFunctions.getTopCincoMasVendidos(url, token, this.state.loggedUser.userCompanyId, date);
+  }
+
+  getTopCincoMenosVendidos = async (date) => {
+    let token = cookies.get('access_token');
+    if(!token) return
+    return await ReportesFunctions.getTopCincoMenosVendidos(url, token, this.state.loggedUser.userCompanyId, date);
+  }
+
   setearSnackbar = (status, message, variant) => {
     this.setState({
       snackbarStatus: status,
@@ -488,7 +502,19 @@ getPackagesByCompany = async (id) => {
                                 loggedCompany={this.state.loggedUser.userCompanyId}
                               />
                               ) : (
-                                null
+                                this.state.shownWindow === 'reporteTopCincoMas' ? (
+                                  <TopCincoMasVendidos
+                                    getDatos={this.getTopCincoMasVendidos}
+                                  />
+                                ) : (
+                                  this.state.shownWindow === 'reporteTopCincoMenos' ? (
+                                    <TopCincoMenosVendidos
+                                      getDatos={this.getTopCincoMenosVendidos}
+                                    />
+                                  ) : (
+                                    null
+                                  )
+                                )
                               )
                             )
                           )

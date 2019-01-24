@@ -111,11 +111,49 @@ const getTransactionPackages = async (url, transactionId) => {
                                     response.json()
                                 ))
                                 .then(data => {
-                                    console.log('paquetes de una transaccion', data);
                                     return data;
                                 })
                                 .catch(err => console.log(err));
     return paquetes;
+}
+
+const getTopCincoMasVendidos = async (url, token, id, date) => {
+    let request = new Request(`${url}/api/pedido/company/${id}/masVendidos`, {
+		method: 'POST',
+		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+        credentials: 'same-origin',
+        body: JSON.stringify({ dateFrom: date })
+    });
+
+    let productos = await fetch(request)
+                            .then(response => (
+                                response.json()
+                            ))
+                            .then(data => {
+                                console.log('data', data)
+                                return data;
+                            })
+                            .catch(err => console.log(err));
+    return productos;
+}
+
+const getTopCincoMenosVendidos = async (url, token, id, date) => {
+    let request = new Request(`${url}/api/pedido/company/${id}/menosVendidos`, {
+		method: 'POST',
+		headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
+        credentials: 'same-origin',
+        body: JSON.stringify({ dateFrom: date })
+    });
+      
+    let productos = await fetch(request)
+                            .then(response => (
+                                response.json()
+                            ))
+                            .then(data => {
+                                return data;
+                            })
+                            .catch(err => console.log(err));
+    return productos;
 }
 
 export default {
@@ -124,5 +162,7 @@ export default {
     getTransactionsPedido,
     getTransactionProducts,
     getTransactionPackages,
-    getListadoTransacciones
+    getListadoTransacciones,
+    getTopCincoMasVendidos,
+    getTopCincoMenosVendidos
 }

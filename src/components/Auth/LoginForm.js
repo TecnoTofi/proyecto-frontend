@@ -99,11 +99,15 @@ class LoginForm extends Component {
 
         if (!error){
           let result = await this.props.onClick(this.state.userEmail, this.state.userPassword);
+
           if(result === 400){
             this.setState({userEmailError: 'Email y/o contraseña ingresados son incorrectos', userPasswordError: ' '})
           }
+          else if(result === 204){
+            this.setState({userEmailError: 'Usuario o compania se encuentra bloqueado', userPasswordError: ' '})
+          }
           else this.handleToggle();
-        }      
+        }
     }
   
     onEnterPress = (e) => {

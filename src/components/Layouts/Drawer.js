@@ -87,10 +87,10 @@ class Drawer extends React.Component {
               <ListItemIcon><HistorialIcon /></ListItemIcon>
               <ListItemText primary='Historial de ventas' />
           </ListItem>
-          <ListItem button>
+          {/* <ListItem button>
               <ListItemIcon><CamionIcon /></ListItemIcon>
               <ListItemText primary='Historial de despachos' />
-          </ListItem>
+          </ListItem> */}
           <Divider />
            <ListItem button onClick={() => {
              this.toggleDrawer(); //por alguna razon no se esta llamando
@@ -117,14 +117,31 @@ class Drawer extends React.Component {
             getCategories={this.props.getCategories}
           />
         <Divider />
-        <ListItem button>
+            {/* <ListItem button>
+                <ListItemIcon><BestFiveIcon /></ListItemIcon>
+                <ListItemText primary='Top 5 mas vendido' />
+            </ListItem> */}
+            
+            <ListItem button onClick={() => {
+              this.toggleDrawer(); //por alguna razon no se esta llamando
+              this.props.cambiarVentana('reporteTopCincoMas');
+            }}>
                 <ListItemIcon><BestFiveIcon /></ListItemIcon>
                 <ListItemText primary='Top 5 mas vendido' />
             </ListItem>
-            <ListItem button>
+
+            <ListItem button onClick={() => {
+              this.toggleDrawer(); //por alguna razon no se esta llamando
+              this.props.cambiarVentana('reporteTopCincoMenos');
+            }}>
                 <ListItemIcon><WorstFiveIcon /></ListItemIcon>
                 <ListItemText primary='Top 5 menos vendido' />
             </ListItem>
+
+            {/* <ListItem button>
+                <ListItemIcon><WorstFiveIcon /></ListItemIcon>
+                <ListItemText primary='Top 5 menos vendido' />
+            </ListItem> */}
             <ListItem button>
                 <ListItemIcon><GraficoIcon /></ListItemIcon>
                 <ListItemText primary='Grafico de ventas por zona' />
