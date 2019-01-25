@@ -45,54 +45,6 @@ const getProductsByCompany = async (url, id) => {
     return productos;
 };
 
-//revisar, que retorne algo, ver res.json
-const registroProducto = (url, token, request) => {
-    if(token){
-        let instance = axios.create({
-                        baseURL: `${url}/api/product/company`,
-                        method: 'post',
-                        headers: {token: token},
-                        data: request
-                        });
-        instance()
-        .then(res => {
-            console.log(res);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-    }
-    else{
-        console.log('No hay token');
-        return null;
-    }
-};
-//retornar algo
-const asociarProducto = (url, token, body) => {
-    if(token){
-
-        let request = new Request(`${url}/api/product/associate`, {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
-        body: JSON.stringify(body)
-        });
-
-        fetch(request)
-        .then((res) => {
-            res.json()
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => {
-                console.log(`Error al enviar registro de productoEmpresa : ${err}`);
-            });
-        });
-    }
-    else{
-        console.log('No hay token')
-    }
-};
-
 const getProductById = async (url, id) =>{
     let producto = await fetch(`${url}/api/product/${id}`)
                                 .then(response => (
@@ -146,6 +98,46 @@ const getNotAssociated = async(url, id) => {
     return productos;
 }
 
+const registroProducto = async (url, token, request) => {
+
+    let response = await axios({
+        method: 'post',
+        url: `${url}/api/product/company`,
+        headers: { 'Content-Type': 'application/json', token: token },
+        data: request
+    })
+    .then(res => {
+        if (res) return { status: res.status, message: res.data.message, producto: res.data.product };
+        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+    })
+    .catch(err => {
+        console.log(`Error al dar de alta el producto ${err}`);
+        return {status: 500, message: err};
+    });
+
+    return response;
+};
+
+const asociarProducto = async (url, token, request) => {
+
+    let response = await axios({
+        method: 'post',
+        url: `${url}/api/product/associate`,
+        headers: { 'Content-Type': 'application/json', token: token },
+        data: request
+    })
+    .then(res => {
+        if (res) return { status: res.status, message: res.data.message, producto: res.data.product };
+        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+    })
+    .catch(err => {
+        console.log(`Error al asociar el producto ${err}`);
+        return {status: 500, message: err};
+    });
+
+    return response;
+};
+
 const modificarProducto = async (url, token, request, productId, companyId) => {
 
     let response = await axios({
@@ -155,7 +147,6 @@ const modificarProducto = async (url, token, request, productId, companyId) => {
         data: request
     })
     .then(res => {
-        console.info(res);
         if (res) return { status: res.status, message: res.data.message, producto: res.data.product };
         else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
     })
@@ -173,9 +164,10 @@ const eliminarProducto = async (url, token, id) =>{
         headers: new Headers({ 'Content-Type': 'application/json', token: token})
         });
 
-        let response = await fetch(request)
+        let status;
+        let message = await fetch(request)
                         .then((response) => {
-                            // console.info('res', response);
+                            status = response.status
                             return response.json();
                         })
                         .then(data => {
@@ -185,7 +177,7 @@ const eliminarProducto = async (url, token, id) =>{
                         .catch(err => {
                             console.log(`Error al eliminar producto : ${err}`);
                         });
-    return response;
+    return { status, message };
 };
 
 export default {

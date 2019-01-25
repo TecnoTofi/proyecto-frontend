@@ -65,28 +65,6 @@ const getPackagesByCompany = async (url, id) => {
     return paquetes;
 };
 
-// const getLineasPackage = async (url, token, id) => {
-//     // let token = cookies.get('access_token');
-//       if(token){
-//       let request = new Request(`${url}/api/package/products/${id}`, {
-//         method: 'GET',
-//         headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
-//         credentials: 'same-origin'
-//         });
-        
-//         let packages = await fetch(request)
-//                                 .then(response => (
-//                                   response.json()
-//                                 ))
-//                                 .then(data => {
-//                                   console.log(data);
-//                                   return data;
-//                                 })
-//                                 .catch(err => console.log(err));
-//         return packages;
-//       }
-// };
-
 const crearPaquete = async (url, token, request) =>{
 
   let response = await axios({
@@ -107,38 +85,6 @@ const crearPaquete = async (url, token, request) =>{
   });
 
   return response;
-
-    // let token = cookies.get('access_token');
-    // console.log('token enviado',token);
-    // console.log(request);
-    // if(token){
-    //   let instance = axios.create({
-    //     baseURL: `${url}/api/package`,
-    //     method: 'post',
-    //     headers: {token: token},
-    //     data: request
-    //   });
-    //   instance()
-    //     .then(res => {
-    //     console.log(res);
-    //   }).catch(err => {
-    //     console.log(err);
-    //   });
-    // }
-    // else{
-    // console.log('No hay token');
-    // }
-    /*axios.post(`${url}/api/package`, request)
-      .then(res => {
-        console.log(res);
-        //return res.status;
-        if(res.status === 201){
-          return <Snacks />
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });*/
 };
 
 const modificarPaquete = async (url, token, request, id) => {
@@ -161,15 +107,6 @@ const modificarPaquete = async (url, token, request, id) => {
   });
 
   return response;
-
-  // axios.post(`${url}/api/package/update/${id}`,
-  //   request)
-  //     .then(res => {
-  //       console.log(res);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
 };
 
 const eliminarPaquete = async (url, token, id) =>{
@@ -178,9 +115,10 @@ const eliminarPaquete = async (url, token, id) =>{
     headers: new Headers({ 'Content-Type': 'application/json', token: token})
     });
 
-    let response = await fetch(request)
+    let status;
+    let message = await fetch(request)
                     .then((response) => {
-                        console.info('res', response);
+                        status = response.status;
                         return response.json();
                     })
                     .then(data => {
@@ -190,22 +128,13 @@ const eliminarPaquete = async (url, token, id) =>{
                     .catch(err => {
                         console.log(`Error al eliminar paquete : ${err}`);
                     });
-  return response;
-    // axios.post(`${url}/api/package/delete/${id}`)
-    //   .then(res => {
-    //     console.log(res);
-          
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+  return { status, message };
 };
 
 export default {
     getAllPackages,
     getPackageById,
     getPackagesByCompany,
-    // getLineasPackage,
     crearPaquete,
     modificarPaquete,
     eliminarPaquete,

@@ -18,12 +18,9 @@ import PackageFunctions from './components/Paquetes/Functions';
 import Carrito from './components/Cart/Cart';
 import CartFunctions from './components/Cart/Functions';
 import MisProductos from './components/Productos/MisProductos';
-// import ProductForm from './components/Productos/ProductForm';
 import ReporteCompras from './components/Reportes/ComprasList';
 import ReporteVentas from './components/Reportes/VentasList';
 import ReportesFunctions from './components/Reportes/Functions';
-// import Snackbar from '@material-ui/core/Snackbar';
-// import Snackbar from './components/Helpers/Snackbar';
 import Cookies from 'universal-cookie';
 import TopCincoMasVendidos from './components/Reportes/TopCincoMasVendidos';
 import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
@@ -154,22 +151,17 @@ class App extends Component {
     return await ProductFunctions.getProductsByCompany(url, id);
   }
 
-getCompanyById = async () => {
-  return await CompanyFunctions.getCompanyById(url, this.state.loggedUser.userCompanyId);
-}
+  getCompanyById = async () => {
+    return await CompanyFunctions.getCompanyById(url, this.state.loggedUser.userCompanyId);
+  }
 
-getUserById = async () => {
-  return await UserFunctions.getUserById(url, this.state.loggedUser.userId);
-}
+  getUserById = async () => {
+    return await UserFunctions.getUserById(url, this.state.loggedUser.userId);
+  }
 
-getPackagesByCompany = async (id) => {
-  return await PackageFunctions.getPackagesByCompany(url, id);
-}
-
-// getLineasPackage = async (id) => {
-//   let token = cookies.get('access_token');
-//   return await PackageFunctions.getLineasPackage(url, token, id);
-// }
+  getPackagesByCompany = async (id) => {
+    return await PackageFunctions.getPackagesByCompany(url, id);
+  }
 
   signup = async (request) => {
     return await AuthFunctions.signup(url, request);
@@ -242,26 +234,6 @@ getPackagesByCompany = async (id) => {
     }
   }
 
-  registroProducto = async (request) => {
-    let token = cookies.get('access_token');
-    return await ProductFunctions.registroProducto(url, token, request);
-  }
-
-  asociarProducto = async (request) => {
-    let token = cookies.get('access_token');
-    return await ProductFunctions.asociarProducto(url, token, request);
-  }
-
-  registroProductoAsociacion = async (request) => {
-    let token = cookies.get('access_token');
-    return await ProductFunctions.registroProducto(url, token, request);
-  }
-
-  crearPaquete = async (request) =>{
-    let token = cookies.get('access_token');
-    return await PackageFunctions.crearPaquete(url, token, request);
-  }
-
   seleccionarCompany = (id) => {
     this.setState({companiaSeleccionada: Number(id), shownWindow: 'productsCompany'});
   }
@@ -270,24 +242,61 @@ getPackagesByCompany = async (id) => {
     return this.state.companiaSeleccionada;
   }
 
+  registroProductoAsociacion = async (request) => {
+    let token = cookies.get('access_token');
+    let { status, message, producto } = await ProductFunctions.registroProducto(url, token, request);
+    if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo alta de producto.', { variant: 'error' });
+    return { status, message, producto };
+  }
+
+  asociarProducto = async (request) => {
+    let token = cookies.get('access_token');
+    let { status, message, producto } = await ProductFunctions.asociarProducto(url, token, request);
+    if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo asociacion de producto.', { variant: 'error' });
+    return { status, message, producto };
+  }
+
   modificarProducto = async (request, productId) => {
     let token = cookies.get('access_token');
-    return await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
+
+    let { status, message, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
+    if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo modificacion de producto.', { variant: 'error' });
+    return { status, message, producto };
   }
 
   eliminarProducto = async (id) =>{
     let token = cookies.get('access_token');
-    return await ProductFunctions.eliminarProducto(url, token, id);
+    let { status, message } = await ProductFunctions.eliminarProducto(url, token, id);
+    if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo eliminacion de producto.', { variant: 'error' });
+    return message;
+  }
+
+  crearPaquete = async (request) =>{
+    let token = cookies.get('access_token');
+    let { status, message, id } = await PackageFunctions.crearPaquete(url, token, request);
+    if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo alta de paquete.', { variant: 'error' });
+    return { status, message, id };
   }
 
   modificarPaquete = async (request, id) => {
     let token = cookies.get('access_token');
-    return await PackageFunctions.modificarPaquete(url, token, request, id);
+    let { status, message, paquete } = await PackageFunctions.modificarPaquete(url, token, request, id);
+    if(status === 200) this.props.enqueueSnackbar('Paquete modificado exitosamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo modificacion de paquete.', { variant: 'error' });
+    return { status, message, paquete };
   }
 
   eliminarPaquete = async (id) =>{
     let token = cookies.get('access_token'); 
-    return await PackageFunctions.eliminarPaquete(url, token, id);
+    let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
+    if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
+    else this.props.enqueueSnackbar('Fallo eliminacion de paquete.', { variant: 'error' });
+    return message;
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
@@ -328,9 +337,13 @@ getPackagesByCompany = async (id) => {
       voucher: voucher ? voucher : this.state.cart.voucher
     }
 
-    let cart = await CartFunctions.calcularTotal(url, token, request, this.state.cart);
+    let { status, cart, voucher: voucherValido} = await CartFunctions.calcularTotal(url, token, request, this.state.cart);
 
-    this.setState({cart: cart});
+    this.setState({cart});
+
+    if(status === 200 && voucherValido && voucher) this.props.enqueueSnackbar('Voucher agregado exitosamente.', { variant: 'success' });
+    else if(status === 200 && !voucherValido && voucher) this.props.enqueueSnackbar('Voucher invalido', { variant: 'error' });
+    else if(status !== 200) this.props.enqueueSnackbar('Ocurrio un error al calcular el carrito', { variant: 'error' });
   }
 
   realizarPedido = async () => {
@@ -384,23 +397,9 @@ getPackagesByCompany = async (id) => {
     return await ReportesFunctions.getTopCincoMenosVendidos(url, token, this.state.loggedUser.userCompanyId, date);
   }
 
-  // setearSnackbar = (status, message, variant) => {
-  //   this.setState({
-  //     snackbarStatus: status,
-  //     snackbarMessage: message,
-  //     snackbarVariant: variant
-  //   });
-  // }
-
   render() {
     return (
         <Fragment>
-          {/* <Snackbar
-            open={this.state.snackbarStatus}
-            message={this.state.snackbarMessage}
-            variant={this.state.snackbarVariant}
-            onClose={this.setearSnackbar}
-          /> */}
           <Header 
             cambiarVentana={this.cambiarVentana}
             logged={this.state.logged}

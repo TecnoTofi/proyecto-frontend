@@ -153,7 +153,7 @@ const calcularTotal = async (url, token, req, cart) => {
 		body: JSON.stringify(req)
 	});
 
-	let status = '';
+	let status;
 	let response = await fetch(request)
 							.then(res => {
 								status = res.status;
@@ -165,9 +165,8 @@ const calcularTotal = async (url, token, req, cart) => {
 							.catch(err => {
 								console.log('Error en fetch de calculo de carrito');
 							});
-	// let subTotal = 0;
+    console.log('response', response)
 	let subTotalEnvios = 0;
-	// let total = 0;
 
 	cart.contenido.map(seller => {
 		seller.productos.map(prod => {
@@ -189,7 +188,7 @@ const calcularTotal = async (url, token, req, cart) => {
 	cart.total = response.total + subTotalEnvios;
 	if(status === 200 && req.voucher) cart.voucher = req.voucher;
 	
-	return cart;
+	return { status, cart, voucher: response.voucher };
 }
 
 const realizarPedido = async (req, url, token) => {
