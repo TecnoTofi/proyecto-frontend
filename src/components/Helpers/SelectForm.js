@@ -29,14 +29,19 @@ class SimpleSelect extends React.Component {
     type: 0
   };
 
-  async componentWillReceiveProps(){
-    if(this.props.flag === 'profile'){
-      let type = this.props.getSelectedCompany();
-      // console.log(typeof type);
-      await this.setState({type: Number(type)})
-    }
-    else if(this.props.selected === 0){
-      this.setState({type: 0})
+  async componentWillMount(){
+    // if(this.props.flag === 'profile'){
+    //   let type = this.props.getSelectedCompany();
+    //   // console.log(typeof type);
+    //   await this.setState({type: Number(type)})
+    // }
+    // else if(this.props.selected === 0){
+    //   this.setState({type: 0})
+    // }
+    console.log('props', this.props.seleccionado)
+    if(this.props.seleccionado){
+      console.log('entro')
+      this.setState({type: this.props.seleccionado});
     }
   }
 

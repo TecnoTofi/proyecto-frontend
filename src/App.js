@@ -176,7 +176,10 @@ getPackagesByCompany = async (id) => {
   }
 
   modificarPerfil = async (request) => {
-    return await UserFunctions.modificarPerfil(url, this.state.loggedUser.userId, this.state.loggedUser.companyId, request);
+    let token = cookies.get('access_token');
+    let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
+    // if(status === 201) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
+    // else  this.props.enqueueSnackbar(message, { variant: 'error' });
   }
 
   login = async (userEmail, userPassword) => {
@@ -474,7 +477,7 @@ getPackagesByCompany = async (id) => {
                           getCompany={this.getCompanyById}
                           userId={this.state.loggedUser.userId}
                           companyId={this.state.loggedUser.userCompanyId}
-                          getCategories={this.getRubros}
+                          getRubros={this.getRubros}
                           modificarPerfil={this.modificarPerfil}
                         />
                       ) : (

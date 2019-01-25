@@ -4,24 +4,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
-// import Input from '@material-ui/core/Input';
-// import InputLabel from '@material-ui/core/InputLabel';
-// import InputAdornment from '@material-ui/core/InputAdornment';
-// import FormControl from '@material-ui/core/FormControl';
-// import Visibility from '@material-ui/icons/Visibility';
-// import VisibilityOff from '@material-ui/icons/VisibilityOff';
-// import EditIcon from "@material-ui/icons/Create";
-// import IconButton from "@material-ui/core/IconButton";
 import Select from '../Helpers/SelectForm';
-// import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
     root: {
@@ -36,57 +25,48 @@ const styles = theme => ({
   });
 
   class Profile extends Component{
-
-    // constructor(props){
-    //     super(props);
-        state = {
-            categories: [],
-            userName: '',
-            userEmail: '',
-            userPassword: '',
-            userDocument: '',
-            userPhone: '',
-            userFirstStreet: '',
-            userSecondStreet: '',
-            userDoorNumber: '',
-            companyName: '',
-            companyRut: '',
-            companyPhone: '',
-            companyFirstStreet: '',
-            companySecondStreet: '',
-            companyDoorNumber: '',
-            companyDescription:'',
-            companyCategory: 0,
-            companyImage: null,
-            userNameError: '',
-            userEmailError: '',
-            userPasswordError: '',
-            userDocumentError: '',
-            userPhoneError: '',
-            userFirstStreetError: '',
-            userSecondStreetError: '',
-            userDoorNumberError: '',
-            companyNameError: '',
-            companyRutError: '',
-            companyPhoneError: '',
-            companyFirstStreetError: '',
-            companySecondStreetError: '',
-            companyDoorNumberError: '',
-            companyCategoryError: '',
-            companyDescriptionError:'',
-            companyImageError: '',
-            showPassword: false,
-        }
-    // }
-
+    state = {
+        rubros: [],
+        showPassword: false,
+        userName: '',
+        userEmail: '',
+        userDocument: '',
+        userPhone: '',
+        userFirstStreet: '',
+        userSecondStreet: '',
+        userDoorNumber: '',
+        type: 0,
+        companyName: '',
+        companyRut: '',
+        companyPhone: '',
+        companyFirstStreet: '',
+        companySecondStreet: '',
+        companyDoorNumber: '',
+        companyDescription:'',
+        companyRubro: 0,
+        companyImage: null,
+        userNameError: '',
+        userEmailError: '',
+        userDocumentError: '',
+        userPhoneError: '',
+        userFirstStreetError: '',
+        userSecondStreetError: '',
+        userDoorNumberError: '',
+        companyNameError: '',
+        companyRutError: '',
+        companyPhoneError: '',
+        companyFirstStreetError: '',
+        companySecondStreetError: '',
+        companyDoorNumberError: '',
+        companyRubroError: '',
+        companyDescriptionError:'',
+        companyImageError: '',
+    }
 
     async componentWillMount(){
         let company= await this.props.getCompany(this.props.companyId);
-        // console.log('comapny', company);
         let user = await this.props.getUser(this.props.userId);
-        // console.log('user', user);
-        let categories = await this.props.getCategories();
-        // console.log('categories', categories);
+        let rubros = await this.props.getRubros();
         
         this.setState({
             userName: user.name,
@@ -96,30 +76,28 @@ const styles = theme => ({
             userFirstStreet: user.firstStreet,
             userSecondStreet: user.secondStreet,
             userDoorNumber: user.doorNumber.toString(),
-            role: user.roleId,
+            type: user.typeId,
             companyName: company.name,
             companyRut: company.rut,
             companyPhone: company.phone,
             companyFirstStreet: company.firstStreet,
             companySecondStreet: company.secondStreet,
             companyDoorNumber: company.doorNumber.toString(),
-            companyType: company.typeId,
             companyDescription:company.description,
-            companyCategory: company.categoryId,
-            categories: categories
-        });
-     };
+            companyRubro: company.rubroId,
+            rubros
+        }, () => console.log('this.state', this.state));
+    };
 
-     getCompanyId = () => {
-         return this.state.companyCategory;
-     }
+    //  getCompanyId = () => {
+    //      return this.state.companyCategory;
+    //  }
 
       validate = () => {
         let isError = false;
         const errors = {
             userNameError: '',
             userEmailError: '',
-            userPasswordError: '',
             userDocumentError: '',
             userPhoneError: '',
             userFirstStreetError: '',
@@ -131,9 +109,9 @@ const styles = theme => ({
             companyFirstStreetError: '',
             companySecondStreetError: '',
             companyDoorNumberError: '',
-            companyImageError: '',
             companyDescriptionError:'',
-            companyCategoryError: ''
+            companyRubroError: '',
+            companyImageError: '',
         };
 
         if(!this.state.userName){
@@ -156,15 +134,6 @@ const styles = theme => ({
         else if(!Validator.isEmail(this.state.userEmail)){
             isError = true;
             errors.userEmailError = 'Debe ser un email valido';
-        }
-
-        if (!this.state.userPassword) {
-            isError = true;
-            errors.userPasswordError ='Debe ingresar una contraseña';
-        }
-        else if(this.state.userPassword.length < 8){
-            isError = true;
-            errors.userPasswordError ='Debe tener al menos 8 caracteres';
         }
 
         if(!this.state.userDocument){
@@ -277,7 +246,6 @@ const styles = theme => ({
         if(this.state.companyCategory === 0){
             isError = true;
             errors.companyCategoryError="Debe seleccionar el rubro de la empresa";
-            console.log('error en companyCategory === 0');
         }
         
         if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
@@ -289,32 +257,14 @@ const styles = theme => ({
             ...this.state,
             ...errors
         });
-
+        
         return isError;
       };
     
-      handleToggle = () => {
+      handleClose = () => {
         this.setState({
-            userName: '',
-            userEmail: '',
-            userPassword: '',
-            userDocument: '',
-            userPhone: '',
-            userFirstStreet: '',
-            userSecondStreet: '',
-            userDoorNumber: '',
-            companyName: '',
-            companyRut: '',
-            companyPhone: '',
-            companyFirstStreet: '',
-            companySecondStreet: '',
-            companyDoorNumber: '',
-            companyImage: null,
-            companyDescription:'',
-            companyCategory: 0,
             userNameError: '',
             userEmailError: '',
-            userPasswordError: '',
             userDocumentError: '',
             userPhoneError: '',
             userFirstStreetError: '',
@@ -328,7 +278,7 @@ const styles = theme => ({
             companyDoorNumberError: '',
             companyImageError: '',
             companyDescriptionError:'',
-            companyCategoryError: ''
+            companyRubroError: ''
         });
       }
 
@@ -337,35 +287,27 @@ const styles = theme => ({
         this.setState({[e.target.name]: e.target.value});
     }
 
-    // onSelectTypeChange = (tipo) => {
-    //     let type = Number(tipo);
-    //     this.setState({companyType: type}, () => {
-    //         this.setState({role: type});
-    //     });
-    // }
-
-    onSelectCategoryChange = (tipo) => {
+    onSelectRubroChange = (tipo) => {
         let type = Number(tipo);
-        this.setState({companyCategory: type});
+        this.setState({companyRubro: type}, () => console.log(this.state));
     }
 
     onSubmit = (e) => {
         e.preventDefault();
         const error = this.validate();
-
         if (!error){
 
             const request = new FormData();
+            
             //user
             request.set('userName', this.state.userName);
-            request.set('userEmail', this.state.userEmail);
-            request.set('userPassword', this.state.userPassword);
-            request.set('userDocument', this.state.userDocument);
+            request.set('email', this.state.userEmail);
+            request.set('document', this.state.userDocument);
             request.set('userPhone', this.state.userPhone);
             request.set('userFirstStreet', this.state.userFirstStreet);
             request.set('userSecondStreet', this.state.userSecondStreet);
             request.set('userDoorNumber', this.state.userDoorNumber);
-            request.set('role', this.state.role);
+            request.set('type', this.state.type);
             //company
             request.set('companyName', this.state.companyName);
             request.set('companyRut', this.state.companyRut);
@@ -373,15 +315,15 @@ const styles = theme => ({
             request.set('companyFirstStreet', this.state.companyFirstStreet);
             request.set('companySecondStreet', this.state.companySecondStreet);
             request.set('companyDoorNumber', this.state.companyDoorNumber);
-            request.set('companyType', this.state.companyType);
-            request.set('companyCategory', this.state.companyCategory);
+            request.set('rubro', this.state.companyRubro);
             request.set('companyDescription', this.state.companyDescription);
 
             //image
-            request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
+            if(this.state.companyImage) request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
 
+            console.log('request', request);
             this.props.modificarPerfil(request);
-            this.handleToggle();
+            // this.handleClose();
         }
     }
 
@@ -395,16 +337,12 @@ const styles = theme => ({
         if(e.key === 'Enter') this.onSubmit(e);
     }
 
-    /*cargarState = =>{
-
-    }*/
     render(){
         const { classes } = this.props;
         return(
             <Paper className={classes.root}>
                 <Table className={classes.table}>
                     <TableBody>
-                        {/* <FormControl> */}
                         <TableRow>
                             <TextField
                                 autoFocus
@@ -438,258 +376,215 @@ const styles = theme => ({
                                 onKeyPress={this.onEnterPress}
                             />
                         </TableRow>
-                            {/* <FormControl className={(classes.margin, classes.textField)} fullWidth>
-                                <InputLabel
-                                    htmlFor="adornment-password"
-                                    error={this.state.userPasswordError ? true : false}
-                                    //required
-                                >
-                                    Contraseña
-                                </InputLabel>
-                                <Input
-                                    id="userPassword"
-                                    name='userPassword'
-                                    type={this.state.showPassword ? 'text' : 'password'}
-                                    value={this.state.password}
-                                    error={this.state.userPasswordError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                    endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                        aria-label="Toggle password visibility"
-                                        onClick={this.handleClickShowPassword}
-                                        >
-                                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                    }
-                                />
-                                <FormHelperText
-                                    id="userPasswordError"
-                                    error={this.state.userPasswordError ? true : false}>
-                                    {this.state.userPasswordError}
-                                </FormHelperText>
-                            </FormControl> */}
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='userDocument'
-                                    name='userDocument'
-                                    label='Documento de identidad'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.userDocument}
-                                    helperText={this.state.userDocumentError}
-                                    error={this.state.userDocumentError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='userPhone'
-                                    name='userPhone'
-                                    label='Telefono personal'
-                                    type='text'
-                                    fullWidth
-                                    value= {this.state.userPhone}
-                                    helperText={this.state.userPhoneError}
-                                    error={this.state.userPhoneError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='userFirstStreet'
-                                    name='userFirstStreet'
-                                    label='Calle principal'
-                                    type='text'
-                                    fullWidth
-                                    value= {this.state.userFirstStreet}
-                                    helperText={this.state.userFirstStreetError}
-                                    error={this.state.userFirstStreetError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='userSecondStreet'
-                                    name='userSecondStreet'
-                                    label='Calle secundaria'
-                                    type='text'
-                                    fullWidth
-                                    value= {this.state.userSecondStreet}
-                                    helperText={this.state.userSecondStreetError}
-                                    error={this.state.userSecondStreetError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='userDoorNumber'
-                                    name='userDoorNumber'
-                                    label='Numero de puerta'
-                                    type='text'
-                                    fullWidth
-                                    value= {this.state.userDoorNumber}
-                                    helperText={this.state.userDoorNumberError}
-                                    error={this.state.userDoorNumberError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companyName'
-                                    name='companyName'
-                                    label='Nombre de la empresa'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companyName}
-                                    helperText={this.state.companyNameError}
-                                    error={this.state.companyNameError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companyRut'
-                                    name='companyRut'
-                                    label='RUT de la empresa'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companyRut}
-                                    helperText={this.state.companyRutError}
-                                    error={this.state.companyRutError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companyDescription'
-                                    name='companyDescription'
-                                    label='Descripcion de la empresa'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companyDescription}
-                                    helperText={this.state.companyDescriptionError}
-                                    error={this.state.companyDescriptionError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companyPhone'
-                                    name='companyPhone'
-                                    label='Telefono de la empresa'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companyPhone}
-                                    helperText={this.state.companyPhoneError}
-                                    error={this.state.companyPhoneError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companyFirstStreet'
-                                    name='companyFirstStreet'
-                                    label='Calle principal'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companyFirstStreet}
-                                    helperText={this.state.companyFirstStreetError}
-                                    error={this.state.companyFirstStreetError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companySecondStreet'
-                                    name='companySecondStreet'
-                                    label='Calle secundaria'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companySecondStreet}
-                                    helperText={this.state.companySecondStreetError}
-                                    error={this.state.companySecondStreetError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <TextField
-                                    margin='dense'
-                                    id='companyDoorNumber'
-                                    name='companyDoorNumber'
-                                    label='Numero de puerta'
-                                    type='text'
-                                    fullWidth
-                                    //required
-                                    value= {this.state.companyDoorNumber}
-                                    helperText={this.state.companyDoorNumberError}
-                                    error={this.state.companyDoorNumberError ? true : false}
-                                    onChange={this.onChange}
-                                    onKeyPress={this.onEnterPress}
-                                />
-                            </TableRow>
-                            {/* <Select 
-                                content={this.props.companyTypes}
-                                onChange={this.onSelectTypeChange}
-                                selectError={this.state.companyTypeError}
-                                label={'Tipo de empresa'}
-                                helper={'Seleccione el tipo de empresa'}
-                                //selectedValue= {this.state.datos.companyType}
-                            /> */}
-                            <TableRow>
-                                <Select 
-                                    content={this.state.categories}
-                                    onChange={this.onSelectCategoryChange}
-                                    selectError={this.state.companyCategoryError}
-                                    label={'Rubro de la empresa'}
-                                    helper={'Seleccione el rubro de la empresa'}
-                                    flag='profile'
-                                    getSelectedCompany = {this.getCompanyId}
-                                />
-                            </TableRow>
-                            <TableRow>
-                                <UploadImage onImageUpload={this.onImageUpload} />
-                            </TableRow>
-                            <TableRow>
-                                <Button onClick={this.handleToggle} color="primary">
-                                    Cancelar
-                                </Button>
-                                <Button onClick={this.onSubmit} color="primary" variant='contained'>
-                                    Aceptar
-                                </Button>
-                            </TableRow>
-                        {/* </FormControl> */}
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='userDocument'
+                                name='userDocument'
+                                label='Documento de identidad'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.userDocument}
+                                helperText={this.state.userDocumentError}
+                                error={this.state.userDocumentError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='userPhone'
+                                name='userPhone'
+                                label='Telefono personal'
+                                type='text'
+                                fullWidth
+                                value= {this.state.userPhone}
+                                helperText={this.state.userPhoneError}
+                                error={this.state.userPhoneError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='userFirstStreet'
+                                name='userFirstStreet'
+                                label='Calle principal'
+                                type='text'
+                                fullWidth
+                                value= {this.state.userFirstStreet}
+                                helperText={this.state.userFirstStreetError}
+                                error={this.state.userFirstStreetError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='userSecondStreet'
+                                name='userSecondStreet'
+                                label='Calle secundaria'
+                                type='text'
+                                fullWidth
+                                value= {this.state.userSecondStreet}
+                                helperText={this.state.userSecondStreetError}
+                                error={this.state.userSecondStreetError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='userDoorNumber'
+                                name='userDoorNumber'
+                                label='Numero de puerta'
+                                type='text'
+                                fullWidth
+                                value= {this.state.userDoorNumber}
+                                helperText={this.state.userDoorNumberError}
+                                error={this.state.userDoorNumberError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companyName'
+                                name='companyName'
+                                label='Nombre de la empresa'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companyName}
+                                helperText={this.state.companyNameError}
+                                error={this.state.companyNameError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companyRut'
+                                name='companyRut'
+                                label='RUT de la empresa'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companyRut}
+                                helperText={this.state.companyRutError}
+                                error={this.state.companyRutError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companyDescription'
+                                name='companyDescription'
+                                label='Descripcion de la empresa'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companyDescription}
+                                helperText={this.state.companyDescriptionError}
+                                error={this.state.companyDescriptionError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companyPhone'
+                                name='companyPhone'
+                                label='Telefono de la empresa'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companyPhone}
+                                helperText={this.state.companyPhoneError}
+                                error={this.state.companyPhoneError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companyFirstStreet'
+                                name='companyFirstStreet'
+                                label='Calle principal'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companyFirstStreet}
+                                helperText={this.state.companyFirstStreetError}
+                                error={this.state.companyFirstStreetError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companySecondStreet'
+                                name='companySecondStreet'
+                                label='Calle secundaria'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companySecondStreet}
+                                helperText={this.state.companySecondStreetError}
+                                error={this.state.companySecondStreetError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <TextField
+                                margin='dense'
+                                id='companyDoorNumber'
+                                name='companyDoorNumber'
+                                label='Numero de puerta'
+                                type='text'
+                                fullWidth
+                                //required
+                                value= {this.state.companyDoorNumber}
+                                helperText={this.state.companyDoorNumberError}
+                                error={this.state.companyDoorNumberError ? true : false}
+                                onChange={this.onChange}
+                                onKeyPress={this.onEnterPress}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <Select 
+                                content={this.state.rubros}
+                                onChange={this.onSelectRubroChange}
+                                selectError={this.state.companyRubroError}
+                                label={'Rubro de la empresa'}
+                                helper={'Seleccione el rubro de la empresa'}
+                                seleccionado={this.state.companyRubro}
+                            />
+                        </TableRow>
+                        <TableRow>
+                            <UploadImage onImageUpload={this.onImageUpload} />
+                        </TableRow>
+                        <TableRow>
+                            <Button onClick={this.handleClose} color="primary">
+                                Cancelar
+                            </Button>
+                            <Button onClick={this.onSubmit} color="primary" variant='contained'>
+                                Aceptar
+                            </Button>
+                        </TableRow>
                     </TableBody>
                 </Table>
             </Paper>
