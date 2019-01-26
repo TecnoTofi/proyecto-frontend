@@ -81,6 +81,10 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productPriceError='Debe contener unicamente numeros';
         }
+        else if(!Validator.isLength(this.state.productPrice, {min: 1, max: 6})){
+            isError = true;
+            errors.productPriceError='Debe tener entre 1 y 6 caracteres';
+        }
 
         if(this.state.productStock <= 0){
             isError = true;
@@ -89,6 +93,10 @@ export default class AssociateForm extends Component{
         else if(!Validator.isNumeric(this.state.productStock)){
             isError = true;
             errors.productStockError='Debe contener unicamente numeros';
+        }
+        else if(!Validator.isLength(this.state.productStock, {min: 1, max: 7})){
+            isError = true;
+            errors.productStockError='Debe tener entre 1 y 7 caracteres';
         }
 
         this.setState({

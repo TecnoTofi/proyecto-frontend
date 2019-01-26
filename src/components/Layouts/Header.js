@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import LoginForm from '../Auth/LoginForm';
 import SignupForm from '../Auth/SignupForm';
 import Drawer from './Drawer';
-import HomeIcon from '@material-ui/icons/Home';
+// import HomeIcon from '@material-ui/icons/Home';
 import StoresIcon from '@material-ui/icons/Store';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ProductsIcon from '@material-ui/icons/Fastfood';
@@ -72,12 +72,12 @@ function Header(props) {
               {/* </NavLink> */}
             </Typography>
           {/* <NavLink to='/' className={classes.link}> */}
-            <Button
+            {/* <Button
               color="inherit"
               onClick={() => {props.cambiarVentana('dashboard')}}>
               <HomeIcon className={classes.leftIcon} />
               Dashboard
-            </Button>
+            </Button> */}
           {/* </NavLink> */}
           {/* <NavLink to='/companies' className={classes.link}> */}
             <Button

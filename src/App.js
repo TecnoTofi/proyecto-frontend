@@ -170,8 +170,8 @@ class App extends Component {
   modificarPerfil = async (request) => {
     let token = cookies.get('access_token');
     let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
-    // if(status === 201) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
-    // else  this.props.enqueueSnackbar(message, { variant: 'error' });
+    if(status === 200) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
+    else  this.props.enqueueSnackbar(message, { variant: 'error' });
   }
 
   login = async (userEmail, userPassword) => {
@@ -246,7 +246,7 @@ class App extends Component {
     let token = cookies.get('access_token');
     let { status, message, producto } = await ProductFunctions.registroProducto(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo alta de producto.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return { status, message, producto };
   }
 
@@ -254,16 +254,15 @@ class App extends Component {
     let token = cookies.get('access_token');
     let { status, message, producto } = await ProductFunctions.asociarProducto(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo asociacion de producto.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return { status, message, producto };
   }
 
   modificarProducto = async (request, productId) => {
     let token = cookies.get('access_token');
-
     let { status, message, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
     if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo modificacion de producto.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return { status, message, producto };
   }
 
@@ -271,7 +270,7 @@ class App extends Component {
     let token = cookies.get('access_token');
     let { status, message } = await ProductFunctions.eliminarProducto(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo eliminacion de producto.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return message;
   }
 
@@ -279,7 +278,7 @@ class App extends Component {
     let token = cookies.get('access_token');
     let { status, message, id } = await PackageFunctions.crearPaquete(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo alta de paquete.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return { status, message, id };
   }
 
@@ -287,7 +286,7 @@ class App extends Component {
     let token = cookies.get('access_token');
     let { status, message, paquete } = await PackageFunctions.modificarPaquete(url, token, request, id);
     if(status === 200) this.props.enqueueSnackbar('Paquete modificado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo modificacion de paquete.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return { status, message, paquete };
   }
 
@@ -295,7 +294,7 @@ class App extends Component {
     let token = cookies.get('access_token'); 
     let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar('Fallo eliminacion de paquete.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
     return message;
   }
 
@@ -357,7 +356,7 @@ class App extends Component {
       deliveryType: 'Comprador', //trabajar este punto
       contenido: this.state.cart.contenido
     }
-    let {response, status} = await CartFunctions.realizarPedido(request, url, token);
+    let { message, status } = await CartFunctions.realizarPedido(request, url, token);
     
     if(status === 201 || status === 200) {
       this.props.enqueueSnackbar('Pedido realizado con exito.', { variant: 'success' });
@@ -370,7 +369,7 @@ class App extends Component {
         }
       })
     }
-    else this.props.enqueueSnackbar('Fallo el pedido.', { variant: 'error' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
   }
 
   getReporteCompras = async () => {

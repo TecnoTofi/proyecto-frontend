@@ -15,14 +15,14 @@ const getUserById = async (url, id) => {
 };
 
 const modificarPerfil = async (url, token, userId, companyId, request) => {
-      let response = await axios({
+    let response = await axios({
         method: 'put',
         url: `${url}/api/auth/update/user/${userId}/company/${companyId}`,
         headers: { 'Content-Type': 'application/json', token: token },
         data: request
     })
     .then(res => {
-        console.info(res);
+        // console.info(res);
         if (res) return { status: res.status, message: res.data.message };
         else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
     })

@@ -199,7 +199,7 @@ const realizarPedido = async (req, url, token) => {
 		body: JSON.stringify(req)
 	  });
 	  let status = '';
-	  let response = await fetch(request)
+	  let message = await fetch(request)
 					.then(res => {
 						status = res.status;
 						return res.json()
@@ -218,7 +218,7 @@ const realizarPedido = async (req, url, token) => {
 						console.log(`Error en fetch realizar pedido: ${err}`);
 						//hacer llamado a snackbar para mostrar mensaje
 					})
-	return { response, status };
+	return { message, status };
 }
 
 export default {

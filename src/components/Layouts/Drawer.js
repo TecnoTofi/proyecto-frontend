@@ -10,17 +10,16 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import UserIcon from '@material-ui/icons/AccountCircle';
-import WalletIcon from '@material-ui/icons/CreditCard';
+// import WalletIcon from '@material-ui/icons/CreditCard';
 import ProductsIcon from '@material-ui/icons/List';
 import MenuIcon from '@material-ui/icons/Menu';
 import BestFiveIcon from '@material-ui/icons/TrendingUp';
 import WorstFiveIcon from '@material-ui/icons/TrendingDown';
 import HistorialIcon from '@material-ui/icons/Assignment';
-import GraficoIcon from '@material-ui/icons/Assessment';
-import CamionIcon from '@material-ui/icons/LocalShipping';
-// import ProductForm from '../Productos/ProductForm';
+// import GraficoIcon from '@material-ui/icons/Assessment';
+// import CamionIcon from '@material-ui/icons/LocalShipping';
 import AssociateForm from '../Productos/AssociateForm';
-import PackageForm from '../Paquetes/PackageForm';
+import AltaPaquete from '../Paquetes/AltaPaquete';
 import AltaProducto from '../Productos/AltaProducto';
 
 const styles = {
@@ -64,10 +63,10 @@ class Drawer extends React.Component {
                 <ListItemIcon><UserIcon /></ListItemIcon>
                 <ListItemText primary='Mi perfil' />
             </ListItem>
-          <ListItem button>
+          {/* <ListItem button>
               <ListItemIcon><WalletIcon /></ListItemIcon>
               <ListItemText primary='Mis metodos de pago' />
-          </ListItem>
+          </ListItem> */}
           <Divider />
           {/* <ListItem button>
               <ListItemIcon><HistorialIcon /></ListItemIcon>
@@ -110,7 +109,7 @@ class Drawer extends React.Component {
             // companies={this.props.companies} 
             onClick={this.props.onClickAssociate}
           />
-          <PackageForm 
+          <AltaPaquete 
             getProducts={this.props.getProductosByCompany}
             companyId={this.props.companyId}
             crearPaquete = {this.props.crearPaquete}
@@ -142,7 +141,7 @@ class Drawer extends React.Component {
                 <ListItemIcon><WorstFiveIcon /></ListItemIcon>
                 <ListItemText primary='Top 5 menos vendido' />
             </ListItem> */}
-            <ListItem button>
+            {/* <ListItem button>
                 <ListItemIcon><GraficoIcon /></ListItemIcon>
                 <ListItemText primary='Grafico de ventas por zona' />
             </ListItem>
@@ -153,7 +152,7 @@ class Drawer extends React.Component {
             <ListItem button>
                 <ListItemIcon><GraficoIcon /></ListItemIcon>
                 <ListItemText primary='Grafico de ventas decadentes' />
-            </ListItem>
+            </ListItem> */}
         </List>
       </div>
     );

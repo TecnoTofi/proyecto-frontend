@@ -86,7 +86,7 @@ const styles = theme => ({
             companyDescription:company.description,
             companyRubro: company.rubroId,
             rubros
-        }, () => console.log('this.state', this.state));
+        });
     };
 
     //  getCompanyId = () => {
@@ -135,6 +135,10 @@ const styles = theme => ({
             isError = true;
             errors.userEmailError = 'Debe ser un email valido';
         }
+        else if(!Validator.isLength(this.state.userEmail, {min: 5, max: 30})){
+            isError = true;
+            errors.userEmailError='Debe tener entre 5 y 30 caracteres';
+        }
 
         if(!this.state.userDocument){
             isError = true;
@@ -172,18 +176,22 @@ const styles = theme => ({
             isError = true;
             errors.userDoorNumberError='Debe contener unicamente numeros y letras';
         }
+        else if(this.state.userDoorNumber && !Validator.isLength(this.state.userDoorNumber, {min: 1, max: 5})){
+            isError = true;
+            errors.userDoorNumberError='Debe tener entre 1 y 5 caracteres';
+        }
         
         if(!this.state.companyName){
             isError = true;
             errors.companyNameError='Debe ingresar un nombre';
+        }        
+        else if(!/^\w+(\s\w+)*$/.test(this.state.companyName)){
+             isError = true;
+             errors.companyNameError='Debe contener unicamente numeros y letras';
         }
         else if(!Validator.isLength(this.state.companyName, {min: 3, max: 30})){
             isError = true;
             errors.companyNameError='Debe tener entre 3 y 30 caracteres';
-        }
-         else if(!/^\w+(\s\w+)*$/.test(this.state.companyName)){
-             isError = true;
-             errors.companyNameError='Debe contener unicamente numeros y letras';
         }
         
         if(!this.state.companyRut){
@@ -215,6 +223,10 @@ const styles = theme => ({
             isError = true;
             errors.companyPhoneError='Debe contener unicamente numeros';
         }
+        else if(this.state.companyPhone && !Validator.isLength(this.state.companyPhone, {min: 7, max: 15})){
+            isError = true;
+            errors.companyPhoneError='Debe tener entre 7 y 15 caracteres';
+        }
 
         if(!this.state.companyFirstStreet){
             isError = true;
@@ -241,6 +253,10 @@ const styles = theme => ({
         else if(!Validator.isAlphanumeric(this.state.companyDoorNumber)){
             isError = true;
             errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
+        }
+        else if(this.state.companyDoorNumber && !Validator.isLength(this.state.companyDoorNumber, {min: 1, max: 5})){
+            isError = true;
+            errors.companyDoorNumberError='Debe tener entre 1 y 5 caracteres';
         }
 
         if(this.state.companyCategory === 0){
@@ -289,7 +305,7 @@ const styles = theme => ({
 
     onSelectRubroChange = (tipo) => {
         let type = Number(tipo);
-        this.setState({companyRubro: type}, () => console.log(this.state));
+        this.setState({companyRubro: type});
     }
 
     onSubmit = (e) => {
@@ -308,7 +324,8 @@ const styles = theme => ({
             request.set('userSecondStreet', this.state.userSecondStreet);
             request.set('userDoorNumber', this.state.userDoorNumber);
             request.set('type', this.state.type);
-            //company
+            //company            
+            request.set('companyId', this.props.companyId);
             request.set('companyName', this.state.companyName);
             request.set('companyRut', this.state.companyRut);
             request.set('companyPhone', this.state.companyPhone);
@@ -321,7 +338,7 @@ const styles = theme => ({
             //image
             if(this.state.companyImage) request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
 
-            console.log('request', request);
+            // console.log('request', request);
             this.props.modificarPerfil(request);
             // this.handleClose();
         }

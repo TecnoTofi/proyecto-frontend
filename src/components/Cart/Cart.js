@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Validator from 'validator';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -51,7 +52,7 @@ class Cart extends Component{
     }
 
     onChange = (e) => {
-        if(e.target.value.length <= 20) this.setState({[e.target.name]: e.target.value});
+        this.setState({[e.target.name]: e.target.value});
     }
 
     onEnterPress = (e) => {
@@ -59,8 +60,26 @@ class Cart extends Component{
     }
 
     sendVoucher = (e) => {
-        e.preventDefault();
-        this.props.sendVoucher(this.state.voucher);
+        let isError = false;
+
+        if(!this.state.voucher){
+            isError = true;
+            this.setState({voucherError: 'Debe ingresar el codigo del voucher'});
+        }
+        else if(!Validator.isAlphanumeric(this.state.voucher)){
+            isError = true;
+            this.setState({voucherError: 'Debe contener unicamente numeros y letras'});
+        }
+        else if(this.state.voucher.length < 3 || this.state.voucher.length > 20){
+            isError = true;
+            this.setState({voucherError: 'Debe contener entre 3 y 20 caracteres'});
+        }
+
+        if(!isError){
+            this.setState({voucherError: ''});
+            e.preventDefault();
+            this.props.sendVoucher(this.state.voucher);
+        }
     }
     
     render(){

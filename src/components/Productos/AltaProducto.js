@@ -20,7 +20,7 @@ import Validator from 'validator';
 // import AssociateIcon from '@material-ui/icons/Queue';
 
 
-export default class ProductForm extends Component{
+export default class AltaProducto extends Component{
 
     constructor(props){
         super(props);
@@ -84,6 +84,7 @@ export default class ProductForm extends Component{
             isError = true;
             errors.productNameError='Debe tener 3 y 30 caracteres';
         }
+
         if (!this.state.productCode) {
             isError = true;
             errors.productCodeError ='Debe ingresar un codigo';
@@ -92,6 +93,11 @@ export default class ProductForm extends Component{
             isError = true;
             errors.productCodeError='Debe contener unicamente numeros y letras';
         }
+        else if(!Validator.isLength(this.state.productCode, {min: 3, max: 20})){
+            isError = true;
+            errors.productCodeError='Debe tener entre 3 y 20 caracteres';
+        }
+
         if(this.state.categories.length === 0){
             isError = true;
             errors.categoriesError='Debe seleccionar al menos una categoria';
@@ -100,14 +106,16 @@ export default class ProductForm extends Component{
             isError = true;
             errors.productImageError="Debe subir una imagen JPEG, JPG o PNG";
         }
+
         if(!this.state.productDescription){
             isError = true;
             errors.productDescriptionError='Debe ingresar una descripcion';
         }
         else if(!Validator.isLength(this.state.productDescription, {min: 5, max: 50})){
             isError = true;
-            errors.productDescriptionError='Debe tener entre 5 o 50 caracteres';
+            errors.productDescriptionError='Debe tener entre 5 y 50 caracteres';
         }
+
         if(this.state.productPrice <= 0){
             isError = true;
             errors.productPriceError='Debe ingresar un precio mayor a 0';
@@ -116,6 +124,11 @@ export default class ProductForm extends Component{
             isError = true;
             errors.productPriceError='Debe contener unicamente numeros';
         }
+        else if(!Validator.isLength(this.state.productPrice, {min: 1, max: 6})){
+            isError = true;
+            errors.productPriceError='Debe tener entre 1 y 6 caracteres';
+        }
+
         if(this.state.productStock <= 0){
             isError = true;
             errors.productStockError='Debe ingresar un stock mayor a 0';
@@ -124,6 +137,11 @@ export default class ProductForm extends Component{
             isError = true;
             errors.productStockError='Debe contener unicamente numeros';
         }
+        else if(!Validator.isLength(this.state.productStock, {min: 1, max: 7})){
+            isError = true;
+            errors.productStockError='Debe tener entre 1 y 7 caracteres';
+        }
+
 
         this.setState({
             ...this.state,

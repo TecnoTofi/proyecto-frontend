@@ -99,6 +99,10 @@ class ModificarProducto extends Component{
             isError = true;
             errors.priceError = 'Debe contener unicamente numeros';
         }
+        else if(!Validator.isLength(this.state.price, {min: 1, max: 6})){
+            isError = true;
+            errors.priceError='Debe tener entre 1 y 6 caracteres';
+        }
 
         if(!this.state.stock || this.state.stock <= 0){
             isError = true;
@@ -107,6 +111,10 @@ class ModificarProducto extends Component{
         else if(isNaN(this.state.stock)){
             isError = true;
             errors.stockError = 'Debe contener unicamente numeros';
+        }
+        else if(!Validator.isLength(this.state.stock, {min: 1, max: 7})){
+            isError = true;
+            errors.stockError='Debe tener entre 1 y 7 caracteres';
         }
 
         if(this.state.categories.length === 0){
@@ -175,12 +183,13 @@ class ModificarProducto extends Component{
             //image
             // console.log(this.props)
             if(this.state.image) request.append('image', this.state.image, this.state.image.name);
-            let { status, message, producto } = await this.props.modificar(request, this.state.id);
+            let { status, producto } = await this.props.modificar(request, this.state.id);
 
             if(status === 200){
                 this.props.actualizarLista(producto, this.props.posicion);
                 this.handleToggle();
             }
+
         }
     }
 

@@ -134,14 +134,18 @@ class SignupForm extends Component{
             isError = true;
             errors.userEmailError = 'Debe ser un email valido';
         }
+        else if(!Validator.isLength(this.state.userEmail, {min: 5, max: 30})){
+            isError = true;
+            errors.userEmailError='Debe tener entre 5 y 30 caracteres';
+        }
 
         if (!this.state.userPassword) {
             isError = true;
             errors.userPasswordError ='Debe ingresar una contraseña';
         }
-        else if(this.state.userPassword.length < 8){
+        else if(!Validator.isLength(this.state.userPassword, {min: 8, max: 30})){
             isError = true;
-            errors.userPasswordError ='Debe tener al menos 8 caracteres';
+            errors.userPasswordError = 'Debe tener al menos 8 caracteres, maximo 30';
         }
 
         if(!this.state.userDocument){
@@ -180,18 +184,22 @@ class SignupForm extends Component{
             isError = true;
             errors.userDoorNumberError='Debe contener unicamente numeros y letras';
         }
+        else if(this.state.userDoorNumber && !Validator.isLength(this.state.userDoorNumber, {min: 1, max: 5})){
+            isError = true;
+            errors.userDoorNumberError='Debe tener entre 1 y 5 caracteres';
+        }
         
         if(!this.state.companyName){
             isError = true;
             errors.companyNameError='Debe ingresar un nombre';
         }
+        else if(!/^\w+(\s\w+)*$/.test(this.state.companyName)){
+             isError = true;
+             errors.companyNameError='Debe contener unicamente numeros y letras';
+        }
         else if(!Validator.isLength(this.state.companyName, {min: 3, max: 30})){
             isError = true;
             errors.companyNameError='Debe tener entre 3 y 30 caracteres';
-        }
-         else if(!/^\w+(\s\w+)*$/.test(this.state.companyName)){
-             isError = true;
-             errors.companyNameError='Debe contener unicamente numeros y letras';
         }
         
         if(!this.state.companyRut){
@@ -223,6 +231,10 @@ class SignupForm extends Component{
             isError = true;
             errors.companyPhoneError='Debe contener unicamente numeros';
         }
+        else if(this.state.companyPhone && !Validator.isLength(this.state.companyPhone, {min: 7, max: 15})){
+            isError = true;
+            errors.companyPhoneError='Debe tener entre 7 y 15 caracteres';
+        }
 
         if(!this.state.companyFirstStreet){
             isError = true;
@@ -249,6 +261,10 @@ class SignupForm extends Component{
         else if(!Validator.isAlphanumeric(this.state.companyDoorNumber)){
             isError = true;
             errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
+        }
+        else if(this.state.userDoorNumber && !Validator.isLength(this.state.userDoorNumber, {min: 1, max: 5})){
+            isError = true;
+            errors.userDoorNumberError='Debe tener entre 1 y 5 caracteres';
         }
         
         if(this.state.type === 0 || this.state.type === 0){

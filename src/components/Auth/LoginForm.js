@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Validator from 'validator';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -74,14 +75,18 @@ class LoginForm extends Component {
         isError = true;
         errors.userEmailError = 'Debe ser un email valido';
       }
+      else if(!Validator.isLength(this.state.userEmail, {min: 5, max: 30})){
+        isError = true;
+        errors.userEmailError='Debe tener entre 5 y 30 caracteres';
+      }
 
       if(!this.state.userPassword){
         isError = true;
         errors.userPasswordError = 'Debe ingresar una contraseña';
       }
-      else if(this.state.userPassword.length < 8){
+      else if(!Validator.isLength(this.state.userPassword, {min: 8, max: 30})){
         isError = true;
-        errors.userPasswordError = 'Debe tener al menos 8 caracteres';
+        errors.userPasswordError = 'Debe tener al menos 8 caracteres, maximo 30';
       }
 
       this.setState({

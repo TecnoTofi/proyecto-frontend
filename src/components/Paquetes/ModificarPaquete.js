@@ -115,6 +115,10 @@ class ModificarPaquete extends Component{
             isError = true;
             errors.priceError = 'Debe contener unicamente numeros';
         }
+        else if(!Validator.isLength(this.state.price, {min: 1, max: 6})){
+            isError = true;
+            errors.priceError='Debe tener entre 1 y 6 caracteres';
+        }
 
         if(!this.state.stock || this.state.stock <= 0){
             isError = true;
@@ -123,6 +127,10 @@ class ModificarPaquete extends Component{
         else if(isNaN(this.state.stock)){
             isError = true;
             errors.stockError = 'Debe contener unicamente numeros';
+        }
+        else if(!Validator.isLength(this.state.stock, {min: 1, max: 7})){
+            isError = true;
+            errors.stockError='Debe tener entre 1 y 7 caracteres';
         }
 
         if(this.state.categories.length === 0){
@@ -165,6 +173,7 @@ class ModificarPaquete extends Component{
     }
 
     agregarProducto = () =>{
+        if(!this.state.productId || !this.state.cantidad) return;
         let packageProdcuts = this.state.packageProdcuts;
         let existe = packageProdcuts.map(p => p.id).indexOf(this.state.productId);
 
@@ -216,7 +225,7 @@ class ModificarPaquete extends Component{
             }
             // if(this.state.image) request.append('image', this.state.image, this.state.image.name);
             // console.log(this.props)
-            let { status, message, paquete } = await this.props.modificarPaquete(request, this.state.id);
+            let { status, paquete } = await this.props.modificarPaquete(request, this.state.id);
             
             if(status === 200){
                 this.props.actualizarLista(paquete, this.props.posicion)
@@ -236,12 +245,9 @@ class ModificarPaquete extends Component{
     }
 
     handleDelete = (id) =>{
-        console.log('state packageProducts', this.state.packageProdcuts);
         let packageProdcuts = this.state.packageProdcuts.filter(p => {
             return p.productId !== id;
         });
-        console.log('filtered packageProducts', packageProdcuts);
-        //ver aca porque se estan borrando todos
         this.setState({ packageProdcuts });
     }
 
