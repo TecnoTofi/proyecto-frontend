@@ -258,6 +258,12 @@ class App extends Component {
     return { status, message, producto };
   }
 
+  registroProductosBulk = async (request) => {
+    let token = cookies.get('access_token');
+    return await ProductFunctions.registroProductosBulk(url, token, request);
+  }
+
+
   modificarProducto = async (request, productId) => {
     let token = cookies.get('access_token');
     let { status, message, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
@@ -414,6 +420,7 @@ class App extends Component {
             getNotAssociated={this.getNotAssociatedProducts}
             companies={this.state.companies}
             registroEmpresaProducto={this.asociarProducto}
+            registroProductosBulk={this.registroProductosBulk}
             getProductosByCompany = {this.getProductsByCompany}
             crearPaquete={this.crearPaquete}
           />

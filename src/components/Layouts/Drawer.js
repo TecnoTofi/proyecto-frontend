@@ -21,6 +21,7 @@ import HistorialIcon from '@material-ui/icons/Assignment';
 import AssociateForm from '../Productos/AssociateForm';
 import AltaPaquete from '../Paquetes/AltaPaquete';
 import AltaProducto from '../Productos/AltaProducto';
+import CargaBulk from '../Productos/CargaBulk';
 
 const styles = {
   list: {
@@ -108,6 +109,10 @@ class Drawer extends React.Component {
             getProducts={this.props.getNotAssociated} 
             // companies={this.props.companies} 
             onClick={this.props.onClickAssociate}
+          />
+          <CargaBulk
+          companyId={this.props.companyId}
+          onClick={this.props.onClickProductsBulk} 
           />
           <AltaPaquete 
             getProducts={this.props.getProductosByCompany}

@@ -180,6 +180,29 @@ const eliminarProducto = async (url, token, id) =>{
     return { status, message };
 };
 
+const registroProductosBulk = (url, token, request) => {
+    if(token){
+        let instance = axios.create({
+            baseURL: `${url}/api/product/bulk`,
+            method: 'post',
+            headers: {token: token},
+            data: request
+        });
+
+        instance()
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+    else{
+        console.log('No hay token');
+        return null;
+    }
+};
+
 export default {
     getAllProducts,
     getProductsByCompany,
@@ -191,4 +214,5 @@ export default {
     getProductById,
     getCompanyProductsByProduct,
     getNotAssociated,
+    registroProductosBulk
 }

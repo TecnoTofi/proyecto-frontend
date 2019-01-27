@@ -58,6 +58,7 @@ function Header(props) {
               onClickAssociate={props.registroEmpresaProducto}
               onClickProductAssociate={props.registrarProducto}
               getProductosByCompany={props.getProductosByCompany}
+              onClickProductsBulk={props.registroProductosBulk}
               crearPaquete = {props.crearPaquete}
             />
           ) : null}
