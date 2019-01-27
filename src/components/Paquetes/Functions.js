@@ -29,7 +29,6 @@ const getPackageById = async (url, id) => {
                             res.json()
                           ))
                           .then(data => {
-                            // console.log('data', data);
                             data.imageUrl = `${url}/${data.imagePath}`;
                             data.esPackage = true;
                             data.products = data.products.map(p => {
@@ -66,7 +65,6 @@ const getPackagesByCompany = async (url, id) => {
 };
 
 const crearPaquete = async (url, token, request) =>{
-
   let response = await axios({
     method: 'post',
     url: `${url}/api/package`,
@@ -88,7 +86,6 @@ const crearPaquete = async (url, token, request) =>{
 };
 
 const modificarPaquete = async (url, token, request, id) => {
-
   let response = await axios({
     method: 'put',
     url: `${url}/api/package/${id}`,

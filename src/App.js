@@ -68,7 +68,6 @@ class App extends Component {
   }
 
   componentWillMount(){
-
     let token = cookies.get('access_token');
 
     if(token){
@@ -169,6 +168,7 @@ class App extends Component {
 
   modificarPerfil = async (request) => {
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
     if(status === 200) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
     else  this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -192,7 +192,9 @@ class App extends Component {
   }
 
   logout = async () => {
-    let { result, status } = await AuthFunctions.logout(url);
+    let token = cookies.get('access_token');
+    if(!token) return;
+    let { result, status } = await AuthFunctions.logout(url, token);
 
     if(result && status === 200){
       this.setState({
@@ -244,6 +246,7 @@ class App extends Component {
 
   registroProductoAsociacion = async (request) => {
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message, producto } = await ProductFunctions.registroProducto(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -252,6 +255,7 @@ class App extends Component {
 
   asociarProducto = async (request) => {
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message, producto } = await ProductFunctions.asociarProducto(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -260,12 +264,21 @@ class App extends Component {
 
   registroProductosBulk = async (request) => {
     let token = cookies.get('access_token');
-    return await ProductFunctions.registroProductosBulk(url, token, request);
+    if(!token) return;
+    let { status, errores } = await ProductFunctions.registroProductosBulk(url, token, request);
+    if(status === 201) this.props.enqueueSnackbar('Carga bulk finalizada con exito.', { variant: 'success' });
+    else{
+      for(let e of errores){
+        this.props.enqueueSnackbar(`${e.codigo} - ${e.mensaje}`, { variant: 'error' });
+      }
+    }
+    return { status, errores };
   }
 
 
   modificarProducto = async (request, productId) => {
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
     if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -274,6 +287,7 @@ class App extends Component {
 
   eliminarProducto = async (id) =>{
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message } = await ProductFunctions.eliminarProducto(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -282,6 +296,7 @@ class App extends Component {
 
   crearPaquete = async (request) =>{
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message, id } = await PackageFunctions.crearPaquete(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -290,6 +305,7 @@ class App extends Component {
 
   modificarPaquete = async (request, id) => {
     let token = cookies.get('access_token');
+    if(!token) return;
     let { status, message, paquete } = await PackageFunctions.modificarPaquete(url, token, request, id);
     if(status === 200) this.props.enqueueSnackbar('Paquete modificado exitosamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -298,6 +314,7 @@ class App extends Component {
 
   eliminarPaquete = async (id) =>{
     let token = cookies.get('access_token'); 
+    if(!token) return;
     let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
@@ -305,6 +322,9 @@ class App extends Component {
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
+    let token = cookies.get('access_token'); 
+    if(!token) return;
+
     if(producto.companyId === this.state.loggedUser.userCompanyId) return;
 
     let cart = CartFunctions.agregarAlCarrito(this.state.cart, producto, cantidad);
@@ -316,6 +336,9 @@ class App extends Component {
   }
   
   borrarItemCarrito = (id, esPackage, companyId) => {
+    let token = cookies.get('access_token'); 
+    if(!token) return;
+
     let cart = CartFunctions.borrarItemCarrito(this.state.cart, id, esPackage, companyId);
 
     this.setState({cart: cart}, () => this.cartTotalCalculate());
@@ -324,11 +347,17 @@ class App extends Component {
   }
 
   cambiarCantidadProdCarrito = async (id, esPackage, companyId,  cantidad) => {
+    let token = cookies.get('access_token'); 
+    if(!token) return;
+
     let cart = CartFunctions.cambiarCantidadProdCarrito(this.state.cart, id, esPackage, companyId, cantidad);
     this.setState({cart: cart}, () => this.cartTotalCalculate());
   }
 
   // cartEnvioChange = (id, value, selectedEnvio) => {
+  //   let token = cookies.get('access_token'); 
+  //   if(!token) return;
+
   //   let cart = CartFunctions.cartEnvioChange(this.state.cart, id, value, selectedEnvio);
   //   this.setState({cart: cart}, () => this.cartTotalCalculate());
   // }
@@ -354,6 +383,7 @@ class App extends Component {
   realizarPedido = async () => {
     let token = cookies.get('access_token');
     if(!token) return
+    
     let request = {
       userId: this.state.loggedUser.userId,
       buyerId: this.state.loggedUser.userCompanyId,

@@ -99,7 +99,6 @@ const getNotAssociated = async(url, id) => {
 }
 
 const registroProducto = async (url, token, request) => {
-
     let response = await axios({
         method: 'post',
         url: `${url}/api/product/company`,
@@ -119,7 +118,6 @@ const registroProducto = async (url, token, request) => {
 };
 
 const asociarProducto = async (url, token, request) => {
-
     let response = await axios({
         method: 'post',
         url: `${url}/api/product/associate`,
@@ -139,7 +137,6 @@ const asociarProducto = async (url, token, request) => {
 };
 
 const modificarProducto = async (url, token, request, productId, companyId) => {
-
     let response = await axios({
         method: 'put',
         url: `${url}/api/product/${productId}/company/${companyId}`,
@@ -180,27 +177,23 @@ const eliminarProducto = async (url, token, id) =>{
     return { status, message };
 };
 
-const registroProductosBulk = (url, token, request) => {
-    if(token){
-        let instance = axios.create({
-            baseURL: `${url}/api/product/bulk`,
-            method: 'post',
-            headers: {token: token},
-            data: request
-        });
+const registroProductosBulk = async (url, token, request) => {
+    let response = await axios({
+        method: 'post',
+        url: `${url}/api/product/bulk`,
+        headers: { 'Content-Type': 'application/json', token: token },
+        data: request
+    })
+    .then(res => {
+        if (res) return { status: res.status, errores: res.data };
+        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+    })
+    .catch(err => {
+        console.log(err);
+        return {status: err.response.status, errores: err.response.data};
+    });
 
-        instance()
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-    else{
-        console.log('No hay token');
-        return null;
-    }
+    return response;
 };
 
 export default {

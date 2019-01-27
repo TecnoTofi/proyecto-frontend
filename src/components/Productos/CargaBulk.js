@@ -3,9 +3,9 @@ import 'typeface-roboto';
 import Input from '@material-ui/core/Input';
 import ReadXlsxFile from 'read-excel-file';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import SelectMultiple from '../Helpers/SelectMultiple';
-import UploadImage from '../Helpers/UploadImage';
+// import TextField from '@material-ui/core/TextField';
+// import SelectMultiple from '../Helpers/SelectMultiple';
+// import UploadImage from '../Helpers/UploadImage';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -14,7 +14,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/AddBox';
-import Validator from 'validator';
 
 export default class ProductForm extends Component{
 
@@ -51,7 +50,7 @@ export default class ProductForm extends Component{
     onSubmit = (event)=> {
         event.preventDefault();
     
-        console.log(this.state);
+        // console.log(this.state);
 
             const request = new FormData();
       
@@ -80,41 +79,40 @@ export default class ProductForm extends Component{
             }
             json = json.substr(0, json.length-1) + "]";
             this.setState({products:json});
-            console.log(this.state);
+            // console.log(this.state);
         });
     }
 
     render(){
         return(
             <div>
-            <ListItem button  onClick={this.handleToggle}>
-                <ListItemIcon><AddIcon /></ListItemIcon>
-                <ListItemText primary='Carga bulk' />
-            </ListItem>
-            <Dialog
-                open={this.state.open}
-                onClose={this.handleToggle}
-                aria-labelledby="form-dialog-title"
+                <ListItem button  onClick={this.handleToggle}>
+                    <ListItemIcon><AddIcon /></ListItemIcon>
+                    <ListItemText primary='Carga bulk' />
+                </ListItem>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleToggle}
+                    aria-labelledby="form-dialog-title"
                 >
-                <DialogTitle id="form-dialog-title">Carga en bulk</DialogTitle>
-                <DialogContent>
-                    
-                    <Input 
-                          helper = {'Seleccione archivo excel'}
-                          type='file' 
-                          id='input' 
-                          onChange={this.input}
-
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleToggle} color="primary">
-                        Cancelar
-                    </Button>
-                    <Button onClick={this.onSubmit} color="primary" variant='contained'>
-                        Aceptar
-                    </Button>
-                </DialogActions>
+                    <DialogTitle id="form-dialog-title">Carga en bulk</DialogTitle>
+                    <DialogContent>
+                        <Input
+                            autoFocus
+                            helper = 'Seleccione archivo excel'
+                            type='file'
+                            id='input'
+                            onChange={this.input}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleToggle} color="primary">
+                            Cancelar
+                        </Button>
+                        <Button onClick={this.onSubmit} color="primary" variant='contained'>
+                            Aceptar
+                        </Button>
+                    </DialogActions>
                 </Dialog>
             </div>
         );

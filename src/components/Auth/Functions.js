@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-//retornar algo
 const verificarToken = async (url, token) => {
-    //cambiar a GET
     let request = new Request(`${url}/api/auth`, {
         method: 'POST',
         headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json', token: token}),
         credentials: 'same-origin',
-      })
-      let valido = false;
-      let data = await fetch(request)
+    })
+    let valido = false;
+    let data = await fetch(request)
                     .then(res => {
                         if(res.status === 200) valido = true;
                         // console.log('status', res.status);
@@ -51,9 +49,9 @@ const login = async (url, userEmail, userPassword) => {
 
 const logout = async (url) => {
     let request = new Request(`${url}/api/auth/logout`, {
-      method: 'POST',
-      headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
-      credentials: 'same-origin'
+    method: 'POST',
+    headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json'}),
+    credentials: 'same-origin'
     });
 
     let status = 0;

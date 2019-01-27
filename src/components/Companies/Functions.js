@@ -1,31 +1,3 @@
-// const getTypes = async (url) => {
-//     let tipos = await fetch(`${url}/api/company/type`)
-//                             .then(response => (
-//                               response.json()
-//                             ))
-//                             .then(data => {
-//                               // console.log('tipos empresa', data);
-//                               return data;
-//                               // this.setState({companyTypes: data});
-//                             })
-//                             .catch(err => console.log(err));
-//     return tipos;
-// };
-
-// const getCompanyCategories = async (url) => {
-//     let categories = await fetch(`${url}/api/company/rubros`)
-//                             .then(response => (
-//                               response.json()
-//                             ))
-//                             .then(data => {
-//                               // console.log('categorias empresa', data);
-//                               return data;
-//                               // this.setState({companyCategories: data});
-//                             })
-//                             .catch(err => console.log(err));
-//     return categories;
-// };
-
 const getAllCompanies = async (url) => {
   let companias = await fetch(`${url}/api/company`)
                           .then(response => (
@@ -56,10 +28,7 @@ const getCompanyById = async (url, id) => {
   return compania;
 };
 
-
 export default {
-    // getTypes,
-    // getCompanyCategories,
     getAllCompanies,
     getCompanyById
 }
