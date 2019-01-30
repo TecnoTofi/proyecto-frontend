@@ -408,6 +408,16 @@ class App extends Component {
     else this.props.enqueueSnackbar(message, { variant: 'error' });
   }
 
+  ajustarPrecioCategoria = async (category, request) => {
+    let token = cookies.get('access_token');
+    if(!token) return
+
+    let { status, message } = await ProductFunctions.ajustarPrecioCategoria(url, token, category, this.state.loggedUser.userCompanyId, request);
+    if(status === 200) this.props.enqueueSnackbar('Precios ajustados.', { variant: 'success' });
+    else this.props.enqueueSnackbar(message, { variant: 'error' });
+    return message;
+  }
+
   getReporteCompras = async () => {
     let token = cookies.get('access_token');
     if(!token) return
@@ -494,6 +504,7 @@ class App extends Component {
                       eliminarProducto={this.eliminarProducto}
                       modificarPaquete={this.modificarPaquete}
                       eliminarPaquete={this.eliminarPaquete}
+                      ajustarPrecioCategoria={this.ajustarPrecioCategoria}
                     />
                   ) : (
                     this.state.shownWindow === 'carrito' ? (

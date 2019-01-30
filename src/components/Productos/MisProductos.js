@@ -15,6 +15,7 @@ import { Typography } from '@material-ui/core';
 import Alert from './AlertDialog';
 import ModificarProducto from './ModificarProducto'
 import ModificarPaquete from '../Paquetes/ModificarPaquete';
+import AjustePrecioCategoria from './AjustePrecioCategoria';
 
 const styles = theme => ({
     root: {
@@ -88,62 +89,65 @@ class MisProductos extends Component{
                         {/* cambiar esto por una loading animation */}
                     </Typography>
                 ) : (
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>
-                                        Codigo
-                                    </TableCell>
-                                    <TableCell>
-                                        Nombre
-                                    </TableCell>
-                                    <TableCell>
-                                        Precio
-                                    </TableCell>
-                                    <TableCell>
-                                        Acciones
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.productos.map((product, indice) => (
-                                    <TableRow key={product.id}>
+                    <Fragment>
+                        <AjustePrecioCategoria categories={this.state.categories} ajustarPrecioCategoria={this.props.ajustarPrecioCategoria} />
+                        <Paper className={classes.root}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
                                         <TableCell>
-                                        {product.code ? product.code : 'Paquete'}
+                                            Codigo
                                         </TableCell>
                                         <TableCell>
-                                            {product.name}    
+                                            Nombre
                                         </TableCell>
                                         <TableCell>
-                                            {product.price}    
+                                            Precio
                                         </TableCell>
                                         <TableCell>
-                                            {!product.esPackage ?
-                                                <ModificarProducto
-                                                    product={product}
-                                                    categories={this.state.categories}
-                                                    modificar={this.props.modificarProducto}
-                                                    actualizarLista={this.handleEdit}
-                                                    posicion={indice}
-                                                />
-                                                :
-                                                <ModificarPaquete
-                                                    products={this.state.products}
-                                                    categories={this.state.categories}
-                                                    modificarPaquete={this.props.modificarPaquete}
-                                                    actualizarLista={this.handleEdit}
-                                                    posicion={indice}
-                                                    package={product}
-                                                /> 
-                                            }
-                                            <Alert productId={product.id} esPackage={product.esPackage} eliminar={this.handleDelete} />
+                                            Acciones
                                         </TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Paper>
+                                </TableHead>
+                                <TableBody>
+                                    {this.state.productos.map((product, indice) => (
+                                        <TableRow key={product.id}>
+                                            <TableCell>
+                                            {product.code ? product.code : 'Paquete'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {product.name}    
+                                            </TableCell>
+                                            <TableCell>
+                                                {product.price}    
+                                            </TableCell>
+                                            <TableCell>
+                                                {!product.esPackage ?
+                                                    <ModificarProducto
+                                                        product={product}
+                                                        categories={this.state.categories}
+                                                        modificar={this.props.modificarProducto}
+                                                        actualizarLista={this.handleEdit}
+                                                        posicion={indice}
+                                                    />
+                                                    :
+                                                    <ModificarPaquete
+                                                        products={this.state.products}
+                                                        categories={this.state.categories}
+                                                        modificarPaquete={this.props.modificarPaquete}
+                                                        actualizarLista={this.handleEdit}
+                                                        posicion={indice}
+                                                        package={product}
+                                                    /> 
+                                                }
+                                                <Alert productId={product.id} esPackage={product.esPackage} eliminar={this.handleDelete} />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Paper>
+                    </Fragment>
                 )}
             </Fragment>
         );

@@ -196,6 +196,30 @@ const registroProductosBulk = async (url, token, request) => {
     return response;
 };
 
+const ajustarPrecioCategoria = async (url, token, category, company, body) => {
+    let request = new Request(`${url}/api/product/company/${company}/category/${category}/price`, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', token: token}),
+        body: JSON.stringify(body)
+        });
+
+        let status;
+        let message = await fetch(request)
+                        .then((response) => {
+                            status = response.status
+                            return response.json();
+                        })
+                        .then(data => {
+                            if(data) return data.message;
+                            else return "Ocurrio un error";
+                        })
+                        .catch(err => {
+                            console.log(`Error al procesar la solicitud : ${err}`);
+                            return `Error al procesar la solicitud`;
+                        });
+    return { status, message };
+}
+
 export default {
     getAllProducts,
     getProductsByCompany,
@@ -207,5 +231,6 @@ export default {
     getProductById,
     getCompanyProductsByProduct,
     getNotAssociated,
-    registroProductosBulk
+    registroProductosBulk,
+    ajustarPrecioCategoria
 }
