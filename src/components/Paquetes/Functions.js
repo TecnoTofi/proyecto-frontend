@@ -47,7 +47,6 @@ const getPackagesByCompany = async (url, id) => {
                             res.json()
                           ))
                           .then(data => {
-                            // console.log('data', data);
                             let response = data.map(pack => {
                                         pack.imageUrl = `${url}/${pack.imagePath}`;
                                         pack.esPackage = true;
@@ -58,7 +57,6 @@ const getPackagesByCompany = async (url, id) => {
                                         return pack;
                                       });
                             return response;
-                            // return data
                           })
                           .catch(err => console.log(err));
     return paquetes;

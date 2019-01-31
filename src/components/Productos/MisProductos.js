@@ -40,8 +40,9 @@ class MisProductos extends Component{
         let productos = await this.props.getProductos(this.props.company);
         let paquetes = await this.props.getPaquetes(this.props.company);
         let categories = await this.props.getCategories(this.props.getCategories);
-        // console.log(paquetes);
+
         let listado = productos.concat(paquetes);
+        
         this.setState({
             productos: listado,
             products: productos,
