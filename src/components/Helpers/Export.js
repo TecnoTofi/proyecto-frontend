@@ -3,8 +3,8 @@ import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 // import HCFunctions from './Functions';
-import ItemVentas from './VentasItem';
-import ItemCompras from './ComprasItem';
+import ItemVentas from '../Reportes/VentasItem';
+import ItemCompras from '../Reportes/ComprasItem';
 import ReactDOMServer from "react-dom/server";
 import Button from '@material-ui/core/Button';
 import { render } from "react-dom";
@@ -30,7 +30,30 @@ const styles = theme => ({
         }
     }
 
-    async componentWillMount(){
+    async componentWillMount() {
+        this.getInfo();
+    }
+
+    async componentWillReceiveProps(){
+        this.getInfo();
+    }
+
+    getInfo = async () => {
+        let band = await this.props.bandera;
+        console.log(band);
+        await this.setState({bandera: band});
+
+        if(this.props.bandera === "ventas"){
+            let data = await this.props.ventas;
+            if(data) this.setState({data: data});
+            console.log(this.state);
+        }
+        else if(this.props.bandera === "compras"){
+            let data = await this.props.pedidos;
+            if(data) this.setState({data: data});
+        }
+    }
+    /*async componentWillMount(){
         if(this.props.bandera === "ventas"){
             let data = await this.props.getTransactions();
             if(data) this.setState({data: data});
@@ -40,28 +63,28 @@ const styles = theme => ({
             if(pedidos) this.setState({data: pedidos});
         }
         
-    }
+    }*/
 
     print = () => {
         if(this.state.bandera === "ventas"){
             const string = renderToString(<Fragment>
-                {this.state.transacciones.map(transaction => (
+                {this.state.data.map(transaction => (
                     <ItemVentas key={transaction.id} transaction={transaction} />
                 ))}
             </Fragment>);
             const pdf = new jsPDF("p", "mm", "a4");
             pdf.fromHTML(string);
-            pdf.save("pdf");
+            pdf.save("ventas.pdf");
         }
-        else{
+        else if(this.state.bandera === "compras"){
             const string = renderToString(<Fragment>
-                {this.state.transacciones.map(transaction => (
-                    <ItemCompras key={transaction.id} transaction={transaction} />
+                {this.state.data.map(pedido => (
+                    <ItemCompras key={pedido.id} pedido={pedido} />
                 ))}
             </Fragment>);
             const pdf = new jsPDF("p", "mm", "a4");
             pdf.fromHTML(string);
-            pdf.save("pdf");
+            pdf.save("compras.pdf");
         }
         
       };

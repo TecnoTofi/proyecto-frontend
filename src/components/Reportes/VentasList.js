@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 // import { render } from "react-dom";
 import { renderToString } from "react-dom/server";
 import jsPDF from "jspdf";
+import Export from '../Helpers/Export'
 
 class ReporteVentas extends Component{
 
@@ -20,42 +21,6 @@ class ReporteVentas extends Component{
         if(transacciones) this.setState({transacciones: transacciones});
     }
 
-    print = () => {
-        const string = renderToString(<Fragment>
-            {this.state.transacciones.map(transaction => (
-                <Item key={transaction.id} transaction={transaction} />
-            ))}
-        </Fragment>);
-        const pdf = new jsPDF("p", "mm", "a4");
-        /*const columns = [
-          "id",
-          "amount",
-          "sellerId",
-          "buyerId",
-          "timestamp",
-          "products",
-          "packages",  
-          "delivery"      
-        ];*/
-
-        /*for(tran in this.state.transacciones){
-
-        }
-        var rows = [
-          [
-            ,
-            ,
-            ,
-            ,
-            
-          ]
-        ];*/
-        pdf.fromHTML(string);
-        let date = new Date();
-        
-        pdf.save(`${date}.pdf`);
-      };
-
     //Renderizar data
     render(){
         return(
@@ -66,9 +31,11 @@ class ReporteVentas extends Component{
                     ))}
                 </Fragment>
                 <div>
-                <Button onClick={this.print} color="primary" variant='contained'>
-                    Descargar
-                </Button>
+                <Export bandera = {"ventas"} ventas = {this.state.transacciones} 
+                    onClick={this.onClick}> 
+
+                </Export>
+
                 </div>
             </div>
         );

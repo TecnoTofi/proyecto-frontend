@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 // import HCFunctions from './Functions';
 import Item from './ComprasItem';
+import Export from '../Helpers/Export'
 
 class ReporteCompras extends Component{
 
@@ -18,11 +19,21 @@ class ReporteCompras extends Component{
     //Renderizar data
     render(){
         return(
+            <div>
             <Fragment>
                 {this.state.pedidos.map(pedido => (
                     <Item key={pedido.id} pedido={pedido} />
                 ))}
             </Fragment>
+            <div>
+                <Export bandera = {"compras"} pedidos = {this.state.pedidos} 
+                    onClick={this.onClick}> 
+
+                </Export>
+
+                </div>
+            </div>
+            
         );
     }
 }
