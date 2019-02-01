@@ -291,7 +291,7 @@ class App extends Component {
     let { status, message } = await ProductFunctions.eliminarProducto(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return message;
+    return status;
   }
 
   crearPaquete = async (request) =>{
@@ -318,7 +318,7 @@ class App extends Component {
     let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return message;
+    return status;
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {

@@ -50,23 +50,29 @@ class MisProductos extends Component{
         });
     }
 
-    handleDelete = (id, esPackage) =>{
+    handleDelete = async (id, esPackage) =>{
         let listado = [];
         if(esPackage) {
-            this.props.eliminarPaquete(id);
-            listado = this.state.productos.filter(prod => {
-                if(!prod.esPackage) return prod;
-                else return prod.id !== id;
-            });
+            let status = await this.props.eliminarPaquete(id);
+            if(status === 200){
+                listado = this.state.productos.filter(prod => {
+                    if(!prod.esPackage) return prod;
+                    else return prod.id !== id;
+                });
+                this.setState({productos: listado});
+            }
         }
         else{
-            this.props.eliminarProducto(id);
-            listado = this.state.productos.filter(prod => {
-                if(prod.esPackage) return prod;
-                else return prod.id !== id;
-            });
+            let status = await this.props.eliminarProducto(id);
+            console.log(status)
+            if(status === 200){
+                listado = this.state.productos.filter(prod => {
+                    if(prod.esPackage) return prod;
+                    else return prod.id !== id;
+                });
+                this.setState({productos: listado});
+            }
         }
-        this.setState({productos: listado});
     }
 
 
