@@ -26,8 +26,8 @@ import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
 
 const cookies = new Cookies();
 
-const url = 'https://backend-ort.herokuapp.com';
-// const url = 'http://localhost:3000';
+// const url = 'https://backend-ort.herokuapp.com';
+const url = 'http://localhost:3000';
 
 class App extends Component {
 
