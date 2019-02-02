@@ -4,12 +4,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-// import FormHelperText from '@material-ui/core/FormHelperText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import Select from '../Helpers/SelectForm';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 import SelectMultiple from '../Helpers/SelectMultiple';
@@ -48,7 +46,6 @@ class ModificarProducto extends Component{
     }
 
     componentWillMount(){
-
         let categories = this.props.product.categories.map(c => Number(c.id));
         
          this.setState({
@@ -72,26 +69,34 @@ class ModificarProducto extends Component{
             categoriesError: '',
             imageError: '',
         };
-
+        
         if(!this.state.name){
             isError = true;
             errors.nameError = 'Debe ingresar un nombre';
+        }
+        else if(!isNaN(this.state.name)){
+            isError = true;
+            errors.nameError='No puede constatar unicamente de numeros';
+        }
+        else if(!/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/.test(this.state.name)){
+            isError = true;
+            errors.nameError='Debe contener unicamente numeros y letras';
         }
         else if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
             isError = true;
             errors.nameError = 'Debe tener 3 y 30 caracteres';
         }
-
+        
         if(!this.state.description){
             isError = true;
-            errors.nameError = 'Debe ingresar una descripcion';
+            errors.descriptionError = 'Debe ingresar una descripcion';
         }
         else if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
             isError = true;
             errors.descriptionError = 'Debe tener entre 5 o 50 caracteres';
         }
         
-        if(!this.state.price || this.state.price <= 0){
+        if(!this.state.price){
             isError = true;
             errors.priceError = 'Debe ingresar un precio mayor a 0';
         }
@@ -99,12 +104,12 @@ class ModificarProducto extends Component{
             isError = true;
             errors.priceError = 'Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.price, {min: 1, max: 6})){
+        else if(this.state.price <= 0 || this.state.price > 999999){
             isError = true;
-            errors.priceError='Debe tener entre 1 y 6 caracteres';
+            errors.priceError='Debe ser mayor a 0 y menor a 100000';
         }
-
-        if(!this.state.stock || this.state.stock <= 0){
+        
+        if(!this.state.stock){
             isError = true;
             errors.stockError = 'Debe ingresar un stock mayor a 0';
         }
@@ -112,21 +117,21 @@ class ModificarProducto extends Component{
             isError = true;
             errors.stockError = 'Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.stock, {min: 1, max: 7})){
+        else if(this.state.stock <= 0 || this.state.stock > 999999){
             isError = true;
-            errors.stockError='Debe tener entre 1 y 7 caracteres';
+            errors.stockError='Debe ser mayor a 0 y menor a 1000000';
         }
-
+        
         if(this.state.categories.length === 0){
             isError = true;
             errors.categoriesError = 'Debe seleccionar al menos una categoria';
         }
-
+        
         if(this.state.image && this.state.image.type !== 'image/jpeg' && this.state.image.type !== 'image/jpg' && this.state.image.type !== 'image/png'){
             isError = true;
             errors.packageImageError="Debe subir una imagen JPEG, JPG o PNG";
         }
-
+        
         this.setState({
             ...this.state,
             ...errors
@@ -138,18 +143,6 @@ class ModificarProducto extends Component{
     handleToggle = () => {
         this.setState({
             open: !this.state.open,
-            // name: '',
-            // description: '',
-            // price: '',
-            // stock: '',
-            // //categories: [],
-            // image: null,
-            // nameError: '',
-            // descriptionError: '',
-            // priceError: '',
-            // stockError: '',
-            // //categoriesError: '',
-            // imageError: '',
         });
       }
 
@@ -172,16 +165,13 @@ class ModificarProducto extends Component{
 
             const request = new FormData();
 
-            // request.set('productId', this.state.productId)
             request.set('name', this.state.name);
             request.set('description', this.state.description);
             request.set('price', this.state.price);
             request.set('stock', this.state.stock);
-            // request.set('companyId', this.state.companyId);
             request.set('categories', this.state.categories);
 
             //image
-            // console.log(this.props)
             if(this.state.image) request.append('image', this.state.image, this.state.image.name);
             let { status, producto } = await this.props.modificar(request, this.state.id);
 
@@ -189,7 +179,6 @@ class ModificarProducto extends Component{
                 this.props.actualizarLista(producto, this.props.posicion);
                 this.handleToggle();
             }
-
         }
     }
 
@@ -204,7 +193,6 @@ class ModificarProducto extends Component{
     }
 
     render(){
-        // const { classes } = this.props;
         return(
             <div>
                 <IconButton onClick={this.handleToggle}>
@@ -226,8 +214,8 @@ class ModificarProducto extends Component{
                         type='text'
                         fullWidth
                         value={this.state.name}
-                        helperText={this.state.productNameError}
-                        error={this.state.productNameError ? true : false}
+                        helperText={this.state.nameError}
+                        error={this.state.nameError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -239,8 +227,8 @@ class ModificarProducto extends Component{
                         type='text'
                         value={this.state.description}
                         fullWidth
-                        helperText={this.state.productDescriptionError}
-                        error={this.state.productDescriptionError ? true : false}
+                        helperText={this.state.descriptionError}
+                        error={this.state.descriptionError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -252,8 +240,8 @@ class ModificarProducto extends Component{
                         type='number'
                         value={this.state.price}
                         fullWidth
-                        helperText={this.state.productPriceError}
-                        error={this.state.productPriceError ? true : false}
+                        helperText={this.state.priceError}
+                        error={this.state.priceError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />
@@ -265,8 +253,8 @@ class ModificarProducto extends Component{
                         type='number'
                         value={this.state.stock}
                         fullWidth
-                        helperText={this.state.productStockError}
-                        error={this.state.productStockError ? true : false}
+                        helperText={this.state.stockError}
+                        error={this.state.stockError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
                     />

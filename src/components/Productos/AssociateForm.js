@@ -59,6 +59,14 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productNameError ='Debe ingresar un nombre';
         }
+        else if(!isNaN(this.state.productName)){
+            isError = true;
+            errors.productNameError='No puede constatar unicamente de numeros';
+        }
+        else if(!/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/.test(this.state.productName)){
+            isError = true;
+            errors.productNameError='Debe contener unicamente numeros y letras';
+        }
         else if(!Validator.isLength(this.state.productName, {min: 3, max: 30})){
             isError = true;
             errors.productNameError='Debe tener entre 3 o 30 caracteres';
@@ -81,9 +89,9 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productPriceError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.productPrice, {min: 1, max: 6})){
+        else if(this.state.productPrice <= 0 || this.state.productPrice > 999999){
             isError = true;
-            errors.productPriceError='Debe tener entre 1 y 6 caracteres';
+            errors.productPriceError='Debe ser mayor a 0 y menor a 100000';
         }
 
         if(this.state.productStock <= 0){
@@ -94,9 +102,9 @@ export default class AssociateForm extends Component{
             isError = true;
             errors.productStockError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.productStock, {min: 1, max: 7})){
+        else if(this.state.productStock <= 0 || this.state.productStock > 999999){
             isError = true;
-            errors.productStockError='Debe tener entre 1 y 7 caracteres';
+            errors.productStockError='Debe ser mayor a 0 y menor a 1000000';
         }
 
         this.setState({

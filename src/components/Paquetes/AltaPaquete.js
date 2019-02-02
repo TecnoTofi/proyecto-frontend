@@ -19,24 +19,6 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from "@material-ui/core/IconButton";
 import { Typography } from '@material-ui/core';
 
-// const styles = theme => ({
-//     root: {
-//       width: '100%',
-//       maxWidth: 360,
-//       backgroundColor: theme.palette.background.paper,
-//       position: 'relative',
-//       overflow: 'auto',
-//       maxHeight: 300,
-//     },
-//     listSection: {
-//       backgroundColor: 'inherit',
-//     },
-//     ul: {
-//       backgroundColor: 'inherit',
-//       padding: 0,
-//     },
-//   });
-
 export default class AltaPaquete extends Component{
 
     constructor(props){
@@ -60,8 +42,10 @@ export default class AltaPaquete extends Component{
                 categoriesError: '',
                 imageError: '',
                 productId: 0, 
-                productosSeleccionados:[],
+                productosSeleccionados: [],
                 cantidad: '',
+                cantidadError: '',
+                productIdError: '',
             }
     };
 
@@ -81,6 +65,7 @@ export default class AltaPaquete extends Component{
             priceError: '',
             stockError: '',
             imageError: '',
+            categoriesError: ''
         };
 
         if (!this.state.code) {
@@ -100,6 +85,14 @@ export default class AltaPaquete extends Component{
             isError = true;
             errors.nameError = 'Debe ingresar un nombre';
         }
+        else if(!isNaN(this.state.name)){
+            isError = true;
+            errors.nameError='No puede constatar unicamente de numeros';
+        }
+        else if(!/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/.test(this.state.name)){
+            isError = true;
+            errors.nameError='Debe contener unicamente numeros y letras';
+        }
         else if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
             isError = true;
             errors.nameError='Debe tener 3 y 30 caracteres';
@@ -114,30 +107,30 @@ export default class AltaPaquete extends Component{
             errors.descriptionError='Debe tener entre 5 o 50 caracteres';
         }
 
-        if(this.state.price <= 0){
+        if(!this.state.price || this.state.price <= 0){
             isError = true;
             errors.priceError='Debe ingresar un precio mayor a 0';
         }
-        else if(!Validator.isNumeric(this.state.price)){
+        else if(isNaN(this.state.price)){
             isError = true;
             errors.priceError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.price, {min: 1, max: 6})){
+        else if(this.state.price <= 0 || this.state.price > 999999){
             isError = true;
-            errors.priceError='Debe tener entre 1 y 6 caracteres';
+            errors.priceError='Debe ser mayor a 0 y menor a 100000';
         }
 
-        if(this.state.stock <= 0){
+        if(!this.state.stock || this.state.stock <= 0){
             isError = true;
             errors.stockError='Debe ingresar un stock mayor a 0';
         }
-        else if(!Validator.isNumeric(this.state.stock)){
+        else if(isNaN(this.state.stock)){
             isError = true;
             errors.stockError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.stock, {min: 1, max: 7})){
+        else if(this.state.stock <= 0 || this.state.stock > 999999){
             isError = true;
-            errors.stockError='Debe tener entre 1 y 7 caracteres';
+            errors.stockError='Debe ser mayor a 0 y menor a 1000000';
         }
 
         if(this.state.categories.length === 0){
@@ -200,44 +193,25 @@ export default class AltaPaquete extends Component{
         event.preventDefault();
         
         const error = this.validate();
-        console.log(this.state);
+        
         if (!error){
-
-            //  const request = new FormData();
-            //  request.set('code', this.state.code);
-            //  request.set('name', this.state.name);
-            //  request.set('description', this.state.description);
-            //  request.set('price', this.state.price);
-            //  request.set('stock', this.state.stock);
-            //  request.set('categories', this.state.categories);
-            //  request.set('productos',this.state.productosSeleccionados);
-            //  request.append('image', this.state.image, this.state.image.name);
-
-            /*let request = {
-                price: this.state.price,
-                description: this.state.description,
-                companyId: this.props.companyId,
-                products: this.state.productosSeleccionados,
-                //packageImage:this.state.packageImage,
-            }*/
-            //console.log(request);
-
-            let request = {
-                // id: this.state.id,
-                // companyId: this.state.companyId,
-                code: this.state.code,
-                name: this.state.name,
-                description: this.state.description,
-                price: this.state.price,
-                stock: this.state.stock,
-                productos: this.state.productosSeleccionados,
-                categories: this.state.categories
+            if(this.state.productosSeleccionados.length === 0){
+                this.props.enqueueSnackbar('Debe ingresar al menos un producto', { variant: 'error' });
             }
-            
-            // this.props.crearPaquete(request);
-
-            let { status } = await this.props.crearPaquete(request);
-            if(status === 201) this.handleToggle();
+            else{
+                let request = {
+                    code: this.state.code,
+                    name: this.state.name,
+                    description: this.state.description,
+                    price: this.state.price,
+                    stock: this.state.stock,
+                    productos: this.state.productosSeleccionados,
+                    categories: this.state.categories
+                }
+    
+                let { status } = await this.props.crearPaquete(request);
+                if(status === 201) this.handleToggle();
+            }
         } 
     }
     
@@ -246,23 +220,52 @@ export default class AltaPaquete extends Component{
     }
 
     agregarProducto = () =>{
-        if(!this.state.productId || !this.state.cantidad) return;
-        let productosSeleccionados = this.state.productosSeleccionados;
-        let existe = productosSeleccionados.map(prod => prod.id).indexOf(this.state.productId);
+        let isError = false;
+        let errors = { cantidadError: '', productIdError: '' };
+        
+        if(!this.state.productId){
+            isError = true;
+            errors.productIdError = 'Debe seleccionar un producto';
+        }
 
-        if(existe > -1){
-            productosSeleccionados[existe].cantidad += Number(this.state.cantidad);
+        if(!this.state.cantidad){
+            isError = true;
+            errors.cantidadError = 'Debe ingresar una cantidad mayor a 0';
+        }
+        else if(isNaN(this.state.cantidad)){
+            isError = true;
+            errors.cantidadError = 'Debe ingresar solo numeros';
+        }
+        else if(this.state.cantidad <= 0){
+            isError = true;
+            errors.cantidadError = 'La cantidad debe ser mayor a 0';
+        }
+
+        if(isError){
+            this.setState({
+                ...this.state,
+                ...errors
+            });
         }
         else{
-            let name;
-            this.state.products.map(p => {
-                if(Number(p.id) === this.state.productId) name = p.name;
-                return null;
-            });
-            let prod = {'id': this.state.productId, name, 'cantidad': Number(this.state.cantidad)};
-            productosSeleccionados.push(prod);
+
+            let productosSeleccionados = this.state.productosSeleccionados;
+            let existe = productosSeleccionados.map(prod => prod.id).indexOf(this.state.productId);
+
+            if(existe > -1){
+                productosSeleccionados[existe].cantidad += Number(this.state.cantidad);
+            }
+            else{
+                let name;
+                this.state.products.map(p => {
+                    if(Number(p.id) === this.state.productId) name = p.name;
+                    return null;
+                });
+                let prod = {'id': this.state.productId, name, 'cantidad': Number(this.state.cantidad)};
+                productosSeleccionados.push(prod);
+            }
+            this.setState({'cantidad': '', 'productId': 0, productosSeleccionados, cantidadError: '', productIdError: ''});
         }
-        this.setState({'cantidad': '', 'productId': 0, productosSeleccionados});
     }
 
     onImageUpload = (image) => {
@@ -281,7 +284,6 @@ export default class AltaPaquete extends Component{
 
 
     render(){
-        //console.log(this.state.packages);
         return(
             <div>
                 <ListItem button onClick={this.handleToggle}>
@@ -396,7 +398,6 @@ export default class AltaPaquete extends Component{
                     <SelectForm
                             content={this.state.products}
                             onChange={this.onSelectChange}
-                            //selected={this.state.productId}
                             required
                             value= {this.state.productId}
                             label={'Productos'}
@@ -412,15 +413,15 @@ export default class AltaPaquete extends Component{
                         value={this.state.cantidad}
                         fullWidth
                         required
-                        //helperText={this.state.descriptionError}
-                        //error={this.state.descriptionError ? true : false}
                         onChange={this.onChange}
                         onKeyPress={this.onEnterPress}
+                        helperText={this.state.cantidadError}
+                        error={this.state.cantidadError ? true : false}
                     />
                     <Button onClick={this.agregarProducto} color="primary" variant='contained'>
                         Agregar
                     </Button> 
-                    <UploadImage onImageUpload={this.onImageUpload} />
+                    {/* <UploadImage onImageUpload={this.onImageUpload} /> */}
                     </DialogContent>
                      <DialogActions>
                      <Button onClick={this.handleToggle} color="primary">

@@ -5,7 +5,6 @@ import { Header } from './components/Layouts/';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
 import Home from './components/PaginasPrincipales/Home';
-import Dashboard from './components/PaginasPrincipales/Dashboard';
 import Profile from './components/User/Profile';
 import AuthFunctions from './components/Auth/Functions';
 import HelperFunctions from './components/Helpers/Functions';
@@ -27,8 +26,8 @@ import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
 
 const cookies = new Cookies();
 
-// const url = 'https://backend-ort.herokuapp.com';
-const url = 'http://localhost:3000';
+const url = 'https://backend-ort.herokuapp.com';
+// const url = 'http://localhost:3000';
 
 class App extends Component {
 
@@ -163,7 +162,10 @@ class App extends Component {
   }
 
   signup = async (request) => {
-    return await AuthFunctions.signup(url, request);
+    let { status, message } = await AuthFunctions.signup(url, request);
+    if(status === 201) this.props.enqueueSnackbar('Registro exitoso', { variant: 'success' });
+    else  this.props.enqueueSnackbar(message, { variant: 'error' });
+    return status;
   }
 
   modificarPerfil = async (request) => {
@@ -180,7 +182,7 @@ class App extends Component {
     if(result && status === 200) {
       cookies.set('access_token', result.token, { path: '/' });
       this.setState({
-        shownWindow: 'dashboard',
+        shownWindow: 'home',
         logged: true,
         loggedUser: {
           ...result.userData
@@ -232,7 +234,6 @@ class App extends Component {
     }
     else{
       console.log('Error al cerrar sesion');
-      // this.setearSnackbar(true, 'Error al cerrar sesion', 'error');
     }
   }
 
@@ -272,7 +273,7 @@ class App extends Component {
         this.props.enqueueSnackbar(`${e.codigo} - ${e.mensaje}`, { variant: 'error' });
       }
     }
-    return { status, errores };
+    return status;
   }
 
 
@@ -463,6 +464,7 @@ class App extends Component {
             registroProductosBulk={this.registroProductosBulk}
             getProductosByCompany = {this.getProductsByCompany}
             crearPaquete={this.crearPaquete}
+            enqueueSnackbar={this.props.enqueueSnackbar}
           />
           {this.state.shownWindow === 'home' ? (
             <Home />
@@ -505,6 +507,7 @@ class App extends Component {
                       modificarPaquete={this.modificarPaquete}
                       eliminarPaquete={this.eliminarPaquete}
                       ajustarPrecioCategoria={this.ajustarPrecioCategoria}
+                      enqueueSnackbar={this.props.enqueueSnackbar}
                     />
                   ) : (
                     this.state.shownWindow === 'carrito' ? (
@@ -564,9 +567,7 @@ class App extends Component {
                                       getDatos={this.getTopCincoMenosVendidos}
                                     />
                                   ) : (
-                                    <Dashboard
-                                      getDatos={this.getTopCincoMenosVendidos}
-                                    />
+                                    null
                                   )
                                 )
                               )

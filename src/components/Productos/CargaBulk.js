@@ -3,12 +3,10 @@ import 'typeface-roboto';
 import Input from '@material-ui/core/Input';
 import ReadXlsxFile from 'read-excel-file';
 import Button from '@material-ui/core/Button';
-// import TextField from '@material-ui/core/TextField';
-// import SelectMultiple from '../Helpers/SelectMultiple';
-// import UploadImage from '../Helpers/UploadImage';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -23,6 +21,7 @@ export default class ProductForm extends Component{
             open: false,
             companyId:0,
             products:[],
+            columnas: ['name', 'code', 'description', 'stock', 'price', 'categories'],
         };
     }
 
@@ -42,22 +41,21 @@ export default class ProductForm extends Component{
     handleToggle = () => {
         this.setState({
           open: !this.state.open,
-          //companyId:0,
           products:[],
         });
     }
 
-    onSubmit = (event)=> {
+    onSubmit = async (event)=> {
         event.preventDefault();
-    
-        // console.log(this.state);
 
+        if(this.state.products.length !== 0){
             const request = new FormData();
-      
+
             request.set('products', this.state.products);
             request.set('companyId', this.state.companyId);
-            this.props.onClick(request);
-            this.handleToggle();
+            let status = await this.props.onClick(request);
+            if(status = 201) this.handleToggle();
+        }
     }
     
     onEnterPress = (e) => {
@@ -66,20 +64,43 @@ export default class ProductForm extends Component{
 
     input = (input) =>{
         ReadXlsxFile(input.target.files[0]).then((rows) =>{
-            let cabe = rows[0];
-            let json = "[";
-            for (let fila = 1; fila < rows.length; fila++) {
-                let row = rows[fila];
-                json += "{";
-                    for (let columna = 0; columna < cabe.length; columna++) {
-                        json += "\"" + cabe[columna] + "\"" + ":";
-                        json += "\"" + row[columna] + "\"" + ","                                                 
-                    }
-                json = json.substr(0, json.length-1) +  "},";
+            if(rows.length === 0){
+                this.props.enqueueSnackbar('Archivo no cumple con los requisitos', { variant: 'error' });
             }
-            json = json.substr(0, json.length-1) + "]";
-            this.setState({products:json});
-            // console.log(this.state);
+            else{
+                let cabe = rows[0];
+                if(cabe.length < 6){
+                    this.props.enqueueSnackbar('Archivo no cumple con los requisitos', { variant: 'error' });
+                }
+                else if(cabe.length > 6){
+                    this.props.enqueueSnackbar('Archivo no cumple con los requisitos', { variant: 'error' });
+                }
+                else{
+                    let flag = false;
+                    for(let c of cabe){
+                        let indice = this.state.columnas.indexOf(c);
+                        if(indice === -1) flag = true;
+                    }
+
+                    if(flag){
+                        this.props.enqueueSnackbar('Archivo no cumple con los requisitos', { variant: 'error' });
+                    }
+                    else{
+                        let json = "[";
+                        for (let fila = 1; fila < rows.length; fila++) {
+                            let row = rows[fila];
+                            json += "{";
+                                for (let columna = 0; columna < cabe.length; columna++) {
+                                    json += "\"" + cabe[columna] + "\"" + ":";
+                                    json += "\"" + row[columna] + "\"" + ",";                                    
+                                }
+                            json = json.substr(0, json.length-1) +  "},";
+                        }
+                        json = json.substr(0, json.length-1) + "]";
+                        this.setState({ products: json });
+                    }
+                }
+            }
         });
     }
 
@@ -96,6 +117,12 @@ export default class ProductForm extends Component{
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">Carga en bulk</DialogTitle>
+                    <DialogContentText id="alert-dialog-description">
+                        Formato de Excel: name | code | description | stock | price | categories
+                    </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        Las categorias son numericas separadas por coma
+                    </DialogContentText>
                     <DialogContent>
                         <Input
                             autoFocus

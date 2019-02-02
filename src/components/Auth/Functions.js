@@ -71,13 +71,30 @@ const logout = async (url) => {
 };
 
 const signup = async (url, request) => {
-    await axios.post(`${url}/api/auth/signup`, request)
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+    // await axios.post(`${url}/api/auth/signup`, request)
+    //             .then(res => {
+    //                 console.log(res);
+    //             })
+    //             .catch(err => {
+    //                 console.log(err);
+    //             });
+
+    let response = await axios({
+        method: 'post',
+        url: `${url}/api/auth/signup`,
+        headers: { 'Content-Type': 'application/json' },
+        data: request
+    })
+    .then(res => {
+        if (res) return { status: res.status, message: res.data.message };
+        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+    })
+    .catch(err => {
+        console.log(`Error al realizar registro ${err}`);
+        return {status: err.response.status, errores: err.response.data};
+    });
+
+    return response;
 }
 
 export default {

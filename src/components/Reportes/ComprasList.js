@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-// import HCFunctions from './Functions';
 import Item from './ComprasItem';
 import Export from '../Helpers/Export'
+import Typography from '@material-ui/core/Typography';
 
 class ReporteCompras extends Component{
 
@@ -20,18 +20,23 @@ class ReporteCompras extends Component{
     render(){
         return(
             <div>
-            <Fragment>
-                {this.state.pedidos.map(pedido => (
-                    <Item key={pedido.id} pedido={pedido} />
-                ))}
-            </Fragment>
-            <div>
-                <Export bandera = {"compras"} pedidos = {this.state.pedidos} 
-                    onClick={this.onClick}> 
-
-                </Export>
-
-                </div>
+                <Fragment>
+                    {this.state.pedidos.map(pedido => (
+                        <Item key={pedido.id} pedido={pedido} />
+                    ))}
+                </Fragment>
+                    {this.state.pedidos.length > 0 ? (
+                        <Export
+                            bandera = {"compras"}
+                            pedidos = {this.state.pedidos} 
+                            onClick={this.onClick}
+                        >
+                        </Export>
+                    ) : (
+                        <Typography variant='body2'>
+                            Aun no tiene compras realizadas
+                        </Typography>
+                    )}
             </div>
             
         );

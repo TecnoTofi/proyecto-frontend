@@ -27,7 +27,6 @@ function formatDate(date) {
     ]
     let weekDay = date.getDay();
     let day = date.getDate();
-    console.log(day);
     let month = date.getMonth();
     let year = date.getFullYear();
   
@@ -44,6 +43,11 @@ const ReporteComprasItem = (props) => {
             <Typography variant='h5'>
                 Total - ${props.pedido.amount}
             </Typography>
+            {props.pedido.voucher ? (
+                <Typography variant='h5'>
+                    Voucher: {props.pedido.voucher.voucher} - Tipo: {props.pedido.voucher.type} - Valor: {props.pedido.voucher.value}
+                </Typography>
+            ) : (null)}
             <Divider />
             {props.pedido.transactions.map(transaction => (
                 <Fragment key={transaction.id}>

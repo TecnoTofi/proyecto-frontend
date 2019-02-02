@@ -111,7 +111,7 @@ const registroProducto = async (url, token, request) => {
     })
     .catch(err => {
         console.log(`Error al dar de alta el producto ${err}`);
-        return {status: 500, message: err};
+        return {status: err.response.status, errores: err.response.data};
     });
 
     return response;
@@ -130,7 +130,7 @@ const asociarProducto = async (url, token, request) => {
     })
     .catch(err => {
         console.log(`Error al asociar el producto ${err}`);
-        return {status: 500, message: err};
+        return {status: err.response.status, errores: err.response.data};
     });
 
     return response;
@@ -149,7 +149,7 @@ const modificarProducto = async (url, token, request, productId, companyId) => {
     })
     .catch(err => {
         console.log(`Error al modificar el producto ${err}`);
-        return {status: 500, message: err};
+        return {status: err.response.status, errores: err.response.data};
     });
 
     return response;
@@ -173,6 +173,7 @@ const eliminarProducto = async (url, token, id) =>{
                         })
                         .catch(err => {
                             console.log(`Error al eliminar producto : ${err}`);
+                            return {status: err.response.status, errores: err.response.data};
                         });
     return { status, message };
 };
@@ -215,7 +216,7 @@ const ajustarPrecioCategoria = async (url, token, category, company, body) => {
                         })
                         .catch(err => {
                             console.log(`Error al procesar la solicitud : ${err}`);
-                            return `Error al procesar la solicitud`;
+                            return {status: err.response.status, errores: err.response.data};
                         });
     return { status, message };
 }

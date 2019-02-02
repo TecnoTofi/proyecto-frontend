@@ -111,14 +111,16 @@ class Drawer extends React.Component {
             onClick={this.props.onClickAssociate}
           />
           <CargaBulk
-          companyId={this.props.companyId}
-          onClick={this.props.onClickProductsBulk} 
+            companyId={this.props.companyId}
+            onClick={this.props.onClickProductsBulk}
+            enqueueSnackbar={this.props.enqueueSnackbar}
           />
           <AltaPaquete 
             getProducts={this.props.getProductosByCompany}
             companyId={this.props.companyId}
             crearPaquete = {this.props.crearPaquete}
             getCategories={this.props.getCategories}
+            enqueueSnackbar={this.props.enqueueSnackbar}
           />
         <Divider />
             {/* <ListItem button>

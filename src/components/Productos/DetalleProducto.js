@@ -119,7 +119,7 @@ class DetalleProducto extends Component{
                                             {product.name}    
                                         </TableCell>
                                         <TableCell>
-                                            {product.price}    
+                                            ${product.price}    
                                         </TableCell>
                                         <TableCell>
                                             {product.description}    

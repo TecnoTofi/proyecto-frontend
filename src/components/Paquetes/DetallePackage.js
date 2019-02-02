@@ -9,7 +9,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-// import IconButton from "@material-ui/core/IconButton";
 import CardMedia from '@material-ui/core/CardMedia';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 import Button from '@material-ui/core/Button';
@@ -25,7 +24,6 @@ import Grid from '@material-ui/core/Grid';
 const styles = theme => ({
     root: {
       width: '100%',
-    //   marginTop: theme.spacing.unit * 3,
       overflowX: 'auto'
     },
     table: {
@@ -42,12 +40,10 @@ class DetallePackage extends Component{
         paquete: {},
         dense: false,
         secondary: true,
-        // companyProducts:[],
     }
 
     async componentWillMount(){
         let paquete = await this.props.getPackageById(this.props.packageId);
-        // console.log('paquete', paquete);
         await this.setState({
             paquete: paquete
         });
@@ -68,8 +64,6 @@ class DetallePackage extends Component{
     render(){
         const { classes } = this.props;
         const { dense } = this.state;
-        // const { categories } = this.state.paquete;
-        // console.log(categories);
 
         return (
             <Fragment>
@@ -110,7 +104,6 @@ class DetallePackage extends Component{
                         <Divider variant="middle" />
                         {this.state.paquete.products ? (
                             <Fragment>
-                                {/* <Grid container spacing={16}> */}
                                 <Grid item xs={12} md={6}>
                                     <Typography variant="h6" className={classes.title}>
                                         Productos
@@ -123,7 +116,7 @@ class DetallePackage extends Component{
                                                         <Avatar alt={p.imageName} src={p.imageUrl} className={classes.avatar} />
                                                     </ListItemAvatar>
                                                     <ListItemText
-                                                        primary={p.name}
+                                                        primary={p.name + ' x ' + p.quantity}
                                                         secondary={p.description}
                                                     />
                                                 </ListItem>

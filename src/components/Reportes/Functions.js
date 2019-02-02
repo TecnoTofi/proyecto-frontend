@@ -27,7 +27,6 @@ const getPedidosByUser = async (url, token, userId) => {
                             .then(data => {
                                 if(data){
                                     if(status === 200){
-                                        console.log(data);
                                         return data;
                                     }
                                     console.log('User no tiene pedidos');
@@ -130,7 +129,6 @@ const getTopCincoMasVendidos = async (url, token, id, date) => {
                                 response.json()
                             ))
                             .then(data => {
-                                console.log('data', data)
                                 return data;
                             })
                             .catch(err => console.log(err));

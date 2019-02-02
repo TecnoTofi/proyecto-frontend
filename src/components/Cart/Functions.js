@@ -43,21 +43,17 @@ const agregarAlCarrito = (cart, producto, cantidad=1) => {
 }
 
 const verificarExistenciaProd = (contenido, producto) => {
-	console.log('validando existencia prod')
 	let productoPos = 0;
 	let sellerPos = 0;
 
 	let res = contenido.filter((seller, i) => {
 		let encontrado = false;
 		if(seller.sellerId === producto.companyId){
-			console.log('dentro de if de seller === companyId')
 			sellerPos = i;
 			let x = 0;
 			if(!producto.esPackage){
-				console.log('producto no es paquete')
 				while(x < seller.productos.length && !encontrado){
 					if(seller.productos[x].id === producto.id){
-						console.log('producto ya esta');
 						encontrado = true;
 						productoPos = x;
 					}
@@ -65,10 +61,8 @@ const verificarExistenciaProd = (contenido, producto) => {
 				}
 			}
 			else{
-				console.log('producto es paquete');
 				while(x < seller.paquetes.length && !encontrado){
 					if(seller.paquetes[x].id === producto.id){
-						console.log('paquete ya esta');
 						encontrado = true;
 						productoPos = x;
 					}
@@ -83,12 +77,10 @@ const verificarExistenciaProd = (contenido, producto) => {
 }
 
 const verificarExistenciaSeller = (contenido, id) => {
-	console.log('validando existencia seller')
 	let sellerPos = 0;
 
 	let res = contenido.filter((seller, i) => {
 		if(seller.sellerId === id){
-			console.log('dentro if seller === id');
 			sellerPos = i;
 			return true;
 		}
@@ -119,14 +111,11 @@ const borrarItemCarrito = (cart, prodId, esPackage, companyId) => {
 
 const cambiarCantidadProdCarrito = (cart, prodId, esPackage, companyId, cantidad) => {
 	let product = {id: prodId, esPackage: esPackage, companyId};
-	console.log('product', product)
 	let seller = verificarExistenciaProd(cart.contenido, product);
-	console.log('seller', seller);
 	if(!esPackage) seller.res.productos[seller.productoPos].quantity = cantidad;
 	else seller.res.paquetes[seller.productoPos].quantity = cantidad;
 
 	cart.contenido[seller.sellerPos] = seller.res;
-	console.log(cart);
 	return cart;
 }
 
@@ -165,24 +154,20 @@ const calcularTotal = async (url, token, req, cart) => {
 							.catch(err => {
 								console.log('Error en fetch de calculo de carrito');
 							});
-    console.log('response', response)
 	let subTotalEnvios = 0;
 
 	cart.contenido.map(seller => {
 		seller.productos.map(prod => {
-			// subTotal += prod.price * prod.quantity;
 			if(prod.envio) subTotalEnvios += prod.priceEnvio
 			return true
 		});
 
 		seller.paquetes.map(pack => {
-			// subTotal += pack.price * pack.quantity;
 			if(pack.envio) subTotalEnvios += pack.priceEnvio
 			return true
 		});
 		return true;
 	});
-	// total = subTotal + subTotalEnvios;
 	cart.subTotal = response.sumaProds + response.sumaPacks;
 	cart.subTotalEnvios = subTotalEnvios;
 	cart.total = response.total + subTotalEnvios;
@@ -205,18 +190,11 @@ const realizarPedido = async (req, url, token) => {
 						return res.json()
 					})
 					.then(data => {
-						// if(res.status === 200){
-						// 	console.log('Se realizo el pedido bien');
 							console.log(data);
 							return data;
-						// }
-						// else{
-						// 	console.log('El pedido no salio bien');
-						// }
 					})
 					.catch(err => {
 						console.log(`Error en fetch realizar pedido: ${err}`);
-						//hacer llamado a snackbar para mostrar mensaje
 					})
 	return { message, status };
 }

@@ -51,7 +51,6 @@ function Header(props) {
               cambiarVentana={props.cambiarVentana}
               companyId={props.loggedUser.userCompanyId}
               getCategories={props.getCategories}
-              // onClickProduct={props.registrarProducto}
               getProducts={props.getProducts}
               getNotAssociated={props.getNotAssociated}
               companies={props.companies}
@@ -60,6 +59,7 @@ function Header(props) {
               getProductosByCompany={props.getProductosByCompany}
               onClickProductsBulk={props.registroProductosBulk}
               crearPaquete = {props.crearPaquete}
+              enqueueSnackbar={props.enqueueSnackbar}
             />
           ) : null}
             <Typography

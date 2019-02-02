@@ -262,9 +262,9 @@ class SignupForm extends Component{
             isError = true;
             errors.companyDoorNumberError='Debe contener unicamente numeros y letras';
         }
-        else if(this.state.userDoorNumber && !Validator.isLength(this.state.userDoorNumber, {min: 1, max: 5})){
+        else if(this.state.companyDoorNumber && !Validator.isLength(this.state.companyDoorNumber, {min: 1, max: 5})){
             isError = true;
-            errors.userDoorNumberError='Debe tener entre 1 y 5 caracteres';
+            errors.companyDoorNumberError='Debe tener entre 1 y 5 caracteres';
         }
         
         if(this.state.type === 0 || this.state.type === 0){
@@ -348,7 +348,7 @@ class SignupForm extends Component{
         this.setState({rubro: Number(r)});
     }
 
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
         e.preventDefault();
         const error = this.validate();
 
@@ -379,8 +379,8 @@ class SignupForm extends Component{
             //image
             request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
 
-            this.props.onClick(request);
-            this.handleToggle();
+            let status = await this.props.onClick(request);
+            if(status === 201) this.handleToggle();
         }
     }
 

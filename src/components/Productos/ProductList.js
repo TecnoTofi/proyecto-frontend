@@ -3,9 +3,9 @@ import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import SelectMultiple from '../Helpers/SelectMultiple';
 import Grid from '@material-ui/core/Grid';
 import Item from './ProductItem';
-import SelectMultiple from '../Helpers/SelectMultiple';
 import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
@@ -119,7 +119,7 @@ class List extends Component{
                                     // margin='dense'
                                     className={classes.textField}
                                     name='searchName'
-                                    placeholder='Nombre empresa'
+                                    placeholder='Nombre producto'
                                     onChange={this.onSearchNameChange}
                                 />
                                 <SelectMultiple

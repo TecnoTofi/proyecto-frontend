@@ -4,12 +4,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-// import FormHelperText from '@material-ui/core/FormHelperText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import Select from '../Helpers/SelectForm';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 import IconButton from "@material-ui/core/IconButton";
@@ -18,8 +16,6 @@ import SelectForm from '../Helpers/SelectForm';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Typography } from '@material-ui/core';
-
-
 
 const styles = theme => ({
     leftIcon: {
@@ -36,7 +32,6 @@ class ModificarPaquete extends Component{
             products: [],
             id: 0,
             code: '',
-            // companyId: 0,
             name: '',
             description: '',
             price: 0,
@@ -52,6 +47,8 @@ class ModificarPaquete extends Component{
             stockError: '',
             packageImageError: '',
             categoriesError: '',
+            cantidadError: '',
+            productIdError: '',
         }
     }
 
@@ -66,7 +63,6 @@ class ModificarPaquete extends Component{
          this.setState({
             id: this.props.package.id,
             code: this.props.package.code,
-            // companyId: this.props.package.companyId,
             name: this.props.package.name,
             description: this.props.package.description,
             price: Number(this.props.package.price),
@@ -86,51 +82,58 @@ class ModificarPaquete extends Component{
             stockError: '',
             packageImageError: '',
             categoriesError: '',
-            
         };
 
         if(!this.state.name){
             isError = true;
             errors.nameError = 'Debe ingresar un nombre';
         }
+        else if(!isNaN(this.state.name)){
+            isError = true;
+            errors.nameError='No puede constatar unicamente de numeros';
+        }
+        else if(!/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/.test(this.state.name)){
+            isError = true;
+            errors.nameError='Debe contener unicamente numeros y letras';
+        }
         else if(!Validator.isLength(this.state.name, {min: 3, max: 30})){
             isError = true;
-            errors.nameError = 'Debe tener 3 y 30 caracteres';
+            errors.nameError='Debe tener 3 y 30 caracteres';
         }
 
         if(!this.state.description){
             isError = true;
-            errors.nameError = 'Debe ingresar una descripcion';
+            errors.descriptionError = 'Debe ingresar una descripcion';
         }
         else if(!Validator.isLength(this.state.description, {min: 5, max: 50})){
             isError = true;
             errors.descriptionError = 'Debe tener entre 5 o 50 caracteres';
         }
-        
+        console.info('prueba 1')
         if(!this.state.price || this.state.price <= 0){
             isError = true;
-            errors.priceError = 'Debe ingresar un precio mayor a 0';
+            errors.priceError='Debe ingresar un precio mayor a 0';
         }
         else if(isNaN(this.state.price)){
             isError = true;
-            errors.priceError = 'Debe contener unicamente numeros';
+            errors.priceError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.price, {min: 1, max: 6})){
+        else if(this.state.price <= 0 || this.state.price > 999999){
             isError = true;
-            errors.priceError='Debe tener entre 1 y 6 caracteres';
+            errors.priceError='Debe ser mayor a 0 y menor a 100000';
         }
-
+        console.info('prueba 2')
         if(!this.state.stock || this.state.stock <= 0){
             isError = true;
-            errors.stockError = 'Debe ingresar un stock mayor a 0';
+            errors.stockError='Debe ingresar un stock mayor a 0';
         }
         else if(isNaN(this.state.stock)){
             isError = true;
-            errors.stockError = 'Debe contener unicamente numeros';
+            errors.stockError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.stock, {min: 1, max: 7})){
+        else if(this.state.stock <= 0 || this.state.stock > 999999){
             isError = true;
-            errors.stockError='Debe tener entre 1 y 7 caracteres';
+            errors.stockError='Debe ser mayor a 0 y menor a 1000000';
         }
 
         if(this.state.categories.length === 0){
@@ -173,24 +176,52 @@ class ModificarPaquete extends Component{
     }
 
     agregarProducto = () =>{
-        if(!this.state.productId || !this.state.cantidad) return;
-        let packageProdcuts = this.state.packageProdcuts;
-        let existe = packageProdcuts.map(p => p.id).indexOf(this.state.productId);
+        let isError = false;
+        let errors = { cantidadError: '', productIdError: '' };
+        
+        if(!this.state.productId){
+            isError = true;
+            errors.productIdError = 'Debe seleccionar un producto';
+        }
 
-        if(existe > -1){
-            packageProdcuts[existe].cantidad += Number(this.state.cantidad);
+        if(!this.state.cantidad){
+            isError = true;
+            errors.cantidadError = 'Debe ingresar una cantidad mayor a 0';
+        }
+        else if(isNaN(this.state.cantidad)){
+            isError = true;
+            errors.cantidadError = 'Debe ingresar solo numeros';
+        }
+        else if(this.state.cantidad <= 0){
+            isError = true;
+            errors.cantidadError = 'La cantidad debe ser mayor a 0';
+        }
+
+        if(isError){
+            this.setState({
+                ...this.state,
+                ...errors
+            });
         }
         else{
-            let length = this.state.products.length;
-            for(let i = 0; i < length; i++) {
-                if (Number(this.state.products[i].id) === this.state.productId) {
-                    let prod = { 'productId': this.state.productId, name: this.state.products[i].name, 'quantity': Number(this.state.cantidad) };
-                    packageProdcuts.push(prod);
-                    break;
+            let packageProdcuts = this.state.packageProdcuts;
+            let existe = packageProdcuts.map(p => p.id).indexOf(this.state.productId);
+    
+            if(existe > -1){
+                packageProdcuts[existe].cantidad += Number(this.state.cantidad);
+            }
+            else{
+                let length = this.state.products.length;
+                for(let i = 0; i < length; i++) {
+                    if (Number(this.state.products[i].id) === this.state.productId) {
+                        let prod = { 'productId': this.state.productId, name: this.state.products[i].name, 'quantity': Number(this.state.cantidad) };
+                        packageProdcuts.push(prod);
+                        break;
+                    }
                 }
             }
+            this.setState({'cantidad': '', 'productId': 0, packageProdcuts});
         }
-        this.setState({'cantidad': '', 'productId': 0, packageProdcuts});
     }
 
     onSubmit = async (e) => {
@@ -198,38 +229,25 @@ class ModificarPaquete extends Component{
         const error = this.validate();
 
         if (!error){
-
-            /*const request = new FormData();
-
-            //request.set('name', this.state.name);
-            request.set('description', this.state.description);
-            request.set('price', this.state.price);
-            request.set('companyId', this.state.companyId);
-            request.set('products',this.state.productosSeleccionados);
-            request.append('image', this.state.packageImage, this.state.packageImage.name);
-            //request.set('categories', this.state.categories);
-            //image
-            console.log(this.props)
-            if(this.state.packageImage) request.append('image', this.state.packageImage, this.state.packageImage.name);
-            */
-            let request = {
-                // id: this.state.id,
-                // companyId: this.state.companyId,
-                code: this.state.code,
-                name: this.state.name,
-                description: this.state.description,
-                price: this.state.price,
-                stock: this.state.stock,
-                products: this.state.packageProdcuts,
-                categories: this.state.categories
+            if(this.state.packageProdcuts.length === 0){
+                this.props.enqueueSnackbar('Debe ingresar al menos un producto', { variant: 'error' });
             }
-            // if(this.state.image) request.append('image', this.state.image, this.state.image.name);
-            // console.log(this.props)
-            let { status, paquete } = await this.props.modificarPaquete(request, this.state.id);
-            
-            if(status === 200){
-                this.props.actualizarLista(paquete, this.props.posicion)
-                this.handleToggle();
+            else{
+                let request = {
+                    code: this.state.code,
+                    name: this.state.name,
+                    description: this.state.description,
+                    price: this.state.price,
+                    stock: this.state.stock,
+                    products: this.state.packageProdcuts,
+                    categories: this.state.categories
+                }
+                let { status, paquete } = await this.props.modificarPaquete(request, this.state.id);
+                
+                if(status === 200){
+                    this.props.actualizarLista(paquete, this.props.posicion)
+                    this.handleToggle();
+                }
             }
         }
     }
@@ -252,7 +270,6 @@ class ModificarPaquete extends Component{
     }
 
     render(){
-        // const { classes } = this.props;
         return(
             <div>
                 <IconButton onClick={this.handleToggle}>
@@ -355,7 +372,6 @@ class ModificarPaquete extends Component{
                         <SelectForm
                                 content={this.state.products}
                                 onChange={this.onSelectChange}
-                                //selected={this.state.productId}
                                 required
                                 value= {this.state.productId}
                                 label={'Productos'}
@@ -371,15 +387,15 @@ class ModificarPaquete extends Component{
                             value={this.state.cantidad}
                             fullWidth
                             required
-                            //helperText={this.state.descriptionError}
-                            //error={this.state.descriptionError ? true : false}
+                            helperText={this.state.cantidadError}
+                            error={this.state.cantidadError ? true : false}
                             onChange={this.onChange}
                             onKeyPress={this.onEnterPress}
                         />
                         <Button onClick={this.agregarProducto} color="primary" variant='contained'>
                             Agregar
                         </Button> 
-                        <UploadImage onImageUpload={this.onImageUpload} />
+                        {/* <UploadImage onImageUpload={this.onImageUpload} /> */}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleToggle} color="primary">

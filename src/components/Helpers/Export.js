@@ -2,12 +2,9 @@ import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-// import HCFunctions from './Functions';
 import ItemVentas from '../Reportes/VentasItem';
 import ItemCompras from '../Reportes/ComprasItem';
-import ReactDOMServer from "react-dom/server";
 import Button from '@material-ui/core/Button';
-import { render } from "react-dom";
 import { renderToString } from "react-dom/server";
 import jsPDF from "jspdf";
 
@@ -40,30 +37,17 @@ const styles = theme => ({
 
     getInfo = async () => {
         let band = await this.props.bandera;
-        console.log(band);
         await this.setState({bandera: band});
 
         if(this.props.bandera === "ventas"){
             let data = await this.props.ventas;
             if(data) this.setState({data: data});
-            console.log(this.state);
         }
         else if(this.props.bandera === "compras"){
             let data = await this.props.pedidos;
             if(data) this.setState({data: data});
         }
     }
-    /*async componentWillMount(){
-        if(this.props.bandera === "ventas"){
-            let data = await this.props.getTransactions();
-            if(data) this.setState({data: data});
-        }
-        else{
-            let pedidos = await this.props.getPedidos();
-            if(pedidos) this.setState({data: pedidos});
-        }
-        
-    }*/
 
     print = () => {
         if(this.state.bandera === "ventas"){

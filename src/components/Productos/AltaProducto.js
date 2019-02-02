@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import UploadImage from '../Helpers/UploadImage';
-// import SelectType from './SelectForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -14,11 +13,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/AddBox';
 import Validator from 'validator';
-// import InputLabel from '@material-ui/core/InputLabel';
-
-// import SelectForm from './SelectForm';
-// import AssociateIcon from '@material-ui/icons/Queue';
-
 
 export default class AltaProducto extends Component{
 
@@ -31,10 +25,7 @@ export default class AltaProducto extends Component{
             categories: [],
             categoryList:[],
             productImage: null,
-            //productos: [],
             companyId: 0,
-            //productId: 0,
-            //productName: '',
             productDescription: '',
             productPrice: '',
             productStock: '',
@@ -42,8 +33,6 @@ export default class AltaProducto extends Component{
             productCodeError: '',
             categoriesError: '',
             productImageError: '',
-            //productIdError: 0,
-            //productNameError: '',
             productDescriptionError: '',
             productPriceError: '',
             productStockError: ''
@@ -70,8 +59,6 @@ export default class AltaProducto extends Component{
             productCodeError: '',
             categoriesError: '',
             productImageError: '',
-            //productIdError: 0,
-            //productNameError: '',
             productDescriptionError: '',
             productPriceError: '',
             productStockError: ''
@@ -79,6 +66,14 @@ export default class AltaProducto extends Component{
         if(!this.state.productName){
             isError = true;
             errors.productNameError = 'Debe ingresar un nombre';
+        }
+        else if(!isNaN(this.state.productName)){
+            isError = true;
+            errors.productNameError='No puede constatar unicamente de numeros';
+        }
+        else if(!/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/.test(this.state.productName)){
+            isError = true;
+            errors.productNameError='Debe contener unicamente numeros y letras';
         }
         else if(!Validator.isLength(this.state.productName, {min: 3, max: 30})){
             isError = true;
@@ -102,6 +97,7 @@ export default class AltaProducto extends Component{
             isError = true;
             errors.categoriesError='Debe seleccionar al menos una categoria';
         }
+
         if(this.state.companyImage && this.state.companyImage.type !== 'image/jpeg' && this.state.companyImage.type !== 'image/jpg' && this.state.companyImage.type !== 'image/png'){
             isError = true;
             errors.productImageError="Debe subir una imagen JPEG, JPG o PNG";
@@ -116,38 +112,36 @@ export default class AltaProducto extends Component{
             errors.productDescriptionError='Debe tener entre 5 y 50 caracteres';
         }
 
-        if(this.state.productPrice <= 0){
+        if(!this.state.productPrice || this.state.productPrice <= 0){
             isError = true;
             errors.productPriceError='Debe ingresar un precio mayor a 0';
         }
-        else if(!Validator.isNumeric(this.state.productPrice)){
+        else if(isNaN(this.state.productPrice)){
             isError = true;
             errors.productPriceError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.productPrice, {min: 1, max: 6})){
+        else if(this.state.productPrice <= 0 || this.state.productPrice > 999999){
             isError = true;
-            errors.productPriceError='Debe tener entre 1 y 6 caracteres';
+            errors.productPriceError='Debe ser mayor a 0 y menor a 100000';
         }
 
-        if(this.state.productStock <= 0){
+        if(!this.state.productStock || this.state.productStock <= 0){
             isError = true;
             errors.productStockError='Debe ingresar un stock mayor a 0';
         }
-        else if(!Validator.isNumeric(this.state.productStock)){
+        else if(isNaN(this.state.productStock)){
             isError = true;
             errors.productStockError='Debe contener unicamente numeros';
         }
-        else if(!Validator.isLength(this.state.productStock, {min: 1, max: 7})){
+        else if(this.state.productStock <= 0 || this.state.productStock > 999999){
             isError = true;
-            errors.productStockError='Debe tener entre 1 y 7 caracteres';
+            errors.productStockError='Debe ser mayor a 0 y menor a 1000000';
         }
 
 
         this.setState({
             ...this.state,
             ...errors
-        }, () => {
-            console.log(this.state);
         });
 
         return isError;
@@ -162,8 +156,6 @@ export default class AltaProducto extends Component{
           categories: [],
           productImage: null,
           companyId:0,
-          //productId:0,
-          //productName: '',
           productDescription: '',
           productPrice:'',
           productStock: '',
@@ -172,17 +164,11 @@ export default class AltaProducto extends Component{
           categoriesError: '',
           productImageError: '',
           companyIdError:0,
-          //productIdError:0,
-          //productNameError: '',
           productDescriptionError: '',
           productPriceError:'',
           productStockError: '',
         });
       }
-
-    // onSelectChange = (tipo) => {
-    //     this.setState({category: Number(tipo)});
-    // }
 
     onSelectChange = (seleccionados) => {
         let selectedCategories = seleccionados.map(selected => {
@@ -205,7 +191,7 @@ export default class AltaProducto extends Component{
         event.preventDefault();
         
         const error = this.validate();
-        // console.log(this.state);
+
         if (!error){
             console.log('categories', this.state.categories);
             const request = new FormData();
