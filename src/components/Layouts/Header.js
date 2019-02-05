@@ -18,7 +18,7 @@ import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
     // width: 100+'%',
     // left: 0,
     // top: 0,
@@ -26,6 +26,8 @@ const styles = theme => ({
   },
   grow: {
     flexGrow: 1,
+    textAlign: 'right',
+    
   },
   menuButton: {
     marginLeft: -12,
@@ -40,7 +42,10 @@ const styles = theme => ({
   }
 });
 
+
+
 function Header(props) {
+  
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -66,7 +71,7 @@ function Header(props) {
               <Typography
                 variant="h6"
                 color="inherit"
-                className={classes.grow}
+                // className={classes.grow}
                 // onClick={() => {props.cambiarVentana('home')}}
               >
                 NuestraApp
@@ -80,48 +85,52 @@ function Header(props) {
               Dashboard
             </Button> */}
           {/* </NavLink> */}
-          <NavLink to='/companies' className={classes.link}>
-            <Button
-              color="inherit">
-              {/* onClick={() => {props.cambiarVentana('companies')}}> */}
-              <StoresIcon className={classes.leftIcon} />
-              Empresas
-            </Button>
-          </NavLink>
-          <NavLink to='/products' className={classes.link}>
-            <Button
-              color="inherit">
-              {/* onClick={() => {props.cambiarVentana('productsGeneric')}}> */}
-              <ProductsIcon className={classes.leftIcon} />
-              Productos
-            </Button>
-          </NavLink>
-          {props.logged ? (
-            <Fragment>
-              <NavLink to='/carrito' className={classes.link}>
-                <Button
-                  color="inherit">
-                  {/* onClick={() => {props.cambiarVentana('carrito')}}> */}
-                  <ShoppingCartIcon className={classes.leftIcon} />
-                  Carrito
-                </Button>
-              </NavLink>
-                <MenuUsername
-                  cambiarVentana={props.cambiarVentana}
-                  userName={props.loggedUser.userName}
-                  logout={props.logout}
-                  />
-            </Fragment>
-          ) : (
-            <Fragment>
-              <LoginForm onClick={props.login} />
-              <SignupForm onClick={props.signup}
-                  getTypes={props.getTypes} 
-                  getCategories={props.getRubros} 
-                  // getUserTypes={props.getUserTypes}
-              />
-            </Fragment>
-          )}
+          {/* {width >= 760 ? ( */}
+            <div className={classes.grow}>
+            <NavLink to='/companies' className={classes.link}>
+              <Button
+                color="inherit">
+                {/* onClick={() => {props.cambiarVentana('companies')}}> */}
+                <StoresIcon className={classes.leftIcon} />
+                Empresas
+              </Button>
+            </NavLink>
+            <NavLink to='/products' className={classes.link}>
+              <Button
+                color="inherit">
+                {/* onClick={() => {props.cambiarVentana('productsGeneric')}}> */}
+                <ProductsIcon className={classes.leftIcon} />
+                Productos
+              </Button>
+            </NavLink>
+            {props.logged ? (
+              <Fragment>
+                <NavLink to='/carrito' className={classes.link}>
+                  <Button
+                    color="inherit">
+                    {/* onClick={() => {props.cambiarVentana('carrito')}}> */}
+                    <ShoppingCartIcon className={classes.leftIcon} />
+                    Carrito
+                  </Button>
+                </NavLink>
+                  <MenuUsername
+                    cambiarVentana={props.cambiarVentana}
+                    userName={props.loggedUser.userName}
+                    logout={props.logout}
+                    />
+              </Fragment>
+            ) : (
+              <Fragment>
+                <LoginForm onClick={props.login} />
+                <SignupForm onClick={props.signup}
+                    getTypes={props.getTypes} 
+                    getCategories={props.getRubros} 
+                    // getUserTypes={props.getUserTypes}
+                />
+              </Fragment>
+            )}
+            </div>
+          {/* ) : null} */}
         </Toolbar>
       </AppBar>
     </div>

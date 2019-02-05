@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -40,7 +40,7 @@ class MenuUsername extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div>
+      <Fragment>
         <Button
           color='inherit'
           aria-owns={anchorEl ? 'simple-menu' : undefined}
@@ -80,7 +80,7 @@ class MenuUsername extends React.Component {
             </MenuItem> */}
           <MenuItem onClick={this.logout}>Cerrar sesion</MenuItem>
         </Menu>
-      </div>
+      </Fragment>
     );
   }
 }

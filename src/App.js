@@ -26,7 +26,6 @@ import TopCincoMasVendidos from './components/Reportes/TopCincoMasVendidos';
 import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
-
 const cookies = new Cookies();
 
 // const url = 'https://backend-ort.herokuapp.com';
