@@ -52,7 +52,6 @@ class DetalleProducto extends Component{
     }
 
     async componentWillMount(){
-
         let companyProducts = await this.props.getCompanyProductsByProduct(this.props.productId);
         let producto = await this.props.getProductById(this.props.productId);
 
