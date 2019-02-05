@@ -54,7 +54,7 @@ export default class ProductForm extends Component{
             request.set('products', this.state.products);
             request.set('companyId', this.state.companyId);
             let status = await this.props.onClick(request);
-            if(status = 201) this.handleToggle();
+            if(status === 201) this.handleToggle();
         }
     }
     
