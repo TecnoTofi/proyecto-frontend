@@ -5,6 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Item from './VentasItem';
 import Export from '../Helpers/Export'
 import Typography from '@material-ui/core/Typography';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import { Button } from '@material-ui/core';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     texto: {
@@ -16,13 +20,30 @@ const styles = theme => ({
 class ReporteVentas extends Component{
 
     state = {
-        transacciones: []
+        transacciones: [],
+        textoCarga: 'Cargando ventas...',
+        cargaTerminada: false,
     }
 
     //Recibir data
     async componentWillMount(){
         let transacciones = await this.props.getTransactions();
-        if(transacciones) this.setState({transacciones: transacciones});
+
+        let textoCarga = '', cargaTerminada = false;
+        if(transacciones.length === 0){
+            cargaTerminada = true;
+            textoCarga = 'Aun no ah realizado ventas.';
+        }
+
+        if(transacciones) this.setState({
+            transacciones,
+            textoCarga,
+            cargaTerminada
+        });
+    }
+
+    volverAtras = () => {
+        history.goBack();
     }
 
     //Renderizar data
@@ -31,9 +52,18 @@ class ReporteVentas extends Component{
         return(
             <Fragment>
                 {this.state.transacciones.length === 0 ? (
-                    <Typography variant='h6' className={classes.texto}>
-                            Aun no tiene ventas realizadas
-                    </Typography>
+                    <div className={classes.texto}>
+                        <Typography variant='h6' className={classes.texto}>
+                            {this.state.textoCarga}
+                            {/* cambiar esto por una loading animation */}
+                        </Typography>
+                        {this.state.cargaTerminada ? (
+                            <Button onClick={this.volverAtras}>
+                                <BackIcon />
+                                Volver
+                            </Button>
+                        ) : null}
+                    </div>
                 ) : (
                     <Fragment>
                         {this.state.transacciones.map(transaction => (

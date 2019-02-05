@@ -5,6 +5,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Item from './ComprasItem';
 import Export from '../Helpers/Export'
 import Typography from '@material-ui/core/Typography';
+import ForwardIcon from '@material-ui/icons/ArrowForward';
+import { Button } from '@material-ui/core';
+import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
     texto: {
@@ -16,13 +19,26 @@ const styles = theme => ({
 class ReporteCompras extends Component{
 
     state = {
-        pedidos: []
+        pedidos: [],
+        textoCarga: 'Cargando compras...',
+        cargaTerminada: false,
     }
 
     //Recibir data
     async componentWillMount(){
         let pedidos = await this.props.getPedidos();
-        if(pedidos) this.setState({pedidos: pedidos});
+
+        let textoCarga = '', cargaTerminada = false;
+        if(pedidos.length === 0){
+            cargaTerminada = true;
+            textoCarga = 'Aun no ah realizado compras.';
+        }
+
+        if(pedidos) this.setState({
+            pedidos,
+            textoCarga,
+            cargaTerminada
+        });
     }
 
     //Renderizar data
@@ -31,9 +47,20 @@ class ReporteCompras extends Component{
         return(
             <Fragment>
                 {this.state.pedidos.length === 0 ? (
-                    <Typography variant='h6' className={classes.texto}>
-                        Aun no tiene compras realizadas
-                    </Typography>
+                    <div className={classes.texto}>
+                        <Typography variant='h6' className={classes.texto}>
+                            {this.state.textoCarga}
+                            {/* cambiar esto por una loading animation */}
+                        </Typography>
+                        {this.state.cargaTerminada ? (
+                            <NavLink to='/products'>
+                                <Button>
+                                    Productos
+                                    <ForwardIcon />
+                                </Button>
+                            </NavLink>
+                        ) : null}
+                    </div>
                 ) : (
                     <Fragment>
                         {this.state.pedidos.map(pedido => (

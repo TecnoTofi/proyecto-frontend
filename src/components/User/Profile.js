@@ -11,6 +11,8 @@ import TextField from '@material-ui/core/TextField';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 import Select from '../Helpers/SelectForm';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     root: {
@@ -277,28 +279,6 @@ const styles = theme => ({
         return isError;
       };
     
-      handleClose = () => {
-        this.setState({
-            userNameError: '',
-            userEmailError: '',
-            userDocumentError: '',
-            userPhoneError: '',
-            userFirstStreetError: '',
-            userSecondStreetError: '',
-            userDoorNumberError: '',
-            companyNameError: '',
-            companyRutError: '',
-            companyPhoneError: '',
-            companyFirstStreetError: '',
-            companySecondStreetError: '',
-            companyDoorNumberError: '',
-            companyImageError: '',
-            companyDescriptionError:'',
-            companyRubroError: ''
-        });
-      }
-
-    
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     }
@@ -340,7 +320,6 @@ const styles = theme => ({
 
             // console.log('request', request);
             this.props.modificarPerfil(request);
-            // this.handleClose();
         }
     }
 
@@ -352,6 +331,10 @@ const styles = theme => ({
 
     onEnterPress = (e) => {
         if(e.key === 'Enter') this.onSubmit(e);
+    }
+
+    volverAtras = () => {
+        history.goBack();
     }
 
     render(){
@@ -595,7 +578,7 @@ const styles = theme => ({
                             <UploadImage onImageUpload={this.onImageUpload} />
                         </TableRow>
                         <TableRow>
-                            <Button onClick={this.handleClose} color="primary">
+                            <Button onClick={this.volverAtras} color="primary">
                                 Cancelar
                             </Button>
                             <Button onClick={this.onSubmit} color="primary" variant='contained'>

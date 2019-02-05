@@ -6,7 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import Grid from '@material-ui/core/Grid';
 import Item from './ProductItem';
-import { Typography } from '@material-ui/core';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import { Typography, Button } from '@material-ui/core';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     container: {
@@ -26,26 +29,21 @@ const styles = theme => ({
 });
 
 class List extends Component{
-
-    // constructor(props){
-    //     super(props);
+    
         state = {
             listado: [],
             categorias: [],
             searchName: '',
             selectedCategory: [],
-            textoCarga: 'Cargando productos...'
+            textoCarga: 'Cargando productos...',
+            cargaTerminada: false,
         }
-    // }
 
     async componentWillMount(){
-        // console.log('companyId, mount', this.props);
         this.getInfo();
     }
 
     async componentWillReceiveProps(){
-        // console.log('recibe', this.props);
-        // console.log('flag', this.props.flag)
         this.getInfo();
     }
 
@@ -60,15 +58,17 @@ class List extends Component{
         else if(!productos && paquetes) listado = paquetes;
         else listado = [];
 
-        let textoCarga = '';
-        if(listado.length === 0) textoCarga = 'Esta compañia aun no tiene productos a la venta.';
-        
-        console.log('listado', listado)
+        let textoCarga = '', cargaTerminada = false;
+        if(listado.length === 0){
+            cargaTerminada = true;
+            textoCarga = 'Esta compañia aun no tiene productos a la venta.';
+        }
 
         await this.setState({
             listado: listado,
             categorias: categorias,
-            textoCarga
+            textoCarga,
+            cargaTerminada
         });
     }
 
@@ -90,6 +90,10 @@ class List extends Component{
             return selected.id;
         })
         this.setState({selectedType: selectedType});
+    }
+
+    volverAtras = () => {
+        history.goBack();
     }
 
     render(){
@@ -118,16 +122,23 @@ class List extends Component{
         return(
             <Fragment>
                 {this.state.listado.length === 0 ? (
-                    <Typography variant='h6' className={classes.texto}>
-                        {this.state.textoCarga}
-                        {/* cambiar esto por una loading animation */}
-                    </Typography>
+                    <div className={classes.texto}>
+                        <Typography variant='h6' className={classes.texto}>
+                            {this.state.textoCarga}
+                            {/* cambiar esto por una loading animation */}
+                        </Typography>
+                        {this.state.cargaTerminada ? (
+                            <Button onClick={this.volverAtras}>
+                                <BackIcon />
+                                Volver
+                            </Button>
+                        ) : null}
+                    </div>
                 ) : (
                     filteredList ? (
                         <Fragment>
                             <div className={classes.container}>
                                 <TextField
-                                    // margin='dense'
                                     className={classes.textField}
                                     name='searchName'
                                     placeholder='Nombre producto'

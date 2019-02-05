@@ -16,7 +16,10 @@ import ModificarPaquete from '../Paquetes/ModificarPaquete';
 import AjustePrecioCategoria from './AjustePrecioCategoria';
 import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
-import { Typography } from '@material-ui/core';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import { Typography, Button } from '@material-ui/core';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -148,6 +151,8 @@ class EnhancedTable extends React.Component {
     rowsPerPage: 10,
     searchName: '',
     selectedCategory: [],
+    textoCarga: 'Cargando productos...',
+    cargaTerminada: false,
   };
 
     async componentWillMount(){
@@ -156,11 +161,19 @@ class EnhancedTable extends React.Component {
         let categories = await this.props.getCategories(this.props.getCategories);
 
         let listado = productos.concat(paquetes);
+
+        let textoCarga = '', cargaTerminada = false;
+        if(listado.length === 0){
+            cargaTerminada = true;
+            textoCarga = 'Aun no tiene productos registrados.';
+        }
         
         this.setState({
             productos: listado,
             products: productos,
-            categories
+            categories,
+            textoCarga,
+            cargaTerminada
         });
     }
 
@@ -230,11 +243,14 @@ class EnhancedTable extends React.Component {
         }
     }
 
-
     handleEdit = (product, pos) => {
         let listado = this.state.productos;
         listado[pos] = product;
         this.setState({ productos: listado });
+    }
+
+    volverAtras = () => {
+      history.goBack();
     }
 
   render() {
@@ -265,9 +281,18 @@ class EnhancedTable extends React.Component {
     return (
         <Fragment>
             {filteredList.length === 0 ? (
-              <Typography variant='h6' className={classes.texto}>
-                Aun no tiene productos cargados.
-              </Typography>
+              <div className={classes.texto}>
+                <Typography variant='h6' className={classes.texto}>
+                    {this.state.textoCarga}
+                    {/* cambiar esto por una loading animation */}
+                </Typography>
+                {this.state.cargaTerminada ? (
+                    <Button onClick={this.volverAtras}>
+                        <BackIcon />
+                        Volver
+                    </Button>
+                ) : null}
+              </div>
             ) : (
               <Fragment>
                     <div className={classes.container}>

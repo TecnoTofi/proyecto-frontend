@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import CardMedia from '@material-ui/core/CardMedia';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
+import BackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
@@ -20,6 +21,8 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     root: {
@@ -55,12 +58,16 @@ class DetallePackage extends Component{
     async componentWillMount(){
         let paquete = await this.props.getPackageById(this.props.packageId);
 
-        let textoCarga = '';
-        if(!paquete) textoCarga = 'No se pudo encontrar paquete.';
+        let textoCarga = '', cargaTerminada = false;
+        if(!paquete){
+            cargaTerminada = true;
+            textoCarga = 'No se pudo encontrar paquete.';
+        }
 
         await this.setState({
             paquete: paquete,
-            textoCarga
+            textoCarga,
+            cargaTerminada
         });
     }
 
@@ -74,7 +81,11 @@ class DetallePackage extends Component{
             key: value,
           }),
         );
-      }
+    }
+
+    volverAtras = () => {
+        history.goBack();
+    }
 
     render(){
         const { classes } = this.props;
@@ -83,10 +94,18 @@ class DetallePackage extends Component{
         return (
             <Fragment>
                 {!this.state.paquete ? (
-                    <Typography variant='h6' className={classes.texto}>
-                        {this.state.textoCarga}
-                        {/* cambiar esto por una loading animation */}
-                    </Typography>
+                    <div className={classes.texto}>
+                        <Typography variant='h6' className={classes.texto}>
+                            {this.state.textoCarga}
+                            {/* cambiar esto por una loading animation */}
+                        </Typography>
+                        {this.state.cargaTerminada ? (
+                            <Button onClick={this.volverAtras}>
+                                <BackIcon />
+                                Volver
+                            </Button>
+                        ) : null}
+                    </div>
                 ) : (
                     <Paper className={classes.root}>
                     <div className={classes.padding}>

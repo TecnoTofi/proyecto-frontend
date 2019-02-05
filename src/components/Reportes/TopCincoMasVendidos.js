@@ -8,7 +8,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-// import Divider from '@material-ui/core/Divider'
+import BackIcon from '@material-ui/icons/ArrowBack';
+import { Button } from '@material-ui/core';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     root: {
@@ -32,7 +35,7 @@ class TopCincoMasVendidos extends Component{
     state = {
         productos: [],
         paquetes: [],
-        error: ''
+        error: '',
     }
 
     //Recibir data
@@ -56,15 +59,25 @@ class TopCincoMasVendidos extends Component{
         }
     }
 
+    volverAtras = () => {
+        history.goBack();
+    }
+
     //Renderizar data
     render(){
         let { classes } = this.props;
         return(
             <Fragment>
                 {this.state.productos.length === 0 && this.state.paquetes.length === 0 ? (
-                    <Typography variant='h6' className={classes.texto}>
-                        Aun no tiene ventas realizadas
-                    </Typography>
+                    <div className={classes.texto}>
+                        <Typography variant='h6' className={classes.texto}>
+                            Aun no tiene ventas realizadas
+                        </Typography>
+                        <Button onClick={this.volverAtras}>
+                        <BackIcon />
+                            Volver
+                        </Button>
+                    </div>
                 ) : (
                     <Fragment>
                     {this.state.productos.length > 0 ? (

@@ -16,6 +16,8 @@ import CartSelect from './CartSelect';
 // import CartPickers from './CartPickers';
 import CartProduct from './CartProduct';
 import CartTotal from './CartTotal';
+import ForwardIcon from '@material-ui/icons/ArrowForward';
+import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
     root: {
@@ -101,9 +103,17 @@ class Cart extends Component{
         return(
             <Fragment>
                 {this.state.contenido === 0 ? (
-                    <Typography variant='h6' className={classes.texto}>
-                        Aun no ah agregado productos al carrito.
-                    </Typography>
+                    <div className={classes.texto}>
+                        <Typography variant='h6' className={classes.texto}>
+                            Su carrito se encuentra vacio.
+                        </Typography>
+                        <NavLink to='/products'>
+                            <Button>
+                                Productos
+                                <ForwardIcon />
+                            </Button>
+                        </NavLink>
+                    </div>
                 ) : 
                 (
                 <Fragment>
