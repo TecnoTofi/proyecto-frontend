@@ -183,7 +183,10 @@ class App extends Component {
       let token = cookies.get('access_token');
       if(!token) return;
       let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
-      if(status === 200) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
+      if(status === 200){
+        this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
+        history.goBack();
+      }
       else  this.props.enqueueSnackbar(message, { variant: 'error' });
     }
   }
@@ -519,7 +522,9 @@ class App extends Component {
             subTotalEnvios: 0,
             total: 0
           }
-        })
+        });
+        history.push('/products');
+        history.go();
       }
       else this.props.enqueueSnackbar(message, { variant: 'error' });
     }
@@ -695,14 +700,15 @@ class App extends Component {
     />
   );
 
-  linkDetalleProducto = () => (
+  linkDetalleProducto = ({match: {params}}) => (
     <DetalleProducto 
       getCompanyProductsByProduct={this.getCompanyProductsByProduct}
-      productId={this.state.productSeleccionado}
+      productId={params.productId}
       getProductById={this.getProductById}
       agregarAlCarrito={this.agregarAlCarrito}
       loggedCompany={this.state.loggedUser.userCompanyId}
       verificarToken={this.verificarToken}
+      // test={props}
     />
   );
 
@@ -752,8 +758,8 @@ class App extends Component {
               <Route path='/reporte/topcincomas' component={this.linkReporteTopCincoMas} exact />
               <Route path='/reporte/topcincomenos' component={this.linkReporteTopCincoMenos} exact />
               <Route path='/products/company' component={this.linkProductsCompanyList} exact />
-              <Route path='/product' component={this.linkDetalleProducto} exact />
-              <Route path='/package' component={this.linkDetallePackage} exact />
+              <Route path='/product/:productId' component={this.linkDetalleProducto} exact/>
+              <Route path='/package/:productId' component={this.linkDetallePackage} exact />
             </Switch>
           </Fragment>
         </BrowserRouter>

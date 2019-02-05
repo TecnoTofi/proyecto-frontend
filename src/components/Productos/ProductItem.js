@@ -43,11 +43,13 @@ class ProductItem extends Component {
 
   render(){
     const { classes } = this.props;
-
+    let productId = this.props.item.productId ? this.props.item.productId : this.props.item.id;
+    let path = this.props.item.esPackage ? `/package/${productId}` : `/product/${productId}`;
+    
     return (
       <Card className={classes.card}>
-        <NavLink to={this.props.item.esPackage ? '/package' : '/product'} className={classes.link}>
-          <CardActionArea onClick={this.verDetalle}>
+        <NavLink to={path} className={classes.link}>
+          <CardActionArea>
             <CardMedia
               component="img"
               alt={this.props.item.name}
@@ -75,8 +77,8 @@ class ProductItem extends Component {
         </NavLink>
         <CardActions>
           <Fragment>
-            <NavLink to={this.props.item.esPackage ? '/package' : '/product'} className={classes.link}>
-              <Button size="small" color="primary" onClick={this.verDetalle}>
+            <NavLink to={path} className={classes.link}>
+              <Button size="small" color="primary">
                 Ver
               </Button>
             </NavLink>
