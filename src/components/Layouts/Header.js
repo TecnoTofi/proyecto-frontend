@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -42,29 +42,58 @@ const styles = theme => ({
   }
 });
 
+// window.onresize = resize;
+//   let widthScreen = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
+//   function resize(){
+//     widthScreen = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+//   }
 
-function Header(props) {
+class Header extends Component {
+  state = {
+    width: 0
+  }
   
-  const { classes } = props;
+  updateDimensions = () => {
+  var w = window,
+      d = document,
+      documentElement = d.documentElement,
+      body = d.getElementsByTagName('body')[0],
+      width = w.innerWidth || documentElement.clientWidth || body.clientWidth;
+
+      this.setState({width});
+  }
+
+  componentWillMount() {
+      this.updateDimensions();
+  }
+  componentDidMount() {
+      window.addEventListener("resize", this.updateDimensions);
+  }
+  componentWillUnmount() {
+      window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  render(){
+  const { classes } = this.props;
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {props.logged ? (
+          {this.props.logged ? (
             <Drawer
-              cambiarVentana={props.cambiarVentana}
-              companyId={props.loggedUser.userCompanyId}
-              getCategories={props.getCategories}
-              getProducts={props.getProducts}
-              getNotAssociated={props.getNotAssociated}
-              companies={props.companies}
-              onClickAssociate={props.registroEmpresaProducto}
-              onClickProductAssociate={props.registrarProducto}
-              getProductosByCompany={props.getProductosByCompany}
-              onClickProductsBulk={props.registroProductosBulk}
-              crearPaquete = {props.crearPaquete}
-              enqueueSnackbar={props.enqueueSnackbar}
+              cambiarVentana={this.props.cambiarVentana}
+              companyId={this.props.loggedUser.userCompanyId}
+              getCategories={this.props.getCategories}
+              getProducts={this.props.getProducts}
+              getNotAssociated={this.props.getNotAssociated}
+              companies={this.props.companies}
+              onClickAssociate={this.props.registroEmpresaProducto}
+              onClickProductAssociate={this.props.registrarProducto}
+              getProductosByCompany={this.props.getProductosByCompany}
+              onClickProductsBulk={this.props.registroProductosBulk}
+              crearPaquete = {this.props.crearPaquete}
+              enqueueSnackbar={this.props.enqueueSnackbar}
             />
           ) : null}
             <NavLink to='/' className={classes.link}>
@@ -72,7 +101,7 @@ function Header(props) {
                 variant="h6"
                 color="inherit"
                 // className={classes.grow}
-                // onClick={() => {props.cambiarVentana('home')}}
+                // onClick={() => {this.props.cambiarVentana('home')}}
               >
                 NuestraApp
               </Typography>
@@ -80,17 +109,17 @@ function Header(props) {
           {/* <NavLink to='/' className={classes.link}> */}
             {/* <Button
               color="inherit"
-              onClick={() => {props.cambiarVentana('dashboard')}}>
+              onClick={() => {this.props.cambiarVentana('dashboard')}}>
               <HomeIcon className={classes.leftIcon} />
               Dashboard
             </Button> */}
           {/* </NavLink> */}
-          {/* {width >= 760 ? ( */}
+          {this.state.width >= 760 ? (
             <div className={classes.grow}>
             <NavLink to='/companies' className={classes.link}>
               <Button
                 color="inherit">
-                {/* onClick={() => {props.cambiarVentana('companies')}}> */}
+                {/* onClick={() => {this.props.cambiarVentana('companies')}}> */}
                 <StoresIcon className={classes.leftIcon} />
                 Empresas
               </Button>
@@ -98,43 +127,44 @@ function Header(props) {
             <NavLink to='/products' className={classes.link}>
               <Button
                 color="inherit">
-                {/* onClick={() => {props.cambiarVentana('productsGeneric')}}> */}
+                {/* onClick={() => {this.props.cambiarVentana('productsGeneric')}}> */}
                 <ProductsIcon className={classes.leftIcon} />
                 Productos
               </Button>
             </NavLink>
-            {props.logged ? (
+            {this.props.logged ? (
               <Fragment>
                 <NavLink to='/carrito' className={classes.link}>
                   <Button
                     color="inherit">
-                    {/* onClick={() => {props.cambiarVentana('carrito')}}> */}
+                    {/* onClick={() => {this.props.cambiarVentana('carrito')}}> */}
                     <ShoppingCartIcon className={classes.leftIcon} />
                     Carrito
                   </Button>
                 </NavLink>
                   <MenuUsername
-                    cambiarVentana={props.cambiarVentana}
-                    userName={props.loggedUser.userName}
-                    logout={props.logout}
+                    cambiarVentana={this.props.cambiarVentana}
+                    userName={this.props.loggedUser.userName}
+                    logout={this.props.logout}
                     />
               </Fragment>
             ) : (
               <Fragment>
-                <LoginForm onClick={props.login} />
-                <SignupForm onClick={props.signup}
-                    getTypes={props.getTypes} 
-                    getCategories={props.getRubros} 
-                    // getUserTypes={props.getUserTypes}
+                <LoginForm onClick={this.props.login} />
+                <SignupForm onClick={this.props.signup}
+                    getTypes={this.props.getTypes} 
+                    getCategories={this.props.getRubros} 
+                    // getUserTypes={this.props.getUserTypes}
                 />
               </Fragment>
             )}
             </div>
-          {/* ) : null} */}
+          ) : null}
         </Toolbar>
       </AppBar>
     </div>
   );
+            }
 }
 
 Header.propTypes = {
