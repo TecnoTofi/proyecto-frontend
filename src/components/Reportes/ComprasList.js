@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     texto: {
@@ -26,6 +28,9 @@ class ReporteCompras extends Component{
 
     //Recibir data
     async componentWillMount(){
+
+        this.verificarLogin();
+
         let pedidos = await this.props.getPedidos();
 
         let textoCarga = '', cargaTerminada = false;
@@ -39,6 +44,15 @@ class ReporteCompras extends Component{
             textoCarga,
             cargaTerminada
         });
+    }
+
+    verificarLogin = async () => {
+        let tokenValido = await this.props.verificarToken();
+
+        if(!tokenValido){
+            alert('No ah iniciado sesion.');
+            history.goBack();
+        }
     }
 
     //Renderizar data

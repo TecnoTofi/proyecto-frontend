@@ -156,25 +156,37 @@ class EnhancedTable extends React.Component {
   };
 
     async componentWillMount(){
-        let productos = await this.props.getProductos(this.props.company);
-        let paquetes = await this.props.getPaquetes(this.props.company);
-        let categories = await this.props.getCategories(this.props.getCategories);
 
-        let listado = productos.concat(paquetes);
+      this.verificarLogin();
 
-        let textoCarga = '', cargaTerminada = false;
-        if(listado.length === 0){
-            cargaTerminada = true;
-            textoCarga = 'Aun no tiene productos registrados.';
-        }
-        
-        this.setState({
-            productos: listado,
-            products: productos,
-            categories,
-            textoCarga,
-            cargaTerminada
-        });
+      let productos = await this.props.getProductos(this.props.company);
+      let paquetes = await this.props.getPaquetes(this.props.company);
+      let categories = await this.props.getCategories(this.props.getCategories);
+
+      let listado = productos.concat(paquetes);
+
+      let textoCarga = '', cargaTerminada = false;
+      if(listado.length === 0){
+          cargaTerminada = true;
+          textoCarga = 'Aun no tiene productos registrados.';
+      }
+      
+      this.setState({
+          productos: listado,
+          products: productos,
+          categories,
+          textoCarga,
+          cargaTerminada
+      });
+    }
+
+    verificarLogin = async () => {
+      let tokenValido = await this.props.verificarToken();
+
+      if(!tokenValido){
+          alert('No ah iniciado sesion.');
+          history.goBack();
+      }
     }
 
   handleRequestSort = (event, property) => {

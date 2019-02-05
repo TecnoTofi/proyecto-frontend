@@ -71,7 +71,7 @@ class App extends Component {
     let token = cookies.get('access_token');
 
     if(token){
-      	this.verificarToken(token);
+      	this.verificarToken();
     }
   }
 
@@ -80,7 +80,8 @@ class App extends Component {
     else this.setState({shownWindow: ventana});
   }
 
-  verificarToken = async (token) => {
+  verificarToken = async () => {
+    let token = cookies.get('access_token');
     let { valido, data } = await AuthFunctions.verificarToken(url, token);
     if(valido){
       cookies.set('access_token', data.token, { path: '/' });
@@ -100,6 +101,7 @@ class App extends Component {
     else{
       console.log('error en auth de token, o vencido');
     }
+    return valido;
   }
 
   getTypes = async () => {
@@ -502,6 +504,8 @@ class App extends Component {
       cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
       realizarPedido={this.realizarPedido}
       sendVoucher={this.cartTotalCalculate}
+      verificarToken={this.verificarToken}
+      enqueueSnackbar={this.props.enqueueSnackbar}
     />
   );
 
@@ -513,6 +517,7 @@ class App extends Component {
       companyId={this.state.loggedUser.userCompanyId}
       getRubros={this.getRubros}
       modificarPerfil={this.modificarPerfil}
+      verificarToken={this.verificarToken}
     />
   );
 
@@ -529,30 +534,35 @@ class App extends Component {
       ajustarPrecioCategoria={this.ajustarPrecioCategoria}
       enqueueSnackbar={this.props.enqueueSnackbar}
       flag={'productos'}
+      verificarToken={this.verificarToken}
     />
   );
 
   linkReporteCompras = () => (
     <ReporteCompras
       getPedidos={this.getReporteCompras}
+      verificarToken={this.verificarToken}
     />
   );
 
   linkReporteVentas = () => (
     <ReporteVentas
       getTransactions={this.getReporteVentas}
+      verificarToken={this.verificarToken}
     />
   );
 
   linkReporteTopCincoMas = () => (
     <TopCincoMasVendidos
       getDatos={this.getTopCincoMasVendidos}
+      verificarToken={this.verificarToken}
     />
   );
 
   linkReporteTopCincoMenos = () => (
     <TopCincoMenosVendidos
       getDatos={this.getTopCincoMenosVendidos}
+      verificarToken={this.verificarToken}
     />
   );
 
@@ -565,6 +575,7 @@ class App extends Component {
       company={this.state.companiaSeleccionada}
       getCategories={this.getCategories}
       cambiarVentana={this.cambiarVentana}
+      verificarToken={this.verificarToken}
     />
   );
 
@@ -575,6 +586,7 @@ class App extends Component {
       getProductById={this.getProductById}
       agregarAlCarrito={this.agregarAlCarrito}
       loggedCompany={this.state.loggedUser.userCompanyId}
+      verificarToken={this.verificarToken}
     />
   );
 
@@ -584,6 +596,7 @@ class App extends Component {
       getPackageById={this.getPackageById}
       agregarAlCarrito={this.agregarAlCarrito}
       loggedCompany={this.state.loggedUser.userCompanyId}
+      verificarToken={this.verificarToken}
     />
   );
 

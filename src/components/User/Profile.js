@@ -66,6 +66,9 @@ const styles = theme => ({
     }
 
     async componentWillMount(){
+
+        this.verificarLogin();
+
         let company= await this.props.getCompany(this.props.companyId);
         let user = await this.props.getUser(this.props.userId);
         let rubros = await this.props.getRubros();
@@ -91,9 +94,14 @@ const styles = theme => ({
         });
     };
 
-    //  getCompanyId = () => {
-    //      return this.state.companyCategory;
-    //  }
+    verificarLogin = async () => {
+        let tokenValido = await this.props.verificarToken();
+
+        if(!tokenValido){
+            alert('No ah iniciado sesion.');
+            history.goBack();
+        }
+    }
 
       validate = () => {
         let isError = false;

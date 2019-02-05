@@ -27,6 +27,9 @@ class ReporteVentas extends Component{
 
     //Recibir data
     async componentWillMount(){
+
+        this.verificarLogin();
+
         let transacciones = await this.props.getTransactions();
 
         let textoCarga = '', cargaTerminada = false;
@@ -40,6 +43,15 @@ class ReporteVentas extends Component{
             textoCarga,
             cargaTerminada
         });
+    }
+
+    verificarLogin = async () => {
+        let tokenValido = await this.props.verificarToken();
+
+        if(!tokenValido){
+            alert('No ah iniciado sesion.');
+            history.goBack();
+        }
     }
 
     volverAtras = () => {

@@ -40,6 +40,9 @@ class TopCincoMenossVendidos extends Component{
 
     //Recibir data
     async componentWillMount(){
+
+        this.verificarLogin();
+
         let productos = [], paquetes = [];
 
         let date = new Date();
@@ -59,6 +62,15 @@ class TopCincoMenossVendidos extends Component{
         }
     }
 
+    verificarLogin = async () => {
+        let tokenValido = await this.props.verificarToken();
+
+        if(!tokenValido){
+            alert('No ah iniciado sesion.');
+            history.goBack();
+        }
+    }
+
     volverAtras = () => {
         history.goBack();
     }
@@ -71,7 +83,7 @@ class TopCincoMenossVendidos extends Component{
                 {this.state.productos.length === 0 && this.state.paquetes.length === 0 ? (
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
-                            Aun no tiene ventas realizadas
+                            Aun no tiene ventas realizadas este mes.
                         </Typography>
                         <Button onClick={this.volverAtras}>
                         <BackIcon />

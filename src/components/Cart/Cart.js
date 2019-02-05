@@ -18,6 +18,8 @@ import CartProduct from './CartProduct';
 import CartTotal from './CartTotal';
 import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { NavLink } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const styles = theme => ({
     root: {
@@ -44,7 +46,10 @@ class Cart extends Component{
         contenido: 0
     }
 
-    componentWillMount(){
+    async componentWillMount(){
+
+        this.verificarLogin();
+        
         let voucher = this.props.cart.voucher;
         let contenido = this.props.cart.contenido.length;
         this.setState({voucher, contenido});
@@ -53,6 +58,15 @@ class Cart extends Component{
     componentWillReceiveProps(){
         let contenido = this.props.cart.contenido.length;
         this.setState({contenido});
+    }
+
+    verificarLogin = async () => {
+        let tokenValido = await this.props.verificarToken();
+
+        if(!tokenValido){
+            alert('No ah iniciado sesion.');
+            history.goBack();
+        }
     }
 
     handleSelectChange = (productId, productCode, companyId, quantity) => {
