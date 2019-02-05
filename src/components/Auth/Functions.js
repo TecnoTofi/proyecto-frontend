@@ -10,11 +10,9 @@ const verificarToken = async (url, token) => {
     let data = await fetch(request)
                     .then(res => {
                         if(res.status === 200) valido = true;
-                        // console.log('status', res.status);
                         return res.json()
                     })
                     .then(data => {
-                        // console.log('data', data);
                         return data
                     })
                     .catch(err => {
@@ -61,7 +59,6 @@ const logout = async (url) => {
                         return res.json()
                         })
                         .then(data => {
-                            console.log(data);
                             return data;
                         })
                         .catch(err => {
@@ -71,14 +68,6 @@ const logout = async (url) => {
 };
 
 const signup = async (url, request) => {
-    // await axios.post(`${url}/api/auth/signup`, request)
-    //             .then(res => {
-    //                 console.log(res);
-    //             })
-    //             .catch(err => {
-    //                 console.log(err);
-    //             });
-
     let response = await axios({
         method: 'post',
         url: `${url}/api/auth/signup`,

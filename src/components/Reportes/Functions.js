@@ -60,7 +60,6 @@ const getTransactionsByCompany = async (url, token, companyId) => {
                             .then(data => {
                                 if(data){
                                     if(status === 200){
-                                        console.log(data);
                                         return data;
                                     }
                                     console.log('Company no tiene ventas');

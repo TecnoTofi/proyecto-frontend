@@ -406,7 +406,7 @@ class SignupForm extends Component{
                 onClose={this.handleToggle}
                 aria-labelledby="form-dialog-title"
                 >
-                <DialogTitle id="form-dialog-title">Registro de usuario - empresa</DialogTitle>
+                <DialogTitle id="form-dialog-title">Registro de Usuario - Compañía</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus

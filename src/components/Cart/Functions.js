@@ -105,7 +105,13 @@ const borrarItemCarrito = (cart, prodId, esPackage, companyId) => {
 		});
 		seller.res.paquetes = paquetes;
 	}
-	cart.contenido[seller.sellerPos] = seller.res;
+
+	if(seller.res.productos.length === 0 && seller.res.paquetes.length === 0){
+		cart.contenido = cart.contenido.filter(s => {
+			return s.sellerId !== seller.res.sellerId;
+		});
+	}
+	else cart.contenido[seller.sellerPos] = seller.res;
 	return cart;
 }
 

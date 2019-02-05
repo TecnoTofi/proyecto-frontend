@@ -187,13 +187,12 @@ export default class AltaProducto extends Component{
         })
     }
 
-    onSubmit = (event)=> {
+    onSubmit = async (event)=> {
         event.preventDefault();
         
         const error = this.validate();
 
         if (!error){
-            console.log('categories', this.state.categories);
             const request = new FormData();
             request.set('name', this.state.productName);
             request.set('code', this.state.productCode);
@@ -202,10 +201,10 @@ export default class AltaProducto extends Component{
             request.set('description', this.state.productDescription);
             request.set('price', this.state.productPrice);
             request.set('stock', this.state.productStock);
-            request.append('image', this.state.productImage, this.state.productImage.name);
+            if(this.state.productImage) request.append('image', this.state.productImage, this.state.productImage.name);
             
-            this.props.onClick(request);
-            this.handleToggle();
+            let status = await this.props.onClick(request);
+            if(status === 201) this.handleToggle();
         } 
     }
     

@@ -13,14 +13,14 @@ import CartIcon from '@material-ui/icons/AddShoppingCart';
 
 // import { NavLink } from 'react-router-dom';
 
-const styles = {
+const styles = theme => ({
   card: {
     maxWidth: 345,
   },
   media: {
-    objectFit: 'cover',
-  },
-};
+    objectFit: 'contain'
+  }
+});
 
 class ProductItem extends Component {
   

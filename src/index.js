@@ -6,8 +6,10 @@ import * as serviceWorker from './serviceWorker';
 import { SnackbarProvider } from 'notistack';
 
 ReactDOM.render(
-<SnackbarProvider maxSnack={3}><App /></SnackbarProvider>
-, document.getElementById('root'));
+<SnackbarProvider maxSnack={3}>
+    <App />
+</SnackbarProvider>,
+document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

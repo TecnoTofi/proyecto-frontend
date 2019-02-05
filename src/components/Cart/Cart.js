@@ -19,13 +19,18 @@ import CartTotal from './CartTotal';
 
 const styles = theme => ({
     root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        margin: theme.spacing.unit * 3,
-        alignContent: 'center'
+        // display: 'flex',
+        // flexWrap: 'wrap',
+        marginTop: theme.spacing.unit * 3,
+        marginBottom: theme.spacing.unit * 3,
+        textAlign: 'center'
     //   ...theme.mixins.gutters(),
     //   paddingTop: theme.spacing.unit * 2,
     //   paddingBottom: theme.spacing.unit * 2,
+    },
+    texto: {
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3,
     },
   });
 
@@ -34,11 +39,18 @@ class Cart extends Component{
     state = {
         voucher: '',
         voucherError: '',
+        contenido: 0
     }
 
     componentWillMount(){
         let voucher = this.props.cart.voucher;
-        this.setState({voucher});
+        let contenido = this.props.cart.contenido.length;
+        this.setState({voucher, contenido});
+    }
+
+    componentWillReceiveProps(){
+        let contenido = this.props.cart.contenido.length;
+        this.setState({contenido});
     }
 
     handleSelectChange = (productId, productCode, companyId, quantity) => {
@@ -84,105 +96,114 @@ class Cart extends Component{
     
     render(){
         const { contenido, subTotal, subTotalEnvios, total } = this.props.cart;
-        // const { classes } = this.props;
+        const { classes } = this.props;
 
         return(
             <Fragment>
-                <Paper>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Producto</TableCell>
-                                <TableCell>Precio</TableCell>
-                                <TableCell>Cantidad</TableCell>
-                                {/* <TableCell>Envio</TableCell> */}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {contenido.map((seller) => {
-                                    let prods = seller.productos.map((prod, i) => (
-                                        <TableRow key={prod.id}>
-                                            <TableCell>
-                                                <CartProduct
-                                                    product={prod}
-                                                    onClick={this.props.onDelete}
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography variant='body1'>
-                                                    ${prod.price}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <CartSelect 
-                                                    quantity={prod.quantity}
-                                                    product={prod}
-                                                    onChange={this.handleSelectChange}
-                                                />
-                                            </TableCell>
-                                            {/* {i===0 ? (
+                {this.state.contenido === 0 ? (
+                    <Typography variant='h6' className={classes.texto}>
+                        Aun no ah agregado productos al carrito.
+                    </Typography>
+                ) : 
+                (
+                <Fragment>
+                    <Paper>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Producto</TableCell>
+                                    <TableCell>Precio</TableCell>
+                                    <TableCell>Cantidad</TableCell>
+                                    {/* <TableCell>Envio</TableCell> */}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {contenido.map((seller) => {
+                                        let prods = seller.productos.map((prod, i) => (
+                                            <TableRow key={prod.id}>
                                                 <TableCell>
-                                                    <CartPickers 
-                                                        priceEnvio={prod.priceEnvio}
-                                                        envioType={prod.envioType}
-                                                        productId={prod.id}
-                                                        onChange={this.handlePickerChange}
+                                                    <CartProduct
+                                                        product={prod}
+                                                        onClick={this.props.onDelete}
                                                     />
                                                 </TableCell>
-                                            ) : (
-                                                null
-                                            )} */}
-                                        </TableRow>
-                                    ))
-                                    let packs = seller.paquetes.map(pack => (
-                                        <TableRow key={pack.id}>
-                                            <TableCell>
-                                            <CartProduct
-                                                    product={pack}
-                                                    onClick={this.props.onDelete}
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography variant='body1'>
-                                                    ${pack.price}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <CartSelect
-                                                    quantity={pack.quantity}
-                                                    product={pack}
-                                                    onChange={this.handleSelectChange}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                    return prods.concat(packs);
-                            })}
-                        </TableBody>
-                    </Table>
-                </Paper>
-                <div>
-                    <TextField
-                        margin='dense'
-                        id='voucher'
-                        name='voucher'
-                        label='Voucher de descuento'
-                        type='text'
-                        helperText={this.state.voucherError}
-                        error={this.state.voucherError ? true : false}
-                        onChange={this.onChange}
-                        onKeyPress={this.onEnterPress}
+                                                <TableCell>
+                                                    <Typography variant='body1'>
+                                                        ${prod.price}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <CartSelect 
+                                                        quantity={prod.quantity}
+                                                        product={prod}
+                                                        onChange={this.handleSelectChange}
+                                                    />
+                                                </TableCell>
+                                                {/* {i===0 ? (
+                                                    <TableCell>
+                                                        <CartPickers 
+                                                            priceEnvio={prod.priceEnvio}
+                                                            envioType={prod.envioType}
+                                                            productId={prod.id}
+                                                            onChange={this.handlePickerChange}
+                                                        />
+                                                    </TableCell>
+                                                ) : (
+                                                    null
+                                                )} */}
+                                            </TableRow>
+                                        ))
+                                        let packs = seller.paquetes.map(pack => (
+                                            <TableRow key={pack.id}>
+                                                <TableCell>
+                                                <CartProduct
+                                                        product={pack}
+                                                        onClick={this.props.onDelete}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Typography variant='body1'>
+                                                        ${pack.price}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <CartSelect
+                                                        quantity={pack.quantity}
+                                                        product={pack}
+                                                        onChange={this.handleSelectChange}
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                        return prods.concat(packs);
+                                })}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                    <div className={classes.root}>
+                        <TextField
+                            margin='dense'
+                            id='voucher'
+                            name='voucher'
+                            label='Voucher de descuento'
+                            type='text'
+                            helperText={this.state.voucherError}
+                            error={this.state.voucherError ? true : false}
+                            onChange={this.onChange}
+                            onKeyPress={this.onEnterPress}
+                        />
+                        <Button className="btnVoucher" onClick={this.sendVoucher} color="primary" variant='contained'>
+                            Agregar
+                        </Button>
+                    </div>
+                    <CartTotal 
+                        subTotal={subTotal} 
+                        subTotalEnvios={subTotalEnvios} 
+                        total={total} 
+                        realizarPedido={this.props.realizarPedido}
                     />
-                    <Button className="btnVoucher" onClick={this.sendVoucher} color="primary" variant='contained'>
-                        Aceptar
-                    </Button>
-                </div>
-                <CartTotal 
-                    subTotal={subTotal} 
-                    subTotalEnvios={subTotalEnvios} 
-                    total={total} 
-                    realizarPedido={this.props.realizarPedido}
-                />
+                </Fragment>
+                )}
             </Fragment>
         );
     }

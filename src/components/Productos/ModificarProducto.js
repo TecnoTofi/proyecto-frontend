@@ -14,14 +14,6 @@ import SelectMultiple from '../Helpers/SelectMultiple';
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Create";
 
-
-
-const styles = theme => ({
-    leftIcon: {
-        marginRight: theme.spacing.unit
-    }
-});
-
 class ModificarProducto extends Component{
 
     constructor(props){
@@ -195,7 +187,7 @@ class ModificarProducto extends Component{
     render(){
         return(
             <div>
-                <IconButton onClick={this.handleToggle}>
+                <IconButton onClick={this.handleToggle} className={this.props.buttonClass}>
                     <EditIcon />
                 </IconButton>
                 <Dialog
@@ -283,8 +275,4 @@ class ModificarProducto extends Component{
     }
 }
 
-ModificarProducto.propTypes = {
-    classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(ModificarProducto);
+export default ModificarProducto;

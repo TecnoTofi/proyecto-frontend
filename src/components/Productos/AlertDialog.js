@@ -1,4 +1,6 @@
 import React from 'react';
+// import PropTypes from 'prop-types';
+// import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -27,12 +29,9 @@ class AlertDialog extends React.Component {
   render() {
     return (
       <div>
-       {/* <Button onClick={this.handleClickOpen}>*/ }
-        <IconButton onClick={this.handleClickOpen}>
+        <IconButton onClick={this.handleClickOpen} className={this.props.buttonClass}>
           <DeleteIcon />
         </IconButton>
-        
-       {/* </Button> */}
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}

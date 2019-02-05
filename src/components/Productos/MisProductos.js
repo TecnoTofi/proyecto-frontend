@@ -16,6 +16,7 @@ import ModificarPaquete from '../Paquetes/ModificarPaquete';
 import AjustePrecioCategoria from './AjustePrecioCategoria';
 import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
+import { Typography } from '@material-ui/core';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -120,12 +121,19 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
     marginLeft: theme.spacing.unit * 3,
     },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
-        marginTop: theme.spacing.unit * 2
-      }
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+    marginTop: theme.spacing.unit * 2
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
+  texto: {
+    textAlign: 'center',
+    marginTop: theme.spacing.unit * 3,
+  },
 });
 
 class EnhancedTable extends React.Component {
@@ -175,27 +183,6 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: [] });
   };
 
-  handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  };
-
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -233,7 +220,6 @@ class EnhancedTable extends React.Component {
         }
         else{
             let status = await this.props.eliminarProducto(id);
-            console.log(status)
             if(status === 200){
                 listado = this.state.productos.filter(prod => {
                     if(prod.esPackage) return prod;
@@ -278,8 +264,12 @@ class EnhancedTable extends React.Component {
 
     return (
         <Fragment>
-            {filteredList ? (
-                <Fragment>
+            {filteredList.length === 0 ? (
+              <Typography variant='h6' className={classes.texto}>
+                Aun no tiene productos cargados.
+              </Typography>
+            ) : (
+              <Fragment>
                     <div className={classes.container}>
                     <div>
                         <TextField
@@ -320,7 +310,6 @@ class EnhancedTable extends React.Component {
                             return (
                                 <TableRow
                                 hover
-                                onClick={event => this.handleClick(event, n.id)}
                                 role="checkbox"
                                 aria-checked={isSelected}
                                 tabIndex={-1}
@@ -336,9 +325,11 @@ class EnhancedTable extends React.Component {
                                 <TableCell align="right">{n.stock}</TableCell>
                                 <TableCell align="right">${n.price}</TableCell>
                                 <TableCell align="right">{n.esPackage ? 'Paquete' : 'Producto'}</TableCell>
-                                <TableCell align="right">
+                                <TableCell>
+                                  {/* <div> */}
                                     {!n.esPackage ?
                                         <ModificarProducto
+                                            // buttonClass={classes.button}
                                             product={n}
                                             categories={this.state.categories}
                                             modificar={this.props.modificarProducto}
@@ -347,6 +338,7 @@ class EnhancedTable extends React.Component {
                                         />
                                         :
                                         <ModificarPaquete
+                                            // buttonClass={classes.button}
                                             products={this.state.products}
                                             categories={this.state.categories}
                                             modificarPaquete={this.props.modificarPaquete}
@@ -357,6 +349,7 @@ class EnhancedTable extends React.Component {
                                         /> 
                                     }
                                     <Alert productId={n.id} esPackage={n.esPackage} eliminar={this.handleDelete} />
+                                  {/* </div> */}
                                 </TableCell>
                                 </TableRow>
                             );
@@ -386,7 +379,7 @@ class EnhancedTable extends React.Component {
                     />
                 </Paper>
                 </Fragment>
-            ) : null }
+            ) }
       </Fragment>
     );
   }

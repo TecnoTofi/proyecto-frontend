@@ -21,7 +21,11 @@ const styles = theme => ({
     },
     media: {
         maxWidth: 400,
-    }
+    },
+    texto: {
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3,
+    },
   });
 
 class TopCincoMenossVendidos extends Component{
@@ -57,83 +61,95 @@ class TopCincoMenossVendidos extends Component{
         let { classes } = this.props;
         return(
             <Fragment>
-                {this.state.productos ? (
-                    <Fragment>
-                        <Typography variant='h4'>Productos</Typography>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>
-                                        Codigo
-                                    </TableCell>
-                                    <TableCell>
-                                        Nombre
-                                    </TableCell>
-                                    <TableCell>
-                                        Cantidad
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.productos.map((product, i) => (
-                                    <TableRow key={i}>
-                                        <TableCell>
-                                            {product.code}
-                                        </TableCell>
-                                        <TableCell>
-                                            {product.name}    
-                                        </TableCell>
-                                        <TableCell>
-                                            {product.sum}    
-                                        </TableCell>
-                                        <TableCell>
-                                            {product.description}    
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Fragment>
+                {this.state.productos.length === 0 && this.state.paquetes.length === 0 ? (
+                    <Typography variant='h6' className={classes.texto}>
+                        Aun no tiene ventas realizadas
+                    </Typography>
                 ) : (
-                    <Typography>No hay productos en el top</Typography>
-                )}
-                {/* <Divider variant="middle" /> */}
-                {this.state.paquetes ? (
                     <Fragment>
-                        <Typography variant='h4'>Paquetes</Typography>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>
-                                        Codigo
-                                    </TableCell>
-                                    <TableCell>
-                                        Nombre
-                                    </TableCell>
-                                    <TableCell>
-                                        Cantidad
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.paquetes.map((pack, i) => (
-                                    <TableRow key={i}>
-                                        <TableCell>
-                                            {pack.code}
-                                        </TableCell>
-                                        <TableCell>
-                                            {pack.name}    
-                                        </TableCell>
-                                        <TableCell>
-                                            {pack.sum}    
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        {this.state.productos.length > 0 ? (
+                            <Fragment>
+                                <Typography variant='h4'>Productos</Typography>
+                                <Table className={classes.table}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>
+                                                Codigo
+                                            </TableCell>
+                                            <TableCell>
+                                                Nombre
+                                            </TableCell>
+                                            <TableCell>
+                                                Cantidad
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.productos.map((product, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell>
+                                                    {product.code}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {product.name}    
+                                                </TableCell>
+                                                <TableCell>
+                                                    {product.sum}    
+                                                </TableCell>
+                                                <TableCell>
+                                                    {product.description}    
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Fragment>
+                        ) : (
+                            <Typography variant='h6' className={classes.texto}>
+                                Aun no ah vendido productos
+                            </Typography>
+                        )}
+                        {/* <Divider variant="middle" /> */}
+                        {this.state.paquetes.length > 0 ? (
+                            <Fragment>
+                                <Typography variant='h4'>Paquetes</Typography>
+                                <Table className={classes.table}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>
+                                                Codigo
+                                            </TableCell>
+                                            <TableCell>
+                                                Nombre
+                                            </TableCell>
+                                            <TableCell>
+                                                Cantidad
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.paquetes.map((pack, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell>
+                                                    {pack.code}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {pack.name}    
+                                                </TableCell>
+                                                <TableCell>
+                                                    {pack.sum}    
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Fragment>
+                        ) : (
+                            <Typography variant='h6' className={classes.texto}>
+                                Aun no ah vendido paquetes
+                            </Typography>
+                        )}
                     </Fragment>
-                ) : (
-                    <Typography>No hay paquetes en el top</Typography>
                 )}
             </Fragment>
         );

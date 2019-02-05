@@ -14,7 +14,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import red from '@material-ui/core/colors/red';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Typography } from '@material-ui/core';
 
 
@@ -111,7 +111,7 @@ class DetalleCompany extends Component {
              </CardContent>
             <CardActions className={classes.actions} disableActionSpacing>
                 <IconButton aria-label="Add to favorites">
-                <FavoriteIcon />
+                {/* <FavoriteIcon /> */}
             </IconButton>
             </CardActions>
           </Card>

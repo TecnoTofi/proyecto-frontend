@@ -17,7 +17,7 @@ const styles = {
     maxWidth: 345,
   },
   media: {
-    objectFit: 'cover',
+    objectFit: 'contain',
   },
 };
 
@@ -32,7 +32,7 @@ class CompanyItem extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardActionArea>
+        <CardActionArea onClick={this.handleProdClick}>
           <CardMedia
             component="img"
             alt={this.props.item.name}

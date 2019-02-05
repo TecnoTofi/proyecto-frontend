@@ -112,7 +112,7 @@ class AjustePrecioCategoria extends React.Component {
         return isError;
     }
 
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
         e.preventDefault();
         const error = this.validate();
 
@@ -123,7 +123,8 @@ class AjustePrecioCategoria extends React.Component {
                 aumento: this.state.aumento
             };
 
-            this.props.ajustarPrecioCategoria(this.state.category, request);
+            let status = await this.props.ajustarPrecioCategoria(this.state.category, request);
+            if(status === 200) this.handleClose();
         }
     }
 

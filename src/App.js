@@ -248,19 +248,31 @@ class App extends Component {
   registroProductoAsociacion = async (request) => {
     let token = cookies.get('access_token');
     if(!token) return;
-    let { status, message, producto } = await ProductFunctions.registroProducto(url, token, request);
+    let { status, message, errores } = await ProductFunctions.registroProducto(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return { status, message, producto };
+    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if (errores){
+      for(let e of errores){
+        this.props.enqueueSnackbar(e, { variant: 'error' });
+      }
+    }
+    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+    return status;
   }
 
   asociarProducto = async (request) => {
     let token = cookies.get('access_token');
     if(!token) return;
-    let { status, message, producto } = await ProductFunctions.asociarProducto(url, token, request);
+    let { status, message, errores } = await ProductFunctions.asociarProducto(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return { status, message, producto };
+    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if (errores){
+      for(let e of errores){
+        this.props.enqueueSnackbar(e, { variant: 'error' });
+      }
+    }
+    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+    return status;
   }
 
   registroProductosBulk = async (request) => {
@@ -280,35 +292,53 @@ class App extends Component {
   modificarProducto = async (request, productId) => {
     let token = cookies.get('access_token');
     if(!token) return;
-    let { status, message, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
+    let { status, message, errores, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
     if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return { status, message, producto };
+    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if (errores){
+      for(let e of errores){
+        this.props.enqueueSnackbar(e, { variant: 'error' });
+      }
+    }
+    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+    return { status, producto };
   }
 
   eliminarProducto = async (id) =>{
     let token = cookies.get('access_token');
     if(!token) return;
-    let { status, message } = await ProductFunctions.eliminarProducto(url, token, id);
+    let { status, message, errores } = await ProductFunctions.eliminarProducto(url, token, id);
     if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if (errores){
+      for(let e of errores){
+        this.props.enqueueSnackbar(e, { variant: 'error' });
+      }
+    }
+    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
     return status;
   }
 
   crearPaquete = async (request) =>{
     let token = cookies.get('access_token');
     if(!token) return;
-    let { status, message, id } = await PackageFunctions.crearPaquete(url, token, request);
+    let { status, message, errores } = await PackageFunctions.crearPaquete(url, token, request);
     if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return { status, message, id };
+    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if (errores){
+      for(let e of errores){
+        this.props.enqueueSnackbar(e, { variant: 'error' });
+      }
+    }
+    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+    return status;
   }
 
   modificarPaquete = async (request, id) => {
     let token = cookies.get('access_token');
     if(!token) return;
     let { status, message, paquete } = await PackageFunctions.modificarPaquete(url, token, request, id);
-    if(status === 200) this.props.enqueueSnackbar('Paquete modificado exitosamente.', { variant: 'success' });
+    if(status === 200) this.props.enqueueSnackbar('Paquete modificado correctamente.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
     return { status, message, paquete };
   }
@@ -384,6 +414,8 @@ class App extends Component {
   realizarPedido = async () => {
     let token = cookies.get('access_token');
     if(!token) return
+
+    if(this.state.cart.contenido.length === 0) return;
     
     let request = {
       userId: this.state.loggedUser.userId,
@@ -416,7 +448,7 @@ class App extends Component {
     let { status, message } = await ProductFunctions.ajustarPrecioCategoria(url, token, category, this.state.loggedUser.userCompanyId, request);
     if(status === 200) this.props.enqueueSnackbar('Precios ajustados.', { variant: 'success' });
     else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return message;
+    return status;
   }
 
   getReporteCompras = async () => {
@@ -508,6 +540,7 @@ class App extends Component {
                       eliminarPaquete={this.eliminarPaquete}
                       ajustarPrecioCategoria={this.ajustarPrecioCategoria}
                       enqueueSnackbar={this.props.enqueueSnackbar}
+                      flag={'productos'}
                     />
                   ) : (
                     this.state.shownWindow === 'carrito' ? (

@@ -28,7 +28,16 @@ const styles = theme => ({
     },
     media: {
         maxWidth: 400,
-    }
+    },
+    padding: {
+        marginLeft: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+    },
+    texto: {
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3,
+    },
   });
 
 class DetalleProducto extends Component{
@@ -36,15 +45,20 @@ class DetalleProducto extends Component{
     state = {
         producto: {},
         companyProducts:[],
+        textoCarga: 'Cargando producto...'
     }
 
     async componentWillMount(){
 
         let companyProducts = await this.props.getCompanyProductsByProduct(this.props.productId);
         let producto = await this.props.getProductById(this.props.productId);
+        let textoCarga = '';
+        if(companyProducts.length === 0) textoCarga = 'No hay compañias que vendan este producto aun.';
+
         await this.setState({
             companyProducts: companyProducts,
-            producto: producto
+            producto: producto,
+            textoCarga
         });
     }
 
@@ -58,13 +72,13 @@ class DetalleProducto extends Component{
         return (
             <Fragment>
                 {this.state.companyProducts.length === 0 ? (
-                    <Typography>
-                        Cargando producto...
+                    <Typography variant='h6' className={classes.texto}>
+                        {this.state.textoCarga}
                         {/* cambiar esto por una loading animation */}
                     </Typography>
                 ) : (
                     <Paper className={classes.root}>
-                        <div>
+                        <div className={classes.padding}>
                             <Typography variant='h4'>{this.state.producto.name}</Typography>
                             <div>
                                 <CardMedia
@@ -79,7 +93,7 @@ class DetalleProducto extends Component{
                         </div>
                         <Divider variant="middle" />
                         {this.state.producto.categories ? (
-                            <div>
+                            <div className={classes.padding}>
                                 <Typography variant='h6'>Categorias</Typography>
                                 <div>
                                     {this.state.producto.categories.map(c => (
@@ -92,6 +106,8 @@ class DetalleProducto extends Component{
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
+                                    <TableCell padding="checkbox">
+                                    </TableCell>
                                     <TableCell>
                                         Empresa
                                     </TableCell>
@@ -112,6 +128,8 @@ class DetalleProducto extends Component{
                             <TableBody>
                                 {this.state.companyProducts.map((product, i) => (
                                     <TableRow key={i}>
+                                        <TableCell padding="checkbox">
+                                        </TableCell>
                                         <TableCell>
                                             {product.companyName}
                                         </TableCell>

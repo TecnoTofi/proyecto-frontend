@@ -18,7 +18,11 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
         marginTop: theme.spacing.unit * 2
-      }
+    },
+    texto: {
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3,
+    },
 });
 
 class List extends Component{
@@ -30,6 +34,7 @@ class List extends Component{
             categorias: [],
             searchName: '',
             selectedCategory: [],
+            textoCarga: 'Cargando productos...'
         }
     // }
 
@@ -54,10 +59,14 @@ class List extends Component{
         else if(productos && !paquetes) listado = productos;
         else if(!productos && paquetes) listado = paquetes;
         else listado = [];
+
+        let textoCarga = '';
+        if(listado.length === 0) textoCarga = 'Esta compañia aun no tiene productos a la venta.';
         
         await this.setState({
             listado: listado,
-            categorias: categorias
+            categorias: categorias,
+            textoCarga
         });
     }
 
@@ -107,8 +116,8 @@ class List extends Component{
         return(
             <Fragment>
                 {this.state.listado.length === 0 ? (
-                    <Typography>
-                        Cargando productos...
+                    <Typography variant='h6' className={classes.texto}>
+                        {this.state.textoCarga}
                         {/* cambiar esto por una loading animation */}
                     </Typography>
                 ) : (

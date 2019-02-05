@@ -13,7 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/LibraryBooks';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import Validator from 'validator';
-import UploadImage from '../Helpers/UploadImage';
+// import UploadImage from '../Helpers/UploadImage';
 import DeleteIcon from "@material-ui/icons/Delete";
 import Divider from '@material-ui/core/Divider';
 import IconButton from "@material-ui/core/IconButton";
@@ -209,7 +209,7 @@ export default class AltaPaquete extends Component{
                     categories: this.state.categories
                 }
     
-                let { status } = await this.props.crearPaquete(request);
+                let status = await this.props.crearPaquete(request);
                 if(status === 201) this.handleToggle();
             }
         } 

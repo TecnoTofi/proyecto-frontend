@@ -28,8 +28,7 @@ const getProductsByCompany = async (url, id) => {
                                 response.json()
                             ))
                             .then(data => {
-                                // console.log('data', data);
-                                if(data){ //ver que pasa aca
+                                if(data){
                                     let response = data.map(prod => {
                                         prod.imageUrl = `${url}/${prod.imagePath}`;
                                         prod.esPackage = false;
@@ -51,12 +50,6 @@ const getProductById = async (url, id) =>{
                                   response.json()
                                 ))
                                 .then(data => {
-                                  // console.log('data', data);
-                                  /*let response = data.map(prod => {
-                                              prod.imageUrl = `${url}/${prod.imagePath}`;
-                                              return prod;
-                                            });
-                                  return response;*/
                                   data.imageUrl = `${url}/${data.imagePath}`;
                                   return data;
                                 })
@@ -70,7 +63,6 @@ const getCompanyProductsByProduct = async (url, id) => {
                                   response.json()
                                 ))
                                 .then(data => {
-                                  // console.log('data', data);
                                   let response = data.map(prod => {
                                               prod.imageUrl = `${url}/${prod.imagePath}`;
                                               prod.esPackage = false;
@@ -86,7 +78,6 @@ const getNotAssociated = async(url, id) => {
     let productos = await fetch(`${url}/api/product/company/${id}/notassociated`)
                             .then(response => (response.json()))
                             .then(data => {
-                            // console.log('data', data);
                             let response = data.map(prod => {
                                         prod.imageUrl = `${url}/${prod.imagePath}`;
                                         prod.esPackage = false;
@@ -110,7 +101,6 @@ const registroProducto = async (url, token, request) => {
         else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
     })
     .catch(err => {
-        console.log(`Error al dar de alta el producto ${err}`);
         return {status: err.response.status, errores: err.response.data};
     });
 
@@ -125,11 +115,9 @@ const asociarProducto = async (url, token, request) => {
         data: request
     })
     .then(res => {
-        if (res) return { status: res.status, message: res.data.message, producto: res.data.product };
-        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+        return { status: res.status, message: res.data.message, producto: res.data.product };
     })
     .catch(err => {
-        console.log(`Error al asociar el producto ${err}`);
         return {status: err.response.status, errores: err.response.data};
     });
 
@@ -144,38 +132,31 @@ const modificarProducto = async (url, token, request, productId, companyId) => {
         data: request
     })
     .then(res => {
-        if (res) return { status: res.status, message: res.data.message, producto: res.data.product };
-        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+        return { status: res.status, message: res.data.message, producto: res.data.product };
     })
     .catch(err => {
-        console.log(`Error al modificar el producto ${err}`);
         return {status: err.response.status, errores: err.response.data};
     });
 
     return response;
 };
 
-const eliminarProducto = async (url, token, id) =>{
-    let request = new Request(`${url}/api/product/company/${id}`, {
-        method: 'DELETE',
-        headers: new Headers({ 'Content-Type': 'application/json', token: token})
-        });
 
-        let status;
-        let message = await fetch(request)
-                        .then((response) => {
-                            status = response.status
-                            return response.json();
-                        })
-                        .then(data => {
-                            if(data) return data.message;
-                            else return null;
-                        })
-                        .catch(err => {
-                            console.log(`Error al eliminar producto : ${err}`);
-                            return {status: err.response.status, errores: err.response.data};
-                        });
-    return { status, message };
+const eliminarProducto = async (url, token, id) =>{
+    let response = await axios({
+        method: 'delete',
+        url: `${url}/api/product/company/${id}`,
+        headers: { 'Content-Type': 'application/json', token: token }
+    })
+    .then(res => {
+        return { status: res.status, message: res.data.message };
+    })
+    .catch(err => {
+        if(err.response.data.message) return {status: err.response.status, message: err.response.data.message};
+        return {status: err.response.status, errores: err.response.data};
+    });
+
+    return response;
 };
 
 const registroProductosBulk = async (url, token, request) => {
@@ -186,11 +167,9 @@ const registroProductosBulk = async (url, token, request) => {
         data: request
     })
     .then(res => {
-        if (res) return { status: res.status, errores: res.data };
-        else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
+        return { status: res.status, errores: res.data };
     })
     .catch(err => {
-        console.log(err);
         return {status: err.response.status, errores: err.response.data};
     });
 
@@ -211,11 +190,9 @@ const ajustarPrecioCategoria = async (url, token, category, company, body) => {
                             return response.json();
                         })
                         .then(data => {
-                            if(data) return data.message;
-                            else return "Ocurrio un error";
+                            return data.message;
                         })
                         .catch(err => {
-                            console.log(`Error al procesar la solicitud : ${err}`);
                             return {status: err.response.status, errores: err.response.data};
                         });
     return { status, message };
@@ -224,7 +201,6 @@ const ajustarPrecioCategoria = async (url, token, category, company, body) => {
 export default {
     getAllProducts,
     getProductsByCompany,
-    // getProductCategories,
     registroProducto,
     asociarProducto,
     modificarProducto,

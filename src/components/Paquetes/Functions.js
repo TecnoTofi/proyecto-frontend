@@ -70,14 +70,11 @@ const crearPaquete = async (url, token, request) =>{
     data: request
   })
   .then(res => {
-      console.info(res);
-      
-      if (res) return { status: res.status, message: res.data.message, id: res.data.id };
-      else return { status: 500, message: 'Ocurrio un error al procesar la solicitud' };
+      return { status: res.status, message: res.data.message, id: res.data.id };
   })
   .catch(err => {
-      console.log(`Error al modificar el paquete ${err}`);
-      return {status: 500, message: err};
+    if(err.response.data.message) return {status: err.response.status, message: err.response.data.message};
+    return {status: err.response.status, errores: err.response.data};
   });
 
   return response;

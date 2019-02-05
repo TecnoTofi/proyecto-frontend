@@ -27,7 +27,6 @@ function formatDate(date) {
     ]
     let weekDay = date.getDay();
     let day = date.getDate();
-    console.log(day);
     let month = date.getMonth();
     let year = date.getFullYear();
   
