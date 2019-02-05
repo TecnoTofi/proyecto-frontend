@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import UserIcon from '@material-ui/icons/AccountCircle';
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
     leftIcon: {
@@ -56,22 +56,22 @@ class MenuUsername extends React.Component {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={() => {
-            this.handleClose();
-            this.props.cambiarVentana('profile')
-          }}>
-            {/* <NavLink to='/profile' className={classes.link}> */}
-                Perfil
-            {/* </NavLink> */}
-          </MenuItem>
-          <MenuItem onClick={() => {
-            this.handleClose();
-            this.props.cambiarVentana('myProducts')
-          }}>
-            {/* <NavLink to='/misProductos' className={classes.link}> */}
-                Mis productos
-            {/* </NavLink> */}
+          <NavLink to='/profile' className={classes.link}>
+            <MenuItem onClick={() => {
+              this.handleClose();
+              // this.props.cambiarVentana('profile')
+            }}>
+                  Perfil
             </MenuItem>
+          </NavLink>
+          <NavLink to='/misProductos' className={classes.link}>
+            <MenuItem onClick={() => {
+              this.handleClose();
+              // this.props.cambiarVentana('myProducts')
+            }}>
+                Mis productos
+            </MenuItem>
+          </NavLink>
             {/* <MenuItem onClick={() => {
               this.handleClose();
               this.props.cambiarVentana('package')

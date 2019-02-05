@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { NavLink } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,15 +12,17 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 
-// import { NavLink } from 'react-router-dom';
-
 const styles = theme => ({
   card: {
     maxWidth: 345,
   },
   media: {
     objectFit: 'contain'
-  }
+  },
+  link: {
+    color: 'inherit',
+    textDecoration: 'none'
+  },
 });
 
 class ProductItem extends Component {
@@ -43,36 +46,40 @@ class ProductItem extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardActionArea onClick={this.verDetalle}>
-          <CardMedia
-            component="img"
-            alt={this.props.item.name}
-            className={classes.media}
-            height="140"
-            src={`${this.props.item.imageUrl}`}
-            title={this.props.item.name}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {this.props.item.name}
-            </Typography>
-            {this.props.item.price ? (
-              <Typography gutterBottom variant="caption" component="h2">
-                ${this.props.item.price}
+        <NavLink to={this.props.item.esPackage ? '/package' : '/product'} className={classes.link}>
+          <CardActionArea onClick={this.verDetalle}>
+            <CardMedia
+              component="img"
+              alt={this.props.item.name}
+              className={classes.media}
+              height="140"
+              src={`${this.props.item.imageUrl}`}
+              title={this.props.item.name}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {this.props.item.name}
               </Typography>
-            ) : null}
-            {this.props.item.description ? (
-              <Typography gutterBottom variant="overline" component="h2">
-                {this.props.item.description}
-              </Typography>
-            ) : null}
-          </CardContent>
-        </CardActionArea>
+              {this.props.item.price ? (
+                <Typography gutterBottom variant="caption" component="h2">
+                  ${this.props.item.price}
+                </Typography>
+              ) : null}
+              {this.props.item.description ? (
+                <Typography gutterBottom variant="overline" component="h2">
+                  {this.props.item.description}
+                </Typography>
+              ) : null}
+            </CardContent>
+          </CardActionArea>
+        </NavLink>
         <CardActions>
           <Fragment>
-            <Button size="small" color="primary" onClick={this.verDetalle}>
-              Ver
-            </Button>
+            <NavLink to={this.props.item.esPackage ? '/package' : '/product'} className={classes.link}>
+              <Button size="small" color="primary" onClick={this.verDetalle}>
+                Ver
+              </Button>
+            </NavLink>
             {this.props.flagCart && this.props.flagCart !== this.props.item.companyId ? (
               <Button size="small" color="primary" onClick={this.agregarAlCarrito}>
                 <CartIcon className={classes.leftIcon} />

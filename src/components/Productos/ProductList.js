@@ -63,6 +63,8 @@ class List extends Component{
         let textoCarga = '';
         if(listado.length === 0) textoCarga = 'Esta compañia aun no tiene productos a la venta.';
         
+        console.log('listado', listado)
+
         await this.setState({
             listado: listado,
             categorias: categorias,

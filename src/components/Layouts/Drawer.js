@@ -2,6 +2,7 @@ import React from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { NavLink } from 'react-router-dom';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -57,13 +58,15 @@ class Drawer extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List>
+          <NavLink to='/profile' className={classes.link}>
             <ListItem button onClick={() => {
               this.toggleDrawer(); //por alguna razon no se esta llamando
-              this.props.cambiarVentana('profile');
+              // this.props.cambiarVentana('profile');
             }}>
                 <ListItemIcon><UserIcon /></ListItemIcon>
                 <ListItemText primary='Mi perfil' />
             </ListItem>
+          </NavLink>
           {/* <ListItem button>
               <ListItemIcon><WalletIcon /></ListItemIcon>
               <ListItemText primary='Mis metodos de pago' />
@@ -73,32 +76,38 @@ class Drawer extends React.Component {
               <ListItemIcon><HistorialIcon /></ListItemIcon>
               <ListItemText primary='Historial de compras' />
           </ListItem> */}
-          <ListItem button onClick={() => {
-             this.toggleDrawer(); //por alguna razon no se esta llamando
-             this.props.cambiarVentana('reporteCompras');
-           }}>
-              <ListItemIcon><HistorialIcon /></ListItemIcon>
-              <ListItemText primary='Historial de compras' />
-          </ListItem>
-          <ListItem button onClick={() => {
-             this.toggleDrawer(); //por alguna razon no se esta llamando
-             this.props.cambiarVentana('reporteVentas');
-           }}>
-              <ListItemIcon><HistorialIcon /></ListItemIcon>
-              <ListItemText primary='Historial de ventas' />
-          </ListItem>
+          <NavLink to='/reporte/compras' className={classes.link}>
+            <ListItem button onClick={() => {
+              this.toggleDrawer(); //por alguna razon no se esta llamando
+              // this.props.cambiarVentana('reporteCompras');
+            }}>
+                <ListItemIcon><HistorialIcon /></ListItemIcon>
+                <ListItemText primary='Historial de compras' />
+            </ListItem>
+          </NavLink>
+          <NavLink to='/reporte/ventas' className={classes.link}>
+            <ListItem button onClick={() => {
+              this.toggleDrawer(); //por alguna razon no se esta llamando
+              // this.props.cambiarVentana('reporteVentas');
+            }}>
+                <ListItemIcon><HistorialIcon /></ListItemIcon>
+                <ListItemText primary='Historial de ventas' />
+            </ListItem>
+          </NavLink>
           {/* <ListItem button>
               <ListItemIcon><CamionIcon /></ListItemIcon>
               <ListItemText primary='Historial de despachos' />
           </ListItem> */}
           <Divider />
+          <NavLink to='/misProductos' className={classes.link}>
            <ListItem button onClick={() => {
              this.toggleDrawer(); //por alguna razon no se esta llamando
-             this.props.cambiarVentana('myProducts');
+            //  this.props.cambiarVentana('myProducts');
            }}>
               <ListItemIcon><ProductsIcon /></ListItemIcon>
               <ListItemText primary='Mis productos' />
            </ListItem>
+          </NavLink>
           <AltaProducto
             companyId={this.props.companyId}
             getCategories={this.props.getCategories}
@@ -127,23 +136,24 @@ class Drawer extends React.Component {
                 <ListItemIcon><BestFiveIcon /></ListItemIcon>
                 <ListItemText primary='Top 5 mas vendido' />
             </ListItem> */}
-            
-            <ListItem button onClick={() => {
-              this.toggleDrawer(); //por alguna razon no se esta llamando
-              this.props.cambiarVentana('reporteTopCincoMas');
-            }}>
-                <ListItemIcon><BestFiveIcon /></ListItemIcon>
-                <ListItemText primary='Top 5 mas vendido' />
-            </ListItem>
-
-            <ListItem button onClick={() => {
-              this.toggleDrawer(); //por alguna razon no se esta llamando
-              this.props.cambiarVentana('reporteTopCincoMenos');
-            }}>
-                <ListItemIcon><WorstFiveIcon /></ListItemIcon>
-                <ListItemText primary='Top 5 menos vendido' />
-            </ListItem>
-
+            <NavLink to='/reporte/topcincomas' className={classes.link}>
+              <ListItem button onClick={() => {
+                this.toggleDrawer(); //por alguna razon no se esta llamando
+                // this.props.cambiarVentana('reporteTopCincoMas');
+              }}>
+                  <ListItemIcon><BestFiveIcon /></ListItemIcon>
+                  <ListItemText primary='Top 5 mas vendido' />
+              </ListItem>
+            </NavLink>
+            <NavLink to='/reporte/topcincomenos' className={classes.link}>
+              <ListItem button onClick={() => {
+                this.toggleDrawer(); //por alguna razon no se esta llamando
+                // this.props.cambiarVentana('reporteTopCincoMenos');
+              }}>
+                  <ListItemIcon><WorstFiveIcon /></ListItemIcon>
+                  <ListItemText primary='Top 5 menos vendido' />
+              </ListItem>
+            </NavLink>
             {/* <ListItem button>
                 <ListItemIcon><WorstFiveIcon /></ListItemIcon>
                 <ListItemText primary='Top 5 menos vendido' />

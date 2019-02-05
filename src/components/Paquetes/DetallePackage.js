@@ -31,7 +31,16 @@ const styles = theme => ({
     },
     media: {
         maxWidth: 400,
-    }
+    },
+    padding: {
+        marginLeft: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+    },
+    texto: {
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3,
+    },
   });
 
 class DetallePackage extends Component{
@@ -40,12 +49,18 @@ class DetallePackage extends Component{
         paquete: {},
         dense: false,
         secondary: true,
+        textoCarga: 'Cargando paquete...'
     }
 
     async componentWillMount(){
         let paquete = await this.props.getPackageById(this.props.packageId);
+
+        let textoCarga = '';
+        if(!paquete) textoCarga = 'No se pudo encontrar paquete.';
+
         await this.setState({
-            paquete: paquete
+            paquete: paquete,
+            textoCarga
         });
     }
 
@@ -68,13 +83,13 @@ class DetallePackage extends Component{
         return (
             <Fragment>
                 {!this.state.paquete ? (
-                    <Typography>
-                        Cargando paquete...
+                    <Typography variant='h6' className={classes.texto}>
+                        {this.state.textoCarga}
                         {/* cambiar esto por una loading animation */}
                     </Typography>
                 ) : (
                     <Paper className={classes.root}>
-                        <div>
+                    <div className={classes.padding}>
                             <Typography variant='h4'>{this.state.paquete.name}</Typography>
                             <div>
                                 <CardMedia
@@ -88,11 +103,13 @@ class DetallePackage extends Component{
                             </div>
                         </div>
                         <Divider variant="middle" />
-                        <Typography variant='h6'>Descripcion</Typography>
-                        <Typography variant='body1'>{this.state.paquete.description}</Typography>
+                        <div className={classes.padding}>
+                            <Typography variant='h6'>Descripcion</Typography>
+                            <Typography variant='body1'>{this.state.paquete.description}</Typography>
+                        </div>
                         <Divider variant="middle" />
                         {this.state.paquete.categories ? (
-                            <div>
+                            <div className={classes.padding}>
                                 <Typography variant='h6'>Categorias</Typography>
                                 <div>
                                     {this.state.paquete.categories.map(c => (
@@ -103,7 +120,7 @@ class DetallePackage extends Component{
                         ) : null}
                         <Divider variant="middle" />
                         {this.state.paquete.products ? (
-                            <Fragment>
+                            <div className={classes.padding}>
                                 <Grid item xs={12} md={6}>
                                     <Typography variant="h6" className={classes.title}>
                                         Productos
@@ -124,12 +141,14 @@ class DetallePackage extends Component{
                                         </List>
                                     </div>
                                 </Grid>
-                            </Fragment>
+                            </div>
                         ) : null}
                         <Divider variant="middle" />
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
+                                <TableCell padding="checkbox">
+                                    </TableCell>
                                     <TableCell>
                                         Empresa
                                     </TableCell>
@@ -142,13 +161,17 @@ class DetallePackage extends Component{
                                     <TableCell>
                                         Descripcion
                                     </TableCell>
-                                    <TableCell>
-                                        Acciones
-                                    </TableCell>
+                                    {this.props.loggedCompany !== 0 ? (
+                                        <TableCell>
+                                            Acciones
+                                        </TableCell>
+                                    ) : null}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 <TableRow key={0}>
+                                    <TableCell padding="checkbox">
+                                    </TableCell>
                                     <TableCell>
                                         {this.state.paquete.companyName}
                                     </TableCell>

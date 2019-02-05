@@ -14,7 +14,7 @@ import StoresIcon from '@material-ui/icons/Store';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ProductsIcon from '@material-ui/icons/Fastfood';
 import MenuUsername from '../Helpers/MenuUsername';
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -62,16 +62,16 @@ function Header(props) {
               enqueueSnackbar={props.enqueueSnackbar}
             />
           ) : null}
-            <Typography
-              variant="h6"
-              color="inherit"
-              className={classes.grow}
-              onClick={() => {props.cambiarVentana('home')}}
-            >
-              {/* <NavLink to='/' className={classes.link}> */}
+            <NavLink to='/' className={classes.link}>
+              <Typography
+                variant="h6"
+                color="inherit"
+                className={classes.grow}
+                // onClick={() => {props.cambiarVentana('home')}}
+              >
                 NuestraApp
-              {/* </NavLink> */}
-            </Typography>
+              </Typography>
+            </NavLink>
           {/* <NavLink to='/' className={classes.link}> */}
             {/* <Button
               color="inherit"
@@ -80,32 +80,32 @@ function Header(props) {
               Dashboard
             </Button> */}
           {/* </NavLink> */}
-          {/* <NavLink to='/companies' className={classes.link}> */}
+          <NavLink to='/companies' className={classes.link}>
             <Button
-              color="inherit"
-              onClick={() => {props.cambiarVentana('companies')}}>
+              color="inherit">
+              {/* onClick={() => {props.cambiarVentana('companies')}}> */}
               <StoresIcon className={classes.leftIcon} />
               Empresas
             </Button>
-          {/* </NavLink> */}
-          {/* <NavLink to='/products' className={classes.link}> */}
+          </NavLink>
+          <NavLink to='/products' className={classes.link}>
             <Button
-              color="inherit"
-              onClick={() => {props.cambiarVentana('productsGeneric')}}>
+              color="inherit">
+              {/* onClick={() => {props.cambiarVentana('productsGeneric')}}> */}
               <ProductsIcon className={classes.leftIcon} />
               Productos
             </Button>
-          {/* </NavLink> */}
+          </NavLink>
           {props.logged ? (
             <Fragment>
-              {/* <NavLink to='/carrito' className={classes.link}> */}
+              <NavLink to='/carrito' className={classes.link}>
                 <Button
-                  color="inherit"
-                  onClick={() => {props.cambiarVentana('carrito')}}>
+                  color="inherit">
+                  {/* onClick={() => {props.cambiarVentana('carrito')}}> */}
                   <ShoppingCartIcon className={classes.leftIcon} />
                   Carrito
                 </Button>
-              {/* </NavLink> */}
+              </NavLink>
                 <MenuUsername
                   cambiarVentana={props.cambiarVentana}
                   userName={props.loggedUser.userName}

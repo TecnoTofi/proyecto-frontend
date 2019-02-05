@@ -18,7 +18,11 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
         marginTop: theme.spacing.unit * 2
-      }
+      },
+      texto: {
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3,
+    },
 });
 
 class List extends Component{
@@ -31,7 +35,8 @@ class List extends Component{
             tipos: [],
             searchName: '',
             selectedCategory: [],
-            selectedType: []
+            selectedType: [],
+            textoCarga: 'Cargando compañias...'
         }
     // }
 
@@ -51,18 +56,23 @@ class List extends Component{
         // let listado = [];
         // if(!this.props.company && this.props.company !== 0){
             // console.log('companyId', this.props.company);
-            let listado = await this.props.getContent();
+        let listado = await this.props.getContent();
         // }
         // else
         //     listado = await this.props.getContent();
         let categorias = await this.props.getCategories();
         // let tipos = [];
         // if(this.props.flag === 'companias')
-            let tipos = await this.props.getTipos();
+        let tipos = await this.props.getTipos();
+
+        let textoCarga = '';
+        if(listado.length === 0) textoCarga = 'Esta compañia aun no tiene productos a la venta.';
+
         await this.setState({
             listado: listado,
             categorias: categorias,
-            tipos: tipos
+            tipos: tipos,
+            textoCarga
         });
     }
 
@@ -107,8 +117,8 @@ class List extends Component{
         return(
             <Fragment>
                 {this.state.listado.length === 0 ? (
-                    <Typography>
-                        Cargando empresas...
+                    <Typography variant='h6' className={classes.texto}>
+                        {this.state.textoCarga}
                         {/* cambiar esto por una loading animation */}
                     </Typography>
                 ) : (

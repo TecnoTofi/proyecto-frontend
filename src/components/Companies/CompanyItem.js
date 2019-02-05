@@ -10,7 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DetalleCompany from './DetalleCompany';
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const styles = {
   card: {
@@ -18,6 +18,10 @@ const styles = {
   },
   media: {
     objectFit: 'contain',
+  },
+  link: {
+    color: 'inherit',
+    textDecoration: 'none'
   },
 };
 
@@ -32,27 +36,31 @@ class CompanyItem extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardActionArea onClick={this.handleProdClick}>
-          <CardMedia
-            component="img"
-            alt={this.props.item.name}
-            className={classes.media}
-            height="140"
-            src={`${this.props.item.imageUrl}`}
-            title={this.props.item.name}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {this.props.item.name}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
+        <NavLink to='/products/company' className={classes.link}>
+          <CardActionArea onClick={this.handleProdClick}>
+            <CardMedia
+              component="img"
+              alt={this.props.item.name}
+              className={classes.media}
+              height="140"
+              src={`${this.props.item.imageUrl}`}
+              title={this.props.item.name}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {this.props.item.name}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </NavLink>
         <CardActions>
           <Fragment >
             <DetalleCompany company={this.props.item} />
+            <NavLink to='/products/company' className={classes.link}>
               <Button size="small" color="primary" onClick={this.handleProdClick} >
                 Productos
               </Button>
+            </NavLink>
           </Fragment>
         </CardActions>
       </Card>

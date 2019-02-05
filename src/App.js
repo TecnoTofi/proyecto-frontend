@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import { withSnackbar } from 'notistack';
 import { Header } from './components/Layouts/';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
 import Home from './components/PaginasPrincipales/Home';
@@ -226,8 +227,8 @@ class App extends Component {
           subTotalEnvios: 0,
           total: 0
         },
-        companiaSeleccionada: 0,
-        productSeleccionado:0
+        // companiaSeleccionada: 0,
+        // productSeleccionado:0
       });
       cookies.remove('access_token', { path: '/' });
       this.cambiarVentana('home');
@@ -475,146 +476,158 @@ class App extends Component {
     return await ReportesFunctions.getTopCincoMenosVendidos(url, token, this.state.loggedUser.userCompanyId, date);
   }
 
+  linkProductList = () => (
+    <ProductList
+      getProductos={this.getAllProducts}
+      getPaquetes={this.getAllPackages}
+      getCategories={this.getCategories}
+      cambiarVentana={this.cambiarVentana}
+    />
+  );
+
+  linkCompanyList = () => (
+    <CompanyList
+      getContent={this.getAllCompanies}
+      getCategories={this.getRubros}
+      getTipos={this.getTypes}
+      onCompanyClick={this.seleccionarCompany}
+    />
+  );
+
+  linkCarrito = () => (
+    <Carrito 
+      cart={this.state.cart}
+      onDelete={this.borrarItemCarrito}
+      cartEnvioChange={this.cartEnvioChange}
+      cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
+      realizarPedido={this.realizarPedido}
+      sendVoucher={this.cartTotalCalculate}
+    />
+  );
+
+  linkProfile = () => (
+    <Profile 
+      getUser={this.getUserById}
+      getCompany={this.getCompanyById}
+      userId={this.state.loggedUser.userId}
+      companyId={this.state.loggedUser.userCompanyId}
+      getRubros={this.getRubros}
+      modificarPerfil={this.modificarPerfil}
+    />
+  );
+
+  linkMisProductos = () => (
+    <MisProductos
+      getProductos={this.getProductsByCompany}
+      getPaquetes={this.getPackagesByCompany}
+      company={this.state.loggedUser.userCompanyId}
+      getCategories={this.getCategories}
+      modificarProducto={this.modificarProducto}
+      eliminarProducto={this.eliminarProducto}
+      modificarPaquete={this.modificarPaquete}
+      eliminarPaquete={this.eliminarPaquete}
+      ajustarPrecioCategoria={this.ajustarPrecioCategoria}
+      enqueueSnackbar={this.props.enqueueSnackbar}
+      flag={'productos'}
+    />
+  );
+
+  linkReporteCompras = () => (
+    <ReporteCompras
+      getPedidos={this.getReporteCompras}
+    />
+  );
+
+  linkReporteVentas = () => (
+    <ReporteVentas
+      getTransactions={this.getReporteVentas}
+    />
+  );
+
+  linkReporteTopCincoMas = () => (
+    <TopCincoMasVendidos
+      getDatos={this.getTopCincoMasVendidos}
+    />
+  );
+
+  linkReporteTopCincoMenos = () => (
+    <TopCincoMenosVendidos
+      getDatos={this.getTopCincoMenosVendidos}
+    />
+  );
+
+  linkProductsCompanyList = () => (
+    <ProductList
+      flagCart={this.state.loggedUser.userCompanyId}
+      agregarAlCarrito={this.agregarAlCarrito}
+      getProductos={this.getProductsByCompany}
+      getPaquetes={this.getPackagesByCompany}
+      company={this.state.companiaSeleccionada}
+      getCategories={this.getCategories}
+      cambiarVentana={this.cambiarVentana}
+    />
+  );
+
+  linkDetalleProducto = () => (
+    <DetalleProducto 
+      getCompanyProductsByProduct={this.getCompanyProductsByProduct}
+      productId={this.state.productSeleccionado}
+      getProductById={this.getProductById}
+      agregarAlCarrito={this.agregarAlCarrito}
+      loggedCompany={this.state.loggedUser.userCompanyId}
+    />
+  );
+
+  linkDetallePackage = () => (
+    <DetallePackage 
+      packageId={this.state.productSeleccionado}
+      getPackageById={this.getPackageById}
+      agregarAlCarrito={this.agregarAlCarrito}
+      loggedCompany={this.state.loggedUser.userCompanyId}
+    />
+  );
+
   render() {
     return (
-        <Fragment>
-          <Header 
-            cambiarVentana={this.cambiarVentana}
-            logged={this.state.logged}
-            loggedUser={this.state.loggedUser}
-            login={this.login}
-            logout={this.logout}
-            signup={this.signup}
-            getTypes={this.getTypes}
-            getRubros={this.getRubros}
-            getCategories={this.getCategories}
-            registrarProducto={this.registroProductoAsociacion}
-            getProducts={this.getAllProducts}
-            getNotAssociated={this.getNotAssociatedProducts}
-            companies={this.state.companies}
-            registroEmpresaProducto={this.asociarProducto}
-            registroProductosBulk={this.registroProductosBulk}
-            getProductosByCompany = {this.getProductsByCompany}
-            crearPaquete={this.crearPaquete}
-            enqueueSnackbar={this.props.enqueueSnackbar}
-          />
-          {this.state.shownWindow === 'home' ? (
-            <Home />
-          ) : (
-            this.state.shownWindow === 'companies' ? (
-              <CompanyList
-                getContent={this.getAllCompanies}
-                getCategories={this.getRubros}
-                getTipos={this.getTypes}
-                onCompanyClick={this.seleccionarCompany}
-              />
-            ) : (
-              this.state.shownWindow === 'productsGeneric' ? (
-                <ProductList
-                  getProductos={this.getAllProducts}
-                  getPaquetes={this.getAllPackages}
-                  getCategories={this.getCategories}
-                  cambiarVentana={this.cambiarVentana}
-                />
-              ) : (
-                this.state.shownWindow === 'productsCompany' ? (
-                  <ProductList
-                    flagCart={this.state.loggedUser.userCompanyId}
-                    agregarAlCarrito={this.agregarAlCarrito}
-                    getProductos={this.getProductsByCompany}
-                    getPaquetes={this.getPackagesByCompany}
-                    company={this.state.companiaSeleccionada}
-                    getCategories={this.getCategories}
-                    cambiarVentana={this.cambiarVentana}
-                  />
-                ) : (
-                  this.state.shownWindow === 'myProducts' ? (
-                    <MisProductos
-                      getProductos={this.getProductsByCompany}
-                      getPaquetes={this.getPackagesByCompany}
-                      company={this.state.loggedUser.userCompanyId}
-                      getCategories={this.getCategories}
-                      modificarProducto={this.modificarProducto}
-                      eliminarProducto={this.eliminarProducto}
-                      modificarPaquete={this.modificarPaquete}
-                      eliminarPaquete={this.eliminarPaquete}
-                      ajustarPrecioCategoria={this.ajustarPrecioCategoria}
-                      enqueueSnackbar={this.props.enqueueSnackbar}
-                      flag={'productos'}
-                    />
-                  ) : (
-                    this.state.shownWindow === 'carrito' ? (
-                      <Carrito 
-                        cart={this.state.cart}
-                        onDelete={this.borrarItemCarrito}
-                        cartEnvioChange={this.cartEnvioChange}
-                        cambiarCantidadProdCarrito={this.cambiarCantidadProdCarrito}
-                        realizarPedido={this.realizarPedido}
-                        sendVoucher={this.cartTotalCalculate}
-                      />
-                    ) : (
-                      this.state.shownWindow === 'profile' ? (
-                        <Profile 
-                          getUser={this.getUserById}
-                          getCompany={this.getCompanyById}
-                          userId={this.state.loggedUser.userId}
-                          companyId={this.state.loggedUser.userCompanyId}
-                          getRubros={this.getRubros}
-                          modificarPerfil={this.modificarPerfil}
-                        />
-                      ) : (
-                        this.state.shownWindow === 'reporteCompras' ? (
-                          <ReporteCompras
-                            getPedidos={this.getReporteCompras}
-                          />
-                        ) : (
-                          this.state.shownWindow === 'reporteVentas' ? (
-                            <ReporteVentas
-                              getTransactions={this.getReporteVentas}
-                            />
-                          ) : (
-                            this.state.shownWindow === 'productDetalle' ? (
-                              <DetalleProducto 
-                                getCompanyProductsByProduct={this.getCompanyProductsByProduct}
-                                productId={this.state.productSeleccionado}
-                                getProductById={this.getProductById}
-                                agregarAlCarrito={this.agregarAlCarrito}
-                                loggedCompany={this.state.loggedUser.userCompanyId}
-                              />
-                            ) : (
-                              this.state.shownWindow === 'packageDetalle' ? (
-                              <DetallePackage 
-                                packageId={this.state.productSeleccionado}
-                                getPackageById={this.getPackageById}
-                                agregarAlCarrito={this.agregarAlCarrito}
-                                loggedCompany={this.state.loggedUser.userCompanyId}
-                              />
-                              ) : (
-                                this.state.shownWindow === 'reporteTopCincoMas' ? (
-                                  <TopCincoMasVendidos
-                                    getDatos={this.getTopCincoMasVendidos}
-                                  />
-                                ) : (
-                                  this.state.shownWindow === 'reporteTopCincoMenos' ? (
-                                    <TopCincoMenosVendidos
-                                      getDatos={this.getTopCincoMenosVendidos}
-                                    />
-                                  ) : (
-                                    null
-                                  )
-                                )
-                              )
-                            )
-                          )
-                        )
-                      )
-                    )
-                  )
-                )
-              )
-            )
-          )}
-        </Fragment>
+        <BrowserRouter>
+          <Fragment>
+            <Header 
+              cambiarVentana={this.cambiarVentana}
+              logged={this.state.logged}
+              loggedUser={this.state.loggedUser}
+              login={this.login}
+              logout={this.logout}
+              signup={this.signup}
+              getTypes={this.getTypes}
+              getRubros={this.getRubros}
+              getCategories={this.getCategories}
+              registrarProducto={this.registroProductoAsociacion}
+              getProducts={this.getAllProducts}
+              getNotAssociated={this.getNotAssociatedProducts}
+              companies={this.state.companies}
+              registroEmpresaProducto={this.asociarProducto}
+              registroProductosBulk={this.registroProductosBulk}
+              getProductosByCompany = {this.getProductsByCompany}
+              crearPaquete={this.crearPaquete}
+              enqueueSnackbar={this.props.enqueueSnackbar}
+            />
+            <Switch>
+              <Route path='/' component={Home} exact />
+              <Route path='/products' component={this.linkProductList} exact />
+              <Route path='/companies' component={this.linkCompanyList} exact />
+              <Route path='/carrito' component={this.linkCarrito} exact />
+              <Route path='/profile' component={this.linkProfile} exact />
+              <Route path='/misProductos' component={this.linkMisProductos} exact />
+              <Route path='/reporte/compras' component={this.linkReporteCompras} exact />
+              <Route path='/reporte/ventas' component={this.linkReporteVentas} exact />
+              <Route path='/reporte/topcincomas' component={this.linkReporteTopCincoMas} exact />
+              <Route path='/reporte/topcincomenos' component={this.linkReporteTopCincoMenos} exact />
+              <Route path='/products/company' component={this.linkProductsCompanyList} exact />
+              <Route path='/product' component={this.linkDetalleProducto} exact />
+              <Route path='/package' component={this.linkDetallePackage} exact />
+            </Switch>
+          </Fragment>
+        </BrowserRouter>
     );
   }
 }

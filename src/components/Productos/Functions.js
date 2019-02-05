@@ -6,6 +6,7 @@ const getAllProducts = async (url) => {
                                 response.json()
                                 ))
                                 .then(data => {
+                                    console.log('data', data)
                                     if(!data.message){
                                         let response = data.map(prod => {
                                             prod.imageUrl = `${url}/${prod.imagePath}`;

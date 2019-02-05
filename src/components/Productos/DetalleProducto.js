@@ -120,9 +120,11 @@ class DetalleProducto extends Component{
                                     <TableCell>
                                         Descripcion
                                     </TableCell>
-                                    <TableCell>
-                                        Acciones
-                                    </TableCell>
+                                    {this.props.loggedCompany !== 0 ? (
+                                        <TableCell>
+                                            Acciones
+                                        </TableCell>
+                                    ) : null}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
