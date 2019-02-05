@@ -24,6 +24,8 @@ import ReportesFunctions from './components/Reportes/Functions';
 import Cookies from 'universal-cookie';
 import TopCincoMasVendidos from './components/Reportes/TopCincoMasVendidos';
 import TopCincoMenosVendidos from './components/Reportes/TopCincoMenosVendidos';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const cookies = new Cookies();
 
@@ -172,11 +174,18 @@ class App extends Component {
   }
 
   modificarPerfil = async (request) => {
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
-    if(status === 200) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
-    else  this.props.enqueueSnackbar(message, { variant: 'error' });
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
+      if(status === 200) this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
+      else  this.props.enqueueSnackbar(message, { variant: 'error' });
+    }
   }
 
   login = async (userEmail, userPassword) => {
@@ -233,7 +242,9 @@ class App extends Component {
         // productSeleccionado:0
       });
       cookies.remove('access_token', { path: '/' });
-      this.cambiarVentana('home');
+      // this.cambiarVentana('home');
+      history.push('/');
+      history.go();
     }
     else{
       console.log('Error al cerrar sesion');
@@ -249,110 +260,166 @@ class App extends Component {
   }
 
   registroProductoAsociacion = async (request) => {
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message, errores } = await ProductFunctions.registroProducto(url, token, request);
-    if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
-    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
-    else if (errores){
-      for(let e of errores){
-        this.props.enqueueSnackbar(e, { variant: 'error' });
-      }
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
-    return status;
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, errores } = await ProductFunctions.registroProducto(url, token, request);
+      if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
+      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return status;
+    }
   }
 
   asociarProducto = async (request) => {
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message, errores } = await ProductFunctions.asociarProducto(url, token, request);
-    if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
-    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
-    else if (errores){
-      for(let e of errores){
-        this.props.enqueueSnackbar(e, { variant: 'error' });
-      }
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
-    return status;
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, errores } = await ProductFunctions.asociarProducto(url, token, request);
+      if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
+      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return status;
+    }
   }
 
   registroProductosBulk = async (request) => {
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, errores } = await ProductFunctions.registroProductosBulk(url, token, request);
-    if(status === 201) this.props.enqueueSnackbar('Carga bulk finalizada con exito.', { variant: 'success' });
-    else{
-      for(let e of errores){
-        this.props.enqueueSnackbar(`${e.codigo} - ${e.mensaje}`, { variant: 'error' });
-      }
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    return status;
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, errores } = await ProductFunctions.registroProductosBulk(url, token, request);
+      if(status === 201) this.props.enqueueSnackbar('Carga bulk finalizada con exito.', { variant: 'success' });
+      else{
+        for(let e of errores){
+          this.props.enqueueSnackbar(`${e.codigo} - ${e.mensaje}`, { variant: 'error' });
+        }
+      }
+      return status;
+    }
   }
 
 
   modificarProducto = async (request, productId) => {
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message, errores, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
-    if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
-    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
-    else if (errores){
-      for(let e of errores){
-        this.props.enqueueSnackbar(e, { variant: 'error' });
-      }
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
-    return { status, producto };
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, errores, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
+      if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
+      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return { status, producto };
+    }
   }
 
   eliminarProducto = async (id) =>{
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message, errores } = await ProductFunctions.eliminarProducto(url, token, id);
-    if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
-    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
-    else if (errores){
-      for(let e of errores){
-        this.props.enqueueSnackbar(e, { variant: 'error' });
-      }
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
-    return status;
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, errores } = await ProductFunctions.eliminarProducto(url, token, id);
+      if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
+      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return status;
+    }
   }
 
   crearPaquete = async (request) =>{
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message, errores } = await PackageFunctions.crearPaquete(url, token, request);
-    if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
-    else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
-    else if (errores){
-      for(let e of errores){
-        this.props.enqueueSnackbar(e, { variant: 'error' });
-      }
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
-    return status;
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, errores } = await PackageFunctions.crearPaquete(url, token, request);
+      if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
+      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return status;
+    }
   }
 
   modificarPaquete = async (request, id) => {
-    let token = cookies.get('access_token');
-    if(!token) return;
-    let { status, message, paquete } = await PackageFunctions.modificarPaquete(url, token, request, id);
-    if(status === 200) this.props.enqueueSnackbar('Paquete modificado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return { status, message, paquete };
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, paquete } = await PackageFunctions.modificarPaquete(url, token, request, id);
+      if(status === 200) this.props.enqueueSnackbar('Paquete modificado correctamente.', { variant: 'success' });
+      else this.props.enqueueSnackbar(message, { variant: 'error' });
+      return { status, message, paquete };
+    }
   }
 
   eliminarPaquete = async (id) =>{
-    let token = cookies.get('access_token'); 
-    if(!token) return;
-    let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
-    if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return status;
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token'); 
+      if(!token) return;
+      let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
+      if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
+      else this.props.enqueueSnackbar(message, { variant: 'error' });
+      return status;
+    }
   }
 
   agregarAlCarrito = (producto, cantidad=1) => {
@@ -397,85 +464,134 @@ class App extends Component {
   // }
 
   cartTotalCalculate = async (voucher) => {
-    let token = cookies.get('access_token');
-    if(!token) return
+    let tokenValido = await this.verificarToken();
 
-    let request = {
-      contenido: this.state.cart.contenido,
-      voucher: voucher ? voucher : this.state.cart.voucher
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-
-    let { status, cart, voucher: voucherValido} = await CartFunctions.calcularTotal(url, token, request, this.state.cart);
-
-    this.setState({cart});
-
-    if(status === 200 && voucherValido && voucher) this.props.enqueueSnackbar('Voucher agregado exitosamente.', { variant: 'success' });
-    else if(status === 200 && !voucherValido && voucher) this.props.enqueueSnackbar('Voucher invalido', { variant: 'error' });
-    else if(status !== 200) this.props.enqueueSnackbar('Ocurrio un error al calcular el carrito', { variant: 'error' });
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+  
+      let request = {
+        contenido: this.state.cart.contenido,
+        voucher: voucher ? voucher : this.state.cart.voucher
+      }
+  
+      let { status, cart, voucher: voucherValido} = await CartFunctions.calcularTotal(url, token, request, this.state.cart);
+  
+      this.setState({cart});
+  
+      if(status === 200 && voucherValido && voucher) this.props.enqueueSnackbar('Voucher agregado exitosamente.', { variant: 'success' });
+      else if(status === 200 && !voucherValido && voucher) this.props.enqueueSnackbar('Voucher invalido', { variant: 'error' });
+      else if(status !== 200) this.props.enqueueSnackbar('Ocurrio un error al calcular el carrito', { variant: 'error' });
+    }
   }
 
   realizarPedido = async () => {
-    let token = cookies.get('access_token');
-    if(!token) return
+    let tokenValido = await this.verificarToken();
 
-    if(this.state.cart.contenido.length === 0) return;
-    
-    let request = {
-      userId: this.state.loggedUser.userId,
-      buyerId: this.state.loggedUser.userCompanyId,
-      amount: this.state.cart.total,
-      voucher: this.state.cart.voucher,
-      deliveryType: 'Comprador', //trabajar este punto
-      contenido: this.state.cart.contenido
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
     }
-    let { message, status } = await CartFunctions.realizarPedido(request, url, token);
-    
-    if(status === 201 || status === 200) {
-      this.props.enqueueSnackbar('Pedido realizado con exito.', { variant: 'success' });
-      this.setState({
-        cart: {
-          contenido: [],
-          subTotal: 0,
-          subTotalEnvios: 0,
-          total: 0
-        }
-      })
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+
+      if(this.state.cart.contenido.length === 0) return;
+      
+      let request = {
+        userId: this.state.loggedUser.userId,
+        buyerId: this.state.loggedUser.userCompanyId,
+        amount: this.state.cart.total,
+        voucher: this.state.cart.voucher,
+        deliveryType: 'Comprador', //trabajar este punto
+        contenido: this.state.cart.contenido
+      }
+      let { message, status } = await CartFunctions.realizarPedido(request, url, token);
+      
+      if(status === 201 || status === 200) {
+        this.props.enqueueSnackbar('Pedido realizado con exito.', { variant: 'success' });
+        this.setState({
+          cart: {
+            contenido: [],
+            subTotal: 0,
+            subTotalEnvios: 0,
+            total: 0
+          }
+        })
+      }
+      else this.props.enqueueSnackbar(message, { variant: 'error' });
     }
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
   }
 
   ajustarPrecioCategoria = async (category, request) => {
-    let token = cookies.get('access_token');
-    if(!token) return
+    let tokenValido = await this.verificarToken();
 
-    let { status, message } = await ProductFunctions.ajustarPrecioCategoria(url, token, category, this.state.loggedUser.userCompanyId, request);
-    if(status === 200) this.props.enqueueSnackbar('Precios ajustados.', { variant: 'success' });
-    else this.props.enqueueSnackbar(message, { variant: 'error' });
-    return status;
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+  
+      let { status, message } = await ProductFunctions.ajustarPrecioCategoria(url, token, category, this.state.loggedUser.userCompanyId, request);
+      if(status === 200) this.props.enqueueSnackbar('Precios ajustados.', { variant: 'success' });
+      else this.props.enqueueSnackbar(message, { variant: 'error' });
+      return status;
+    }
   }
 
   getReporteCompras = async () => {
-    let token = cookies.get('access_token');
-    if(!token) return
-    return await ReportesFunctions.getPedidosByUser(url, token, this.state.loggedUser.userId);
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+      return await ReportesFunctions.getPedidosByUser(url, token, this.state.loggedUser.userId);
+    }
   }
 
   getReporteVentas = async () => {
-    let token = cookies.get('access_token');
-    if(!token) return
-    return await ReportesFunctions.getTransactionsByCompany(url, token, this.state.loggedUser.userCompanyId);
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+      return await ReportesFunctions.getTransactionsByCompany(url, token, this.state.loggedUser.userCompanyId);
+    }
   }
 
   getTopCincoMasVendidos = async (date) => {
-    let token = cookies.get('access_token');
-    if(!token) return
-    return await ReportesFunctions.getTopCincoMasVendidos(url, token, this.state.loggedUser.userCompanyId, date);
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+      return await ReportesFunctions.getTopCincoMasVendidos(url, token, this.state.loggedUser.userCompanyId, date);
+    }
   }
 
   getTopCincoMenosVendidos = async (date) => {
-    let token = cookies.get('access_token');
-    if(!token) return
-    return await ReportesFunctions.getTopCincoMenosVendidos(url, token, this.state.loggedUser.userCompanyId, date);
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return
+      return await ReportesFunctions.getTopCincoMenosVendidos(url, token, this.state.loggedUser.userCompanyId, date);
+    }
   }
 
   linkProductList = () => (
