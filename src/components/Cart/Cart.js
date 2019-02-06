@@ -59,8 +59,8 @@ class Cart extends Component{
         let tokenValido = await this.props.verificarToken();
 
         if(!tokenValido){
-            alert('No ah iniciado sesion.');
-            history.goBack();
+            this.props.enqueueSnackbar('No ah iniciado sesion.', { variant: 'error'});
+            setTimeout(history.goBack(), 5000);
         }
     }
 

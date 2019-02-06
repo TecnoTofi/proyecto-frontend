@@ -700,9 +700,9 @@ class App extends Component {
     />
   );
 
-  linkDetallePackage = () => (
-    <DetallePackage 
-      packageId={this.state.productSeleccionado}
+  linkDetallePackage = ({match: {params}}) => (
+    <DetallePackage
+      packageId={params.productId}
       getPackageById={this.getPackageById}
       agregarAlCarrito={this.agregarAlCarrito}
       loggedCompany={this.state.loggedUser.userCompanyId}
