@@ -16,6 +16,8 @@ import CartSelect from './CartSelect';
 // import CartPickers from './CartPickers';
 import CartProduct from './CartProduct';
 import CartTotal from './CartTotal';
+import ProductsIcon from '@material-ui/icons/Fastfood';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { NavLink } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -31,6 +33,13 @@ const styles = theme => ({
         textAlign: 'center',
         marginTop: theme.spacing.unit * 3,
     },
+    link: {
+        color: 'inherit',
+        textDecoration: 'none'
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+      }
   });
 
 class Cart extends Component{
@@ -113,13 +122,15 @@ class Cart extends Component{
             <Fragment>
                 {this.state.contenido === 0 ? (
                     <div className={classes.texto}>
+                    <ShoppingCartIcon fontSize='large' />
                         <Typography variant='h6' className={classes.texto}>
                             Su carrito se encuentra vacio.
                         </Typography>
-                        <NavLink to='/products'>
+                        <NavLink to='/products' className={classes.link}>
                             <Button>
+                                <ProductsIcon className={classes.leftIcon} />
                                 Productos
-                                <ForwardIcon />
+                                <ForwardIcon fontSize='small' />
                             </Button>
                         </NavLink>
                     </div>

@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = ({
     root: {
@@ -49,9 +53,18 @@ const ReporteComprasItem = (props) => {
                 <Fragment key={transaction.id}>
                     {transaction.products ? (
                         transaction.products.map(prod => (
-                            <Typography variant='body1' key={prod.id}>
-                                {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
-                            </Typography>
+                            <Fragment>
+                                <List dense={false}>
+                                    <ListItem>
+                                        <ListItemAvatar>
+                                            <Avatar alt={prod.imageName} src={prod.imageUrl} className={classes.avatar} />
+                                        </ListItemAvatar>
+                                    </ListItem>
+                                </List>
+                                <Typography variant='body1' key={prod.id}>
+                                    {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
+                                </Typography>
+                            </Fragment>
                         ))
                     ) : null}
                     {transaction.packages ? (

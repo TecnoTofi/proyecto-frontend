@@ -13,8 +13,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
+
 import { withSnackbar } from 'notistack';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
@@ -84,8 +86,8 @@ class DetalleProducto extends Component{
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
-                            {/* cambiar esto por una loading animation */}
                         </Typography>
+                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <Button onClick={this.volverAtras}>
                                 <BackIcon />

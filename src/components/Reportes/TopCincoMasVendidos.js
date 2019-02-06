@@ -9,6 +9,11 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import BackIcon from '@material-ui/icons/ArrowBack';
+// import List from '@material-ui/core/List';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import Avatar from '@material-ui/core/Avatar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Button } from '@material-ui/core';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
@@ -35,6 +40,7 @@ class TopCincoMasVendidos extends Component{
         productos: [],
         paquetes: [],
         error: '',
+        textoCarga: 'Cargando datos...',
     }
 
     //Recibir data
@@ -53,8 +59,9 @@ class TopCincoMasVendidos extends Component{
         if(datos){
             if(datos.productos) productos = datos.productos;
             if(datos.paquetes) paquetes = datos.paquetes;
-
-            this.setState({productos, paquetes});
+            let textoCarga = '';
+            
+            this.setState({productos, paquetes, textoCarga});
         }
         else{
             this.setState({error: 'No se pudo obtener la informacion del servidor'});
@@ -79,100 +86,131 @@ class TopCincoMasVendidos extends Component{
         let { classes } = this.props;
         return(
             <Fragment>
-                {this.state.productos.length === 0 && this.state.paquetes.length === 0 ? (
+                {this.state.textoCarga ? (
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
-                            Aun no tiene ventas realizadas este mes.
+                            {this.state.textoCarga}
                         </Typography>
-                        <Button onClick={this.volverAtras}>
-                        <BackIcon />
-                            Volver
-                        </Button>
+                        <CircularProgress className={classes.progress} />
                     </div>
                 ) : (
                     <Fragment>
-                    {this.state.productos.length > 0 ? (
-                        <Fragment>
-                            <Typography variant='h4'>Productos</Typography>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            Codigo
-                                        </TableCell>
-                                        <TableCell>
-                                            Nombre
-                                        </TableCell>
-                                        <TableCell>
-                                            Cantidad
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {this.state.productos.map((product, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell>
-                                                {product.code}
-                                            </TableCell>
-                                            <TableCell>
-                                                {product.name}    
-                                            </TableCell>
-                                            <TableCell>
-                                                {product.sum}    
-                                            </TableCell>
-                                            <TableCell>
-                                                {product.description}    
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                        {this.state.productos.length === 0 && this.state.paquetes.length === 0 ? (
+                            <div className={classes.texto}>
+                                <Typography variant='h6' className={classes.texto}>
+                                    Aun no tiene ventas realizadas este mes.
+                                </Typography>
+                                <Button onClick={this.volverAtras}>
+                                <BackIcon />
+                                    Volver
+                                </Button>
+                            </div>
+                        ) : (
+                            <Fragment>
+                            {this.state.productos.length > 0 ? (
+                                <Fragment>
+                                    <Typography variant='h4' className={classes.texto}>Productos</Typography>
+                                    <Table className={classes.table}>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell padding="checkbox">
+                                                </TableCell>
+                                                {/* <TableCell>
+                                                    Imagen
+                                                </TableCell> */}
+                                                <TableCell>
+                                                    Codigo
+                                                </TableCell>
+                                                <TableCell>
+                                                    Nombre
+                                                </TableCell>
+                                                <TableCell>
+                                                    Cantidad
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {this.state.productos.map((product, i) => (
+                                                <TableRow key={i}>
+                                                    <TableCell padding="checkbox">
+                                                    </TableCell>
+                                                    {/* <TableCell>
+                                                        <List dense={false}>
+                                                            <ListItem>
+                                                                <ListItemAvatar>
+                                                                    <Avatar alt={product.imageName} src={product.imageUrl} className={classes.avatar} />
+                                                                </ListItemAvatar>
+                                                            </ListItem>
+                                                        </List>
+                                                    </TableCell> */}
+                                                    <TableCell>
+                                                        {product.code}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {product.name}    
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {product.sum}    
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {product.description}    
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Fragment>
+                            ) : (
+                                <Typography variant='h6' className={classes.texto}>
+                                    Aun no ah vendido productos
+                                </Typography>
+                            )}
+                            {this.state.paquetes.length > 0 ? (
+                                <Fragment>
+                                    <Typography variant='h4' className={classes.texto}>Paquetes</Typography>
+                                    <Table className={classes.table}>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell padding="checkbox">
+                                                </TableCell>
+                                                <TableCell>
+                                                    Codigo
+                                                </TableCell>
+                                                <TableCell>
+                                                    Nombre
+                                                </TableCell>
+                                                <TableCell>
+                                                    Cantidad
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {this.state.paquetes.map((pack, i) => (
+                                                <TableRow key={i}>
+                                                    <TableCell padding="checkbox">
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {pack.code}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {pack.name}    
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {pack.sum}    
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Fragment>
+                            ) : (
+                                <Typography variant='h6' className={classes.texto}>
+                                    Aun no ah vendido paquetes
+                                </Typography>
+                            )}
                         </Fragment>
-                    ) : (
-                        <Typography variant='h6' className={classes.texto}>
-                            Aun no ah vendido productos
-                        </Typography>
-                    )}
-                    {this.state.paquetes.length > 0 ? (
-                        <Fragment>
-                            <Typography variant='h4'>Paquetes</Typography>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            Codigo
-                                        </TableCell>
-                                        <TableCell>
-                                            Nombre
-                                        </TableCell>
-                                        <TableCell>
-                                            Cantidad
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {this.state.paquetes.map((pack, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell>
-                                                {pack.code}
-                                            </TableCell>
-                                            <TableCell>
-                                                {pack.name}    
-                                            </TableCell>
-                                            <TableCell>
-                                                {pack.sum}    
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Fragment>
-                    ) : (
-                        <Typography variant='h6' className={classes.texto}>
-                            Aun no ah vendido paquetes
-                        </Typography>
-                    )}
-                </Fragment>
+                        )}
+                    </Fragment>
                 )}
             </Fragment>
         );

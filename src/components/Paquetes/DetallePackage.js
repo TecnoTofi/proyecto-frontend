@@ -21,6 +21,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -97,8 +98,8 @@ class DetallePackage extends Component{
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
-                            {/* cambiar esto por una loading animation */}
                         </Typography>
+                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <Button onClick={this.volverAtras}>
                                 <BackIcon />

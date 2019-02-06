@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -64,8 +65,8 @@ class ReporteCompras extends Component{
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
-                            {/* cambiar esto por una loading animation */}
                         </Typography>
+                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <NavLink to='/products'>
                                 <Button>

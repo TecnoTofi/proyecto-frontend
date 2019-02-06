@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Item from './CompanyItem';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import BackIcon from '@material-ui/icons/ArrowBack';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography, Button } from '@material-ui/core';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
@@ -117,8 +118,8 @@ class List extends Component{
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
-                            {/* cambiar esto por una loading animation */}
                         </Typography>
+                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <Button onClick={this.volverAtras}>
                                 <BackIcon />

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = ({
     root: {
@@ -42,9 +46,18 @@ const ReporteVentasItem = (props) => {
             <Divider />
                     {props.transaction.products ? (
                         props.transaction.products.map(prod => (
-                            <Typography variant='body1' key={prod.id}>
-                                {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
-                            </Typography>
+                            <Fragment>
+                                <List dense={false}>
+                                    <ListItem>
+                                        <ListItemAvatar>
+                                            <Avatar alt={prod.imageName} src={prod.imageUrl} className={classes.avatar} />
+                                        </ListItemAvatar>
+                                    </ListItem>
+                                </List>
+                                <Typography variant='body1' key={prod.id}>
+                                    {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
+                                </Typography>
+                            </Fragment>
                         ))
                     ) : null}
                     {props.transaction.packages ? (

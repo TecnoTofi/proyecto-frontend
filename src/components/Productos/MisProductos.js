@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -18,6 +19,7 @@ import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import { Typography, Button } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -299,8 +301,8 @@ class EnhancedTable extends React.Component {
               <div className={classes.texto}>
                 <Typography variant='h6' className={classes.texto}>
                     {this.state.textoCarga}
-                    {/* cambiar esto por una loading animation */}
                 </Typography>
+                <CircularProgress className={classes.progress} />
                 {this.state.cargaTerminada ? (
                     <Button onClick={this.volverAtras}>
                         <BackIcon />
@@ -361,10 +363,10 @@ class EnhancedTable extends React.Component {
                                 <TableCell component="th" scope="row" padding="none">
                                     {n.code}
                                 </TableCell>
-                                <TableCell align="right">{n.name}</TableCell>
-                                <TableCell align="right">{n.stock}</TableCell>
-                                <TableCell align="right">${n.price}</TableCell>
-                                <TableCell align="right">{n.esPackage ? 'Paquete' : 'Producto'}</TableCell>
+                                <TableCell align="right"><Typography variant='subtitle1'>{n.name}</Typography></TableCell>
+                                <TableCell align="right"><Typography variant='subtitle1'>{n.stock}</Typography></TableCell>
+                                <TableCell align="right"><Typography variant='subtitle1'>$ {n.price}</Typography></TableCell>
+                                <TableCell align="right"><Typography variant='subtitle1'>{n.esPackage ? 'Paquete' : 'Producto'}</Typography></TableCell>
                                 <TableCell>
                                     {!n.esPackage ?
                                         <ModificarProducto

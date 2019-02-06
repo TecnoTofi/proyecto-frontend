@@ -7,6 +7,7 @@ import Export from '../Helpers/Export'
 import Typography from '@material-ui/core/Typography';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import { Button } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -31,6 +32,7 @@ class ReporteVentas extends Component{
         this.verificarLogin();
 
         let transacciones = await this.props.getTransactions();
+        console.log('transacciones', transacciones);
 
         let textoCarga = '', cargaTerminada = false;
         if(transacciones.length === 0){
@@ -67,8 +69,8 @@ class ReporteVentas extends Component{
                     <div className={classes.texto}>
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
-                            {/* cambiar esto por una loading animation */}
                         </Typography>
+                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <Button onClick={this.volverAtras}>
                                 <BackIcon />

@@ -27,6 +27,24 @@ const getPedidosByUser = async (url, token, userId) => {
                             .then(data => {
                                 if(data){
                                     if(status === 200){
+                                        for(let p of data){
+                                            for(let t of p.transactions){
+                                                if(t.products.length > 0){
+                                                    t.products.map(prod => {
+                                                        prod.imageUrl = `${url}/${prod.imagePath}`;
+                                                        prod.esPackage = false;
+                                                        return prod;
+                                                    })
+                                                }
+                                                if(t.packages.length > 0){
+                                                    t.packages.map(pack => {
+                                                        pack.imageUrl = `${url}/${pack.imagePath}`;
+                                                        pack.esPackage = true;
+                                                        return pack;
+                                                    })
+                                                }
+                                            }
+                                        }
                                         return data;
                                     }
                                     console.log('User no tiene pedidos');
@@ -60,6 +78,22 @@ const getTransactionsByCompany = async (url, token, companyId) => {
                             .then(data => {
                                 if(data){
                                     if(status === 200){
+                                        for(let t of data){
+                                            if(t.products.length > 0){
+                                                t.products.map(prod => {
+                                                    prod.imageUrl = `${url}/${prod.imagePath}`;
+                                                    prod.esPackage = false;
+                                                    return prod;
+                                                })
+                                            }
+                                            if(t.packages.length > 0){
+                                                t.packages.map(pack => {
+                                                    pack.imageUrl = `${url}/${pack.imagePath}`;
+                                                    pack.esPackage = true;
+                                                    return pack;
+                                                })
+                                            }
+                                        }
                                         return data;
                                     }
                                     console.log('Company no tiene ventas');
