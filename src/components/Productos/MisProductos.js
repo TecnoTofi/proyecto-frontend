@@ -366,10 +366,8 @@ class EnhancedTable extends React.Component {
                                 <TableCell align="right">${n.price}</TableCell>
                                 <TableCell align="right">{n.esPackage ? 'Paquete' : 'Producto'}</TableCell>
                                 <TableCell>
-                                  {/* <div> */}
                                     {!n.esPackage ?
                                         <ModificarProducto
-                                            // buttonClass={classes.button}
                                             product={n}
                                             categories={this.state.categories}
                                             modificar={this.props.modificarProducto}
@@ -378,7 +376,6 @@ class EnhancedTable extends React.Component {
                                         />
                                         :
                                         <ModificarPaquete
-                                            // buttonClass={classes.button}
                                             products={this.state.products}
                                             categories={this.state.categories}
                                             modificarPaquete={this.props.modificarPaquete}
@@ -389,7 +386,6 @@ class EnhancedTable extends React.Component {
                                         /> 
                                     }
                                     <Alert productId={n.id} esPackage={n.esPackage} eliminar={this.handleDelete} />
-                                  {/* </div> */}
                                 </TableCell>
                                 </TableRow>
                             );

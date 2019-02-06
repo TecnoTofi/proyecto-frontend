@@ -11,31 +11,17 @@ const styles = () => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',
-        // width: 200,
         textAlign: 'center'
     },
     paper: {
-        // width: 200,
-        // minWidth: 275,
         textAlign: 'center'
     },
     button: {
-        // textAlign: 'center'
     }
 });
 
 function CartTotal(props){
     const { classes, subTotal, subTotalEnvios, total } = props;
-
-    // let subTotal = productos.reduce((total, prod) => {
-    //     return total + (prod.price * prod.quantity);
-    // }, 0);
-    
-    // let subTotalEnvios = productos.reduce((total, prod) => {
-    //     if(prod.envio) total = total + prod.priceEnvio;
-    //     return total;
-    // }, 0);
-    // let total = subTotal + subTotalEnvios;
 
     return(
         <Fragment>

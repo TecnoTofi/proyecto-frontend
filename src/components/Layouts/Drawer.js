@@ -132,8 +132,7 @@ class Drawer extends React.Component {
                 />
                 <AssociateForm
                   companyId={this.props.companyId}
-                  getProducts={this.props.getNotAssociated} 
-                  // companies={this.props.companies} 
+                  getProducts={this.props.getNotAssociated}
                   onClick={this.props.onClickAssociate}
                 />
                 <CargaBulk

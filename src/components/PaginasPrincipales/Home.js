@@ -21,8 +21,6 @@ function Home(props){
     );
 }
 
-// export default Home;
-
 Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };

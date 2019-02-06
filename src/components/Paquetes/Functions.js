@@ -15,9 +15,7 @@ const getAllPackages = async (url) => {
                                             });
                                             return pack;
                                           });
-                                // console.log('paquetes', response);
                                 return response;
-                                // return data;
                               })
                               .catch(err => console.log(err));
     return paquetes;

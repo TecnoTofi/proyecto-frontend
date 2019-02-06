@@ -23,14 +23,9 @@ const history = createBrowserHistory();
 
 const styles = theme => ({
     root: {
-        // display: 'flex',
-        // flexWrap: 'wrap',
         marginTop: theme.spacing.unit * 3,
         marginBottom: theme.spacing.unit * 3,
         textAlign: 'center'
-    //   ...theme.mixins.gutters(),
-    //   paddingTop: theme.spacing.unit * 2,
-    //   paddingBottom: theme.spacing.unit * 2,
     },
     texto: {
         textAlign: 'center',

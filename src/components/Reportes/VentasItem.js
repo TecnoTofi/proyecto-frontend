@@ -8,13 +8,9 @@ import Divider from '@material-ui/core/Divider'
 const styles = ({
     root: {
         width: '100%',
-        // marginTop: theme.spacing.unit * 3,
         margin: 50+'px',
         overflowX: 'auto'
       },
-    //   table: {
-    //     minWidth: 700,
-    //   },
 })
 
 function formatDate(date) {

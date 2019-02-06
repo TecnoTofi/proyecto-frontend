@@ -76,11 +76,6 @@ class App extends Component {
     }
   }
 
-  cambiarVentana = (ventana, id) => {
-    if(id) this.setState({shownWindow: ventana, productSeleccionado: id});
-    else this.setState({shownWindow: ventana});
-  }
-
   verificarToken = async () => {
     let token = cookies.get('access_token');
     let { valido, data } = await AuthFunctions.verificarToken(url, token);
@@ -239,12 +234,9 @@ class App extends Component {
           subTotal: 0,
           subTotalEnvios: 0,
           total: 0
-        },
-        // companiaSeleccionada: 0,
-        // productSeleccionado:0
+        }
       });
       cookies.remove('access_token', { path: '/' });
-      // this.cambiarVentana('home');
       history.push('/');
       history.go();
     }
@@ -507,7 +499,7 @@ class App extends Component {
         buyerId: this.state.loggedUser.userCompanyId,
         amount: this.state.cart.total,
         voucher: this.state.cart.voucher,
-        deliveryType: 'Comprador', //trabajar este punto
+        deliveryType: 'Comprador',
         contenido: this.state.cart.contenido
       }
       let { message, status } = await CartFunctions.realizarPedido(request, url, token);
@@ -603,7 +595,6 @@ class App extends Component {
       getProductos={this.getAllProducts}
       getPaquetes={this.getAllPackages}
       getCategories={this.getCategories}
-      cambiarVentana={this.cambiarVentana}
     />
   );
 
@@ -694,7 +685,6 @@ class App extends Component {
       getPaquetes={this.getPackagesByCompany}
       company={this.state.companiaSeleccionada}
       getCategories={this.getCategories}
-      cambiarVentana={this.cambiarVentana}
       verificarToken={this.verificarToken}
     />
   );
@@ -707,7 +697,6 @@ class App extends Component {
       agregarAlCarrito={this.agregarAlCarrito}
       loggedCompany={this.state.loggedUser.userCompanyId}
       verificarToken={this.verificarToken}
-      // test={props}
     />
   );
 
@@ -725,8 +714,7 @@ class App extends Component {
     return (
         <BrowserRouter>
           <Fragment>
-            <Header 
-              cambiarVentana={this.cambiarVentana}
+            <Header
               logged={this.state.logged}
               loggedUser={this.state.loggedUser}
               login={this.login}

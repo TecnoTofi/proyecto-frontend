@@ -60,4 +60,3 @@ CartSelect.propTypes = {
   };
   
   export default withStyles(styles)(CartSelect);
-// export default CartSelect;

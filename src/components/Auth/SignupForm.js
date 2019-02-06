@@ -53,7 +53,6 @@ class SignupForm extends Component{
             companyFirstStreet: '',
             companySecondStreet: '',
             companyDoorNumber: '',
-            // companyType: 0,
             companyDescription:'',
             rubro: 0,
             companyImage: null,
@@ -81,13 +80,10 @@ class SignupForm extends Component{
 
     async componentWillMount(){
         let categories = await this.props.getRubros();
-        // let userTypes = await this.props.getUserTypes();
         let types = await this.props.getTypes();
-        // console.log('categories', categories);
-        // console.log('types', types);
-        this.setState({ //ver porque da error da no-op
+        
+        this.setState({
             categories,
-            // userTypes: userTypes,
             types
         })
     }
@@ -311,7 +307,6 @@ class SignupForm extends Component{
             companyFirstStreet: '',
             companySecondStreet: '',
             companyDoorNumber: '',
-            // companyType: 0,
             companyImage: null,
             companyDescription:'',
             rubro: 0,
@@ -341,8 +336,6 @@ class SignupForm extends Component{
     }
 
     onSelectTypeChange = (id) => {
-        // let companyTypeName = this.state.companyTypes.find(type => type.id === id).name;
-        // let role = this.state.userTypes.find(rol => rol.name === companyTypeName);
         this.setState({type: Number(id)});
     }
 
@@ -374,10 +367,8 @@ class SignupForm extends Component{
             request.set('companyFirstStreet', this.state.companyFirstStreet);
             request.set('companySecondStreet', this.state.companySecondStreet);
             request.set('companyDoorNumber', this.state.companyDoorNumber);
-            // request.set('companyType', this.state.companyType);
             request.set('rubro', this.state.rubro);
             request.set('companyDescription', this.state.companyDescription);
-
             //image
             request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
 

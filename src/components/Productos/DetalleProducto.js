@@ -9,7 +9,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-// import IconButton from "@material-ui/core/IconButton";
 import CardMedia from '@material-ui/core/CardMedia';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 import BackIcon from '@material-ui/icons/ArrowBack';
@@ -23,7 +22,6 @@ const history = createBrowserHistory();
 const styles = theme => ({
     root: {
       width: '100%',
-    //   marginTop: theme.spacing.unit * 3,
       overflowX: 'auto'
     },
     table: {

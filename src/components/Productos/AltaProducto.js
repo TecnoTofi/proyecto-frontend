@@ -138,7 +138,6 @@ export default class AltaProducto extends Component{
             errors.productStockError='Debe ser mayor a 0 y menor a 1000000';
         }
 
-
         this.setState({
             ...this.state,
             ...errors

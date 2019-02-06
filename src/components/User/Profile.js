@@ -326,7 +326,6 @@ const styles = theme => ({
             //image
             if(this.state.companyImage) request.append('companyImage', this.state.companyImage, this.state.companyImage.name);
 
-            // console.log('request', request);
             this.props.modificarPerfil(request);
         }
     }
@@ -360,7 +359,6 @@ const styles = theme => ({
                                 label='Nombre completo'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.userName}
                                 helperText={this.state.userNameError}
                                 error={this.state.userNameError ? true : false}
@@ -376,7 +374,6 @@ const styles = theme => ({
                                 label='Direccion de Email'
                                 type='email'
                                 fullWidth
-                                //required
                                 value= {this.state.userEmail}
                                 helperText={this.state.userEmailError}
                                 error={this.state.userEmailError ? true : false}
@@ -392,7 +389,6 @@ const styles = theme => ({
                                 label='Documento de identidad'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.userDocument}
                                 helperText={this.state.userDocumentError}
                                 error={this.state.userDocumentError ? true : false}
@@ -468,7 +464,6 @@ const styles = theme => ({
                                 label='Nombre de la empresa'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companyName}
                                 helperText={this.state.companyNameError}
                                 error={this.state.companyNameError ? true : false}
@@ -484,7 +479,6 @@ const styles = theme => ({
                                 label='RUT de la empresa'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companyRut}
                                 helperText={this.state.companyRutError}
                                 error={this.state.companyRutError ? true : false}
@@ -500,7 +494,6 @@ const styles = theme => ({
                                 label='Descripcion de la empresa'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companyDescription}
                                 helperText={this.state.companyDescriptionError}
                                 error={this.state.companyDescriptionError ? true : false}
@@ -516,7 +509,6 @@ const styles = theme => ({
                                 label='Telefono de la empresa'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companyPhone}
                                 helperText={this.state.companyPhoneError}
                                 error={this.state.companyPhoneError ? true : false}
@@ -532,7 +524,6 @@ const styles = theme => ({
                                 label='Calle principal'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companyFirstStreet}
                                 helperText={this.state.companyFirstStreetError}
                                 error={this.state.companyFirstStreetError ? true : false}
@@ -548,7 +539,6 @@ const styles = theme => ({
                                 label='Calle secundaria'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companySecondStreet}
                                 helperText={this.state.companySecondStreetError}
                                 error={this.state.companySecondStreetError ? true : false}
@@ -564,7 +554,6 @@ const styles = theme => ({
                                 label='Numero de puerta'
                                 type='text'
                                 fullWidth
-                                //required
                                 value= {this.state.companyDoorNumber}
                                 helperText={this.state.companyDoorNumberError}
                                 error={this.state.companyDoorNumberError ? true : false}

@@ -16,8 +16,6 @@ class CartPickers extends Component{
     }
 
     handleChange = (event) => {
-        // this.setState({value: event.target.value});
-        // this.props.onChange(this.props.productId, event.target.value);
         console.log('arreglar esto')
     }
 

@@ -36,7 +36,6 @@ export default class AssociateForm extends Component{
 
     async componentWillMount() {
         let productos = await this.props.getProducts();
-        // console.log(productos);
         await this.setState({productos: productos});
     }
 
@@ -144,14 +143,10 @@ export default class AssociateForm extends Component{
         event.preventDefault();
         const error = this.validate();
         if (!error){
-            // console.log('productId', this.state.productId);
-            // console.log('productos', this.state.productos);
             let product = this.state.productos.filter(prod => {
                 return Number(prod.id) === this.state.productId
             })[0];
-            // console.log('product', product);
             let {imageName, imagePath} = product;
-            // console.log('imagen', imageName, imagePath);
 
 			let request = {
 				companyId: this.props.companyId,
@@ -162,8 +157,8 @@ export default class AssociateForm extends Component{
                 stock: this.state.productStock,
                 imageName: imageName,
                 imagePath: imagePath
-			}
-            // console.log('request', request);
+            }
+            
             this.props.onClick(request);
             this.handleToggle();
         }

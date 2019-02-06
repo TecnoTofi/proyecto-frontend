@@ -8,7 +8,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Card from '@material-ui/core/Card';
-// import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
@@ -33,8 +32,6 @@ const styles = theme => ({
     maxWidth: 400,
   },
   media: {
-    // height: 0,
-    // paddingTop: '56.25%', // 16:9
     objectFit: 'cover',
   },
   actions: {
@@ -89,14 +86,7 @@ class DetalleCompany extends Component {
           <DialogTitle id="form-dialog-title">{this.props.company.name}</DialogTitle>
           <DialogContent>
           <Card className={classes.card}>
-            {/* <CardHeader
-                title={this.props.company.name}
-                //subheader="September 14, 2016"
-            /> */}
             <CardMedia
-                //className={classes.media}
-                //image={this.props.company.imageUrl}
-                //title="Paella dish"
                 component="img"
                 alt={this.props.company.name}
                 className={classes.media}

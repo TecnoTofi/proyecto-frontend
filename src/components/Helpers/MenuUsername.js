@@ -59,7 +59,6 @@ class MenuUsername extends React.Component {
           <NavLink to='/profile' className={classes.link}>
             <MenuItem onClick={() => {
               this.handleClose();
-              // this.props.cambiarVentana('profile')
             }}>
                   Perfil
             </MenuItem>
@@ -67,17 +66,10 @@ class MenuUsername extends React.Component {
           <NavLink to='/misProductos' className={classes.link}>
             <MenuItem onClick={() => {
               this.handleClose();
-              // this.props.cambiarVentana('myProducts')
             }}>
                 Mis productos
             </MenuItem>
           </NavLink>
-            {/* <MenuItem onClick={() => {
-              this.handleClose();
-              this.props.cambiarVentana('package')
-            }}>
-              Package
-            </MenuItem> */}
           <MenuItem onClick={this.logout}>Cerrar sesion</MenuItem>
         </Menu>
       </Fragment>

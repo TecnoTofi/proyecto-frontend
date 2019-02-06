@@ -16,7 +16,6 @@ const history = createBrowserHistory();
 const styles = theme => ({
     root: {
       width: '100%',
-    //   marginTop: theme.spacing.unit * 3,
       overflowX: 'auto'
     },
     table: {
@@ -134,7 +133,6 @@ class TopCincoMasVendidos extends Component{
                             Aun no ah vendido productos
                         </Typography>
                     )}
-                    {/* <Divider variant="middle" /> */}
                     {this.state.paquetes.length > 0 ? (
                         <Fragment>
                             <Typography variant='h4'>Paquetes</Typography>

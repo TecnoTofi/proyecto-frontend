@@ -4,9 +4,7 @@ const getTypes = async (url) => {
                               response.json()
                             ))
                             .then(data => {
-                              // console.log('tipos empresa', data);
                               return data.types;
-                              // this.setState({companyTypes: data});
                             })
                             .catch(err => console.log(err));
     return tipos;
@@ -18,9 +16,7 @@ const getRubros = async (url) => {
                               response.json()
                             ))
                             .then(data => {
-                              // console.log('categorias empresa', data);
                               return data.rubros;
-                              // this.setState({companyCategories: data});
                             })
                             .catch(err => console.log(err));
     return categories;
@@ -32,9 +28,7 @@ const getCategories = async (url) => {
                                 response.json()
                                 ))
                                 .then(data => {
-                                // console.log('categorias productos', data);
                                 return data.categories;
-                                // this.setState({productCategories: data})
                                 })
                                 .catch(err => console.log(err));
     return categories;

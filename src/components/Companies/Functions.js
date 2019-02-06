@@ -8,9 +8,7 @@ const getAllCompanies = async (url) => {
                               comp.imageUrl = `${url}/${comp.imagePath}`;
                               return comp;
                             });
-                            // console.log('companias', companias);
                             return companias;
-                            // this.setState({companies: companias});
                           })
                           .catch(err => console.log(err));
   return companias;

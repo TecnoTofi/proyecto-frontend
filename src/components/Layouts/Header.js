@@ -42,13 +42,6 @@ const styles = theme => ({
   }
 });
 
-// window.onresize = resize;
-//   let widthScreen = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
-//   function resize(){
-//     widthScreen = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-//   }
-
 class Header extends Component {
   state = {
     width: 0,
@@ -109,8 +102,6 @@ class Header extends Component {
               <Typography
                 variant="h6"
                 color="inherit"
-                // className={classes.grow}
-                // onClick={() => {this.props.cambiarVentana('home')}}
               >
                 NuestraApp
               </Typography>
@@ -128,7 +119,6 @@ class Header extends Component {
             <NavLink to='/companies' className={classes.link}>
               <Button
                 color="inherit">
-                {/* onClick={() => {this.props.cambiarVentana('companies')}}> */}
                 <StoresIcon className={classes.leftIcon} />
                 Empresas
               </Button>
@@ -136,7 +126,6 @@ class Header extends Component {
             <NavLink to='/products' className={classes.link}>
               <Button
                 color="inherit">
-                {/* onClick={() => {this.props.cambiarVentana('productsGeneric')}}> */}
                 <ProductsIcon className={classes.leftIcon} />
                 Productos
               </Button>
@@ -146,7 +135,6 @@ class Header extends Component {
                 <NavLink to='/carrito' className={classes.link}>
                   <Button
                     color="inherit">
-                    {/* onClick={() => {this.props.cambiarVentana('carrito')}}> */}
                     <ShoppingCartIcon className={classes.leftIcon} />
                     Carrito
                   </Button>
@@ -161,9 +149,8 @@ class Header extends Component {
               <Fragment>
                 <LoginForm onClick={this.props.login} />
                 <SignupForm onClick={this.props.signup}
-                    getTypes={this.props.getTypes} 
-                    getRubros={this.props.getRubros} 
-                    // getUserTypes={this.props.getUserTypes}
+                    getTypes={this.props.getTypes}
+                    getRubros={this.props.getRubros}
                 />
               </Fragment>
             )}

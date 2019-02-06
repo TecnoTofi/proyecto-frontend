@@ -31,7 +31,6 @@ const styles = theme => ({
 
 function MediaControlCard(props) {
     const { classes } = props;
-    // console.log(props.product);
 
   return (
     <Card className={classes.card} elevation={0}>
