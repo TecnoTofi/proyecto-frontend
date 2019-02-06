@@ -40,7 +40,10 @@ const getProductsByCompany = async (url, id) => {
                                     return null;
                                 }                                
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => {
+                                console.log(err);
+                                return [];
+                            });
     return productos;
 };
 

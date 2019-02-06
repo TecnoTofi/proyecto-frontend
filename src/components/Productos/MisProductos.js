@@ -159,9 +159,9 @@ class EnhancedTable extends React.Component {
 
       this.verificarLogin();
 
-      let productos = await this.props.getProductos(this.props.company);
-      let paquetes = await this.props.getPaquetes(this.props.company);
       let categories = await this.props.getCategories(this.props.getCategories);
+      let paquetes = await this.props.getPaquetes(this.props.company);
+      let productos = await this.props.getProductos(this.props.company);
 
       let listado = productos.concat(paquetes);
 
@@ -270,24 +270,27 @@ class EnhancedTable extends React.Component {
     const { productos, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, productos.length - page * rowsPerPage);
 
-    let filteredList = this.state.productos.filter((item) => {
-        return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
-    });
+    let filteredList = [];
+    if(this.state.productos.length !== 0){
+      filteredList = this.state.productos.filter((item) => {
+          return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
+      });
 
-    if(this.state.selectedCategory.length > 0){
-        filteredList = filteredList.filter(item => {
-            let res = false;
-            let i = 0;
-            let counter = 0;
-            while(i<item.categories.length){
-                if(this.state.selectedCategory.includes(item.categories[i].id)){
-                    counter++;
-                }
-                i++;
-            }
-            if(counter > 0) res = true;
-            return res;
-        });
+      if(this.state.selectedCategory.length > 0){
+          filteredList = filteredList.filter(item => {
+              let res = false;
+              let i = 0;
+              let counter = 0;
+              while(i<item.categories.length){
+                  if(this.state.selectedCategory.includes(item.categories[i].id)){
+                      counter++;
+                  }
+                  i++;
+              }
+              if(counter > 0) res = true;
+              return res;
+          });
+      }
     }
 
     return (

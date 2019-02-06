@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -19,6 +19,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const styles = theme => ({
   leftIcon: {
@@ -126,10 +129,17 @@ class LoginForm extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
-        <Button color='inherit' onClick={this.handleToggle}>
-          <LoginIcon className={classes.leftIcon} />Iniciar Sesion
-        </Button>
+      <Fragment>
+        {this.props.cajon ? (
+          <ListItem button onClick={this.handleToggle}>
+            <ListItemIcon><LoginIcon /></ListItemIcon>
+            <ListItemText primary='Iniciar sesion' />
+          </ListItem>
+        ) : (
+          <Button color='inherit' onClick={this.handleToggle}>
+            <LoginIcon className={classes.leftIcon} />Iniciar Sesion
+          </Button>
+        )}
         <Dialog
           open={this.state.open}
           onClose={this.handleToggle}
@@ -194,7 +204,7 @@ class LoginForm extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </Fragment>
     );
   }
 }

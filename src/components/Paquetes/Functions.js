@@ -58,7 +58,10 @@ const getPackagesByCompany = async (url, id) => {
                                       });
                             return response;
                           })
-                          .catch(err => console.log(err));
+                          .catch(err => {
+                            console.log(err);
+                            return [];
+                          });
     return paquetes;
 };
 

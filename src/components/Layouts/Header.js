@@ -51,7 +51,8 @@ const styles = theme => ({
 
 class Header extends Component {
   state = {
-    width: 0
+    width: 0,
+    mostrarIconos: false,
   }
   
   updateDimensions = () => {
@@ -61,7 +62,8 @@ class Header extends Component {
       body = d.getElementsByTagName('body')[0],
       width = w.innerWidth || documentElement.clientWidth || body.clientWidth;
 
-      this.setState({width});
+      if(width >= 760) this.setState({width, mostrarIconos: false});
+      else this.setState({width, mostrarIconos: true});
   }
 
   componentWillMount() {
@@ -80,7 +82,7 @@ class Header extends Component {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {this.props.logged ? (
+          {this.state.width < 760 || this.props.logged ? (
             <Drawer
               cambiarVentana={this.props.cambiarVentana}
               companyId={this.props.loggedUser.userCompanyId}
@@ -94,6 +96,13 @@ class Header extends Component {
               onClickProductsBulk={this.props.registroProductosBulk}
               crearPaquete = {this.props.crearPaquete}
               enqueueSnackbar={this.props.enqueueSnackbar}
+              logged={this.props.logged}
+              loggedUser={this.props.loggedUser}
+              logout={this.props.logout}
+              login={this.props.login}
+              getTypes={this.props.getTypes}
+              getRubros={this.props.getRubros}
+              mostrarIconos={this.state.mostrarIconos}
             />
           ) : null}
             <NavLink to='/' className={classes.link}>
@@ -146,14 +155,14 @@ class Header extends Component {
                     cambiarVentana={this.props.cambiarVentana}
                     userName={this.props.loggedUser.userName}
                     logout={this.props.logout}
-                    />
+                  />
               </Fragment>
             ) : (
               <Fragment>
                 <LoginForm onClick={this.props.login} />
                 <SignupForm onClick={this.props.signup}
                     getTypes={this.props.getTypes} 
-                    getCategories={this.props.getRubros} 
+                    getRubros={this.props.getRubros} 
                     // getUserTypes={this.props.getUserTypes}
                 />
               </Fragment>

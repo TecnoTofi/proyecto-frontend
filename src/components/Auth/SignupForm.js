@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -20,7 +20,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const styles = theme => ({
     leftIcon: {
@@ -78,7 +80,7 @@ class SignupForm extends Component{
     }
 
     async componentWillMount(){
-        let categories = await this.props.getCategories();
+        let categories = await this.props.getRubros();
         // let userTypes = await this.props.getUserTypes();
         let types = await this.props.getTypes();
         // console.log('categories', categories);
@@ -397,10 +399,17 @@ class SignupForm extends Component{
     render(){
         const { classes } = this.props;
         return(
-            <div>
-                <Button color='inherit' onClick={this.handleToggle}>
-                    <SignupIcon className={classes.leftIcon} />Registrarse
-                </Button>
+            <Fragment>
+                {this.props.cajon ? (
+                    <ListItem button onClick={this.handleToggle}>
+                        <ListItemIcon><SignupIcon /></ListItemIcon>
+                        <ListItemText primary='Registrarse' />
+                    </ListItem>
+                ) : (
+                    <Button color='inherit' onClick={this.handleToggle}>
+                        <SignupIcon className={classes.leftIcon} />Registrarse
+                    </Button>
+                )}
                 <Dialog
                 open={this.state.open}
                 onClose={this.handleToggle}
@@ -645,7 +654,7 @@ class SignupForm extends Component{
                     </Button>
                 </DialogActions>
                 </Dialog>
-            </div>
+            </Fragment>
         );
     }
 }

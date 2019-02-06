@@ -68,11 +68,11 @@ class App extends Component {
     }
   }
 
-  componentWillMount(){
+  async componentWillMount(){
     let token = cookies.get('access_token');
 
     if(token){
-      	this.verificarToken();
+      	await this.verificarToken();
     }
   }
 
