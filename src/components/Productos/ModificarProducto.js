@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -184,8 +184,8 @@ class ModificarProducto extends Component{
 
     render(){
         return(
-            <div>
-                <IconButton onClick={this.handleToggle} className={this.props.buttonClass}>
+            <Fragment>
+                <IconButton onClick={this.handleToggle} >
                     <EditIcon />
                 </IconButton>
                 <Dialog
@@ -268,7 +268,7 @@ class ModificarProducto extends Component{
                     </Button>
                 </DialogActions>
                 </Dialog>
-            </div>
+            </Fragment>
         );
     }
 }

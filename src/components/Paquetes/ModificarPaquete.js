@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import 'typeface-roboto';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,13 +14,6 @@ import SelectForm from '../Helpers/SelectForm';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Typography } from '@material-ui/core';
-
-const styles = theme => ({
-    leftIcon: {
-        marginRight: theme.spacing.unit
-    }
-});
-
 class ModificarPaquete extends Component{
 
     constructor(props){
@@ -271,7 +262,7 @@ class ModificarPaquete extends Component{
 
     render(){
         return(
-            <div>
+            <Fragment>
                 <IconButton onClick={this.handleToggle}>
                     <EditIcon />
                 </IconButton>
@@ -406,13 +397,8 @@ class ModificarPaquete extends Component{
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </Fragment>
         );
     }
 }
-
-ModificarPaquete.propTypes = {
-    classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(ModificarPaquete);
+export default ModificarPaquete;

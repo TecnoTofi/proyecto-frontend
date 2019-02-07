@@ -12,6 +12,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Alert from './AlertDialog';
+import Avatar from '@material-ui/core/Avatar';
 import ModificarProducto from './ModificarProducto'
 import ModificarPaquete from '../Paquetes/ModificarPaquete';
 import AjustePrecioCategoria from './AjustePrecioCategoria';
@@ -49,6 +50,7 @@ function getSorting(order, orderBy) {
 
 const rows = [
   { id: 'code', numeric: false, disablePadding: true, label: 'Codigo' },
+  { id: 'image', numeric: false, disablePadding: false, label: 'Imagen' },
   { id: 'name', numeric: true, disablePadding: false, label: 'Nombre' },
   { id: 'stock', numeric: true, disablePadding: false, label: 'Stock' },
   { id: 'price', numeric: true, disablePadding: false, label: 'Precio' },
@@ -139,6 +141,9 @@ const styles = theme => ({
     textAlign: 'center',
     marginTop: theme.spacing.unit * 3,
   },
+  acciones: {
+    textAlign: 'left'
+  }
 });
 
 class EnhancedTable extends React.Component {
@@ -363,11 +368,15 @@ class EnhancedTable extends React.Component {
                                 <TableCell component="th" scope="row" padding="none">
                                     {n.code}
                                 </TableCell>
+                                <TableCell>
+                                  <Avatar alt={n.imageName} src={n.imageUrl} className={classes.avatar} />
+                                </TableCell>
                                 <TableCell align="right"><Typography variant='subtitle1'>{n.name}</Typography></TableCell>
                                 <TableCell align="right"><Typography variant='subtitle1'>{n.stock}</Typography></TableCell>
                                 <TableCell align="right"><Typography variant='subtitle1'>$ {n.price}</Typography></TableCell>
                                 <TableCell align="right"><Typography variant='subtitle1'>{n.esPackage ? 'Paquete' : 'Producto'}</Typography></TableCell>
                                 <TableCell>
+                                  <div className={classes.acciones}>
                                     {!n.esPackage ?
                                         <ModificarProducto
                                             product={n}
@@ -388,6 +397,7 @@ class EnhancedTable extends React.Component {
                                         /> 
                                     }
                                     <Alert productId={n.id} esPackage={n.esPackage} eliminar={this.handleDelete} />
+                                  </div>
                                 </TableCell>
                                 </TableRow>
                             );

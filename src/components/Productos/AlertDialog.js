@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -26,8 +26,8 @@ class AlertDialog extends React.Component {
 
   render() {
     return (
-      <div>
-        <IconButton onClick={this.handleClickOpen} className={this.props.buttonClass}>
+      <Fragment>
+        <IconButton onClick={this.handleClickOpen} >
           <DeleteIcon />
         </IconButton>
         <Dialog
@@ -47,7 +47,7 @@ class AlertDialog extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </Fragment>
     );
   }
 }
