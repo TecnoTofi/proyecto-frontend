@@ -20,6 +20,7 @@ const getCompanyById = async (url, id) => {
               res.json()
             ))
             .then(data => {
+              data.imageUrl = `${url}/${data.imagePath}`;
               return data;
             })
             .catch(err => console.log(`Error al buscar Company : ${err}`));

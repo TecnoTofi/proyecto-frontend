@@ -11,6 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 import Select from '../Helpers/SelectForm';
+import CardMedia from '@material-ui/core/CardMedia';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -23,6 +24,12 @@ const styles = theme => ({
     table: {
       width: '90%',
       margin: theme.spacing.unit * 3,
+    },
+    media: {
+        objectFit: 'contain',
+    },
+    input: {
+        display: 'none',
     },
   });
 
@@ -63,6 +70,7 @@ const styles = theme => ({
         companyRubroError: '',
         companyDescriptionError:'',
         companyImageError: '',
+        companyImageUrl:'',
     }
 
     async componentWillMount(){
@@ -90,7 +98,8 @@ const styles = theme => ({
             companyDoorNumber: company.doorNumber.toString(),
             companyDescription:company.description,
             companyRubro: company.rubroId,
-            rubros
+            rubros,
+            companyImageUrl:company.imageUrl,
         });
     };
 
@@ -330,10 +339,13 @@ const styles = theme => ({
         }
     }
 
-    onImageUpload = (image) => {
-        this.setState({
-            companyImage: image
-        })
+    filePreview = (input) => {
+        if (input.target.files && input.target.files[0]) { 
+            this.setState({
+                companyImage: input.target.files[0],
+                companyImageUrl: URL.createObjectURL(input.target.files[0])
+            });
+        }
     }
 
     onEnterPress = (e) => {
@@ -571,8 +583,39 @@ const styles = theme => ({
                                 seleccionado={this.state.companyRubro}
                             />
                         </TableRow>
-                        <TableRow>
+                        {/* <TableRow>
                             <UploadImage onImageUpload={this.onImageUpload} />
+                        </TableRow> */}
+                        <TableRow>
+                            <div>
+                                <input
+                                    accept="image/*"
+                                    className={classes.input}
+                                    id="contained-button-file"
+                                    type="file"
+                                    onChange={this.filePreview}
+                                />
+                                <label htmlFor="contained-button-file">
+                                    <Button 
+                                        color='inherit'
+                                        variant="contained"
+                                        component="span"
+                                        className={classes.button}
+                                        >
+                                        Subir imagen
+                                    </Button>
+                                </label>
+                            </div>
+                        </TableRow>
+                        <TableRow>
+                            <CardMedia
+                                component="img"
+                                //alt={this}
+                                className={classes.media}
+                                height="140"
+                                src={`${this.state.companyImageUrl}`}
+                                //title={this.props.item.name}
+                            />
                         </TableRow>
                         <TableRow>
                             <Button onClick={this.volverAtras} color="primary">
