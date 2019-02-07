@@ -162,6 +162,16 @@ const getTopCincoMasVendidos = async (url, token, id, date) => {
                                 response.json()
                             ))
                             .then(data => {
+                                data.paquetes = data.paquetes.map(pack => {
+                                    pack.imageUrl = `${url}/${pack.imagePath}`;
+                                    pack.esPackage = true;
+                                    return pack;
+                                });
+                                data.productos = data.productos.map(prod => {
+                                    prod.imageUrl = `${url}/${prod.imagePath}`;
+                                    prod.esPackage = false;
+                                    return prod;
+                                });
                                 return data;
                             })
                             .catch(err => console.log(err));
@@ -181,6 +191,16 @@ const getTopCincoMenosVendidos = async (url, token, id, date) => {
                                 response.json()
                             ))
                             .then(data => {
+                                data.paquetes = data.paquetes.map(pack => {
+                                    pack.imageUrl = `${url}/${pack.imagePath}`;
+                                    pack.esPackage = true;
+                                    return pack;
+                                });
+                                data.productos = data.productos.map(prod => {
+                                    prod.imageUrl = `${url}/${prod.imagePath}`;
+                                    prod.esPackage = false;
+                                    return prod;
+                                });
                                 return data;
                             })
                             .catch(err => console.log(err));

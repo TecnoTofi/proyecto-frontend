@@ -11,6 +11,10 @@ import TableCell from "@material-ui/core/TableCell";
 import BackIcon from '@material-ui/icons/ArrowBack';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Button } from '@material-ui/core';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -28,6 +32,7 @@ const styles = theme => ({
     texto: {
         textAlign: 'center',
         marginTop: theme.spacing.unit * 3,
+        marginBottom: theme.spacing.unit * 3,
     },
   });
 
@@ -112,21 +117,25 @@ class TopCincoMenossVendidos extends Component{
                                                 <TableRow>
                                                     <TableCell padding="checkbox">
                                                     </TableCell>
-                                                    <TableCell>
-                                                        Codigo
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        Nombre
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        Cantidad
-                                                    </TableCell>
+                                                    <TableCell>Imagen</TableCell>
+                                                    <TableCell>Codigo</TableCell>
+                                                    <TableCell>Nombre</TableCell>
+                                                    <TableCell>Cantidad</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {this.state.productos.map((product, i) => (
                                                     <TableRow key={i}>
                                                         <TableCell padding="checkbox">
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <List dense={false}>
+                                                                <ListItem>
+                                                                    <ListItemAvatar>
+                                                                        <Avatar alt={product.imageName} src={product.imageUrl} className={classes.avatar} />
+                                                                    </ListItemAvatar>
+                                                                </ListItem>
+                                                            </List>
                                                         </TableCell>
                                                         <TableCell>
                                                             {product.code}
@@ -158,21 +167,25 @@ class TopCincoMenossVendidos extends Component{
                                                 <TableRow>
                                                     <TableCell padding="checkbox">
                                                     </TableCell>
-                                                    <TableCell>
-                                                        Codigo
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        Nombre
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        Cantidad
-                                                    </TableCell>
+                                                    <TableCell>Imagen</TableCell>
+                                                    <TableCell>Codigo</TableCell>
+                                                    <TableCell>Nombre</TableCell>
+                                                    <TableCell>Cantidad</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {this.state.paquetes.map((pack, i) => (
                                                     <TableRow key={i}>
                                                         <TableCell padding="checkbox">
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <List dense={false}>
+                                                                <ListItem>
+                                                                    <ListItemAvatar>
+                                                                        <Avatar alt={pack.imageName} src={pack.imageUrl} className={classes.avatar} />
+                                                                    </ListItemAvatar>
+                                                                </ListItem>
+                                                            </List>
                                                         </TableCell>
                                                         <TableCell>
                                                             {pack.code}

@@ -9,10 +9,10 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import BackIcon from '@material-ui/icons/ArrowBack';
-// import List from '@material-ui/core/List';
-// import ListItem from '@material-ui/core/ListItem';
-// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-// import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Button } from '@material-ui/core';
 import { createBrowserHistory } from 'history';
@@ -32,6 +32,7 @@ const styles = theme => ({
     texto: {
         textAlign: 'center',
         marginTop: theme.spacing.unit * 3,
+        marginBottom: theme.spacing.unit * 3,
     },
   });
 
@@ -55,6 +56,7 @@ class TopCincoMasVendidos extends Component{
         date.setUTCHours(0, 0, 0, 0);
 
         let datos = await this.props.getDatos(date);
+        console.log('datos', datos)
 
         if(datos){
             if(datos.productos) productos = datos.productos;
@@ -115,18 +117,10 @@ class TopCincoMasVendidos extends Component{
                                             <TableRow>
                                                 <TableCell padding="checkbox">
                                                 </TableCell>
-                                                {/* <TableCell>
-                                                    Imagen
-                                                </TableCell> */}
-                                                <TableCell>
-                                                    Codigo
-                                                </TableCell>
-                                                <TableCell>
-                                                    Nombre
-                                                </TableCell>
-                                                <TableCell>
-                                                    Cantidad
-                                                </TableCell>
+                                                <TableCell>Imagen</TableCell>
+                                                <TableCell>Codigo</TableCell>
+                                                <TableCell>Nombre</TableCell>
+                                                <TableCell>Cantidad</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -134,7 +128,7 @@ class TopCincoMasVendidos extends Component{
                                                 <TableRow key={i}>
                                                     <TableCell padding="checkbox">
                                                     </TableCell>
-                                                    {/* <TableCell>
+                                                    <TableCell>
                                                         <List dense={false}>
                                                             <ListItem>
                                                                 <ListItemAvatar>
@@ -142,7 +136,7 @@ class TopCincoMasVendidos extends Component{
                                                                 </ListItemAvatar>
                                                             </ListItem>
                                                         </List>
-                                                    </TableCell> */}
+                                                    </TableCell>
                                                     <TableCell>
                                                         {product.code}
                                                     </TableCell>
@@ -173,21 +167,25 @@ class TopCincoMasVendidos extends Component{
                                             <TableRow>
                                                 <TableCell padding="checkbox">
                                                 </TableCell>
-                                                <TableCell>
-                                                    Codigo
-                                                </TableCell>
-                                                <TableCell>
-                                                    Nombre
-                                                </TableCell>
-                                                <TableCell>
-                                                    Cantidad
-                                                </TableCell>
+                                                <TableCell>Image</TableCell>
+                                                <TableCell>Codigo</TableCell>
+                                                <TableCell>Nombre</TableCell>
+                                                <TableCell>Cantidad</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {this.state.paquetes.map((pack, i) => (
                                                 <TableRow key={i}>
                                                     <TableCell padding="checkbox">
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <List dense={false}>
+                                                            <ListItem>
+                                                                <ListItemAvatar>
+                                                                    <Avatar alt={pack.imageName} src={pack.imageUrl} className={classes.avatar} />
+                                                                </ListItemAvatar>
+                                                            </ListItem>
+                                                        </List>
                                                     </TableCell>
                                                     <TableCell>
                                                         {pack.code}
