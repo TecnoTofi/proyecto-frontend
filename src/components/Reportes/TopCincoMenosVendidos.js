@@ -74,7 +74,7 @@ class TopCincoMenossVendidos extends Component{
         let tokenValido = await this.props.verificarToken();
 
         if(!tokenValido){
-            this.props.enqueueSnackbar('No ah iniciado sesion.', { variant: 'error'});
+            this.props.enqueueSnackbar('No ha iniciado sesion.', { variant: 'error'});
             setTimeout(() => history.goBack(), 2000);
         }
     }
