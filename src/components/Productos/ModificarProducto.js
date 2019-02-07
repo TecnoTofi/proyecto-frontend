@@ -3,6 +3,7 @@ import 'typeface-roboto';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
+import Tooltip from '@material-ui/core/Tooltip';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -185,9 +186,15 @@ class ModificarProducto extends Component{
     render(){
         return(
             <Fragment>
-                <IconButton onClick={this.handleToggle} >
-                    <EditIcon />
-                </IconButton>
+                <Tooltip
+                  title="Editar"
+                  placement='bottom-end'
+                  enterDelay={300}
+                >
+                    <IconButton onClick={this.handleToggle} >
+                        <EditIcon />
+                    </IconButton>
+                </Tooltip>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleToggle}

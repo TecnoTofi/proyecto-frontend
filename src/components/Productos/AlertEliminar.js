@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from '@material-ui/core/Tooltip';
 
 class AlertEliminar extends React.Component {
   state = {
@@ -27,9 +28,15 @@ class AlertEliminar extends React.Component {
   render() {
     return (
       <Fragment>
-        <IconButton onClick={this.handleClickOpen} >
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip
+          title="Eliminar"
+          placement='bottom-end'
+          enterDelay={300}
+        >
+          <IconButton onClick={this.handleClickOpen} >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
