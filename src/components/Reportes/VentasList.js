@@ -32,7 +32,6 @@ class ReporteVentas extends Component{
         this.verificarLogin();
 
         let transacciones = await this.props.getTransactions();
-        console.log('transacciones', transacciones);
 
         let textoCarga = '', cargaTerminada = false;
         if(transacciones.length === 0){

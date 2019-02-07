@@ -3,18 +3,22 @@ import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
-import Divider from '@material-ui/core/Divider'
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import { Paper } from '@material-ui/core';
 
-const styles = ({
+const styles = theme => ({
     root: {
-        width: '100%',
-        margin: 50+'px',
-        overflowX: 'auto'
-      },
+        margin: theme.spacing.unit * 3,
+    },
+    margen: {
+        marginTop: theme.spacing.unit * 3,
+    },
 })
 
 function formatDate(date) {
@@ -41,33 +45,69 @@ const ReporteVentasItem = (props) => {
                 Realizada el - {formatDate(new Date(props.transaction.timestamp))}
             </Typography>
             <Typography variant='h5'>
-                Total - ${props.transaction.amount}
+                Total - $ {props.transaction.amount}
             </Typography>
             <Divider />
-                    {props.transaction.products ? (
-                        props.transaction.products.map(prod => (
-                            <Fragment>
-                                <List dense={false}>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Avatar alt={prod.imageName} src={prod.imageUrl} className={classes.avatar} />
-                                        </ListItemAvatar>
-                                    </ListItem>
-                                </List>
-                                <Typography variant='body1' key={prod.id}>
-                                    {`${prod.name} x ${prod.quantity} - Total: $${prod.price * prod.quantity} - $${prod.price} la unidad`}
-                                </Typography>
-                            </Fragment>
-                        ))
-                    ) : null}
-                    {props.transaction.packages ? (
-                        props.transaction.packages.map(pack => (
-                            <Typography variant='body1' key={pack.id}>
-                            {`${pack.name} x ${pack.quantity} - Total: $${pack.price * pack.quantity} - $${pack.price} la unidad`}
-                            </Typography>
-                        ))
-                    ) : null}
-                    <Divider />
+                {props.transaction.products.length > 0 ? (
+                    <Fragment>
+                        <Paper>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Imagen</TableCell>
+                                        <TableCell>Nombre</TableCell>
+                                        <TableCell>Cantidad</TableCell>
+                                        <TableCell>Precio unidad</TableCell>
+                                        <TableCell>Total</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {props.transaction.products.map(prod => (
+                                        <TableRow key={prod.id}>
+                                            <TableCell>
+                                                <Avatar alt={prod.imageName} src={prod.imageUrl} className={classes.avatar} />
+                                            </TableCell>
+                                            <TableCell>{prod.name}</TableCell>
+                                            <TableCell>{prod.quantity}</TableCell>
+                                            <TableCell>$ {prod.price}</TableCell>
+                                            <TableCell>$ {prod.price * prod.quantity}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Paper>
+                    </Fragment>
+                ) : null}
+                {props.transaction.packages.length > 0 ? (
+                    <Fragment>
+                        <Paper>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Imagen</TableCell>
+                                        <TableCell>Nombre</TableCell>
+                                        <TableCell>Cantidad</TableCell>
+                                        <TableCell>Precio unidad</TableCell>
+                                        <TableCell>Total</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {props.transaction.packages.map(pack => (
+                                        <TableRow key={pack.id}>
+                                            <TableCell>
+                                                <Avatar alt={pack.imageName} src={pack.imageUrl} className={classes.avatar} />
+                                            </TableCell>
+                                            <TableCell>{pack.name}</TableCell>
+                                            <TableCell>{pack.quantity}</TableCell>
+                                            <TableCell>$ {pack.price}</TableCell>
+                                            <TableCell>$ {pack.price * pack.quantity}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Paper>
+                    </Fragment>
+                ) : null}
         </div>
     );
 };
