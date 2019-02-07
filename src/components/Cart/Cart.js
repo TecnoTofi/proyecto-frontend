@@ -69,7 +69,7 @@ class Cart extends Component{
 
         if(!tokenValido){
             this.props.enqueueSnackbar('No ah iniciado sesion.', { variant: 'error'});
-            setTimeout(history.goBack(), 5000);
+            setTimeout(() => history.goBack(), 2000);
         }
     }
 

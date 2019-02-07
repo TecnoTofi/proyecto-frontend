@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CompanyList from './components/Companies/CompanyList'
 import ProductList from './components/Productos/ProductList';
 import Home from './components/PaginasPrincipales/Home';
+import NotFound from './components/Layouts/NotFound';
 import Profile from './components/User/Profile';
 import AuthFunctions from './components/Auth/Functions';
 import HelperFunctions from './components/Helpers/Functions';
@@ -179,7 +180,9 @@ class App extends Component {
       let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
       if(status === 200){
         this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
-        history.goBack();
+        setTimeout(() => {
+          history.goBack();
+        }, 5000)
       }
       else  this.props.enqueueSnackbar(message, { variant: 'error' });
     }
@@ -514,8 +517,10 @@ class App extends Component {
             total: 0
           }
         });
-        history.push('/products');
-        history.go();
+        setTimeout(() => {
+          history.push('/products');
+          history.go();
+        }, 5000)
       }
       else this.props.enqueueSnackbar(message, { variant: 'error' });
     }
@@ -629,6 +634,7 @@ class App extends Component {
       getRubros={this.getRubros}
       modificarPerfil={this.modificarPerfil}
       verificarToken={this.verificarToken}
+      enqueueSnackbar={this.props.enqueueSnackbar}
     />
   );
 
@@ -653,6 +659,7 @@ class App extends Component {
     <ReporteCompras
       getPedidos={this.getReporteCompras}
       verificarToken={this.verificarToken}
+      enqueueSnackbar={this.props.enqueueSnackbar}
     />
   );
 
@@ -660,6 +667,7 @@ class App extends Component {
     <ReporteVentas
       getTransactions={this.getReporteVentas}
       verificarToken={this.verificarToken}
+      enqueueSnackbar={this.props.enqueueSnackbar}
     />
   );
 
@@ -667,6 +675,7 @@ class App extends Component {
     <TopCincoMasVendidos
       getDatos={this.getTopCincoMasVendidos}
       verificarToken={this.verificarToken}
+      enqueueSnackbar={this.props.enqueueSnackbar}
     />
   );
 
@@ -674,6 +683,7 @@ class App extends Component {
     <TopCincoMenosVendidos
       getDatos={this.getTopCincoMenosVendidos}
       verificarToken={this.verificarToken}
+      enqueueSnackbar={this.props.enqueueSnackbar}
     />
   );
 
@@ -708,6 +718,9 @@ class App extends Component {
       loggedCompany={this.state.loggedUser.userCompanyId}
       verificarToken={this.verificarToken}
     />
+  );
+  linkNotFound = () => (
+    <NotFound />
   );
 
   render() {
@@ -747,6 +760,7 @@ class App extends Component {
               <Route path='/products/company' component={this.linkProductsCompanyList} exact />
               <Route path='/product/:productId' component={this.linkDetalleProducto} exact/>
               <Route path='/package/:productId' component={this.linkDetallePackage} exact />
+              <Route path='*' component={this.linkNotFound} exact />
             </Switch>
           </Fragment>
         </BrowserRouter>

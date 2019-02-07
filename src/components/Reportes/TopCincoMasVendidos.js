@@ -56,7 +56,6 @@ class TopCincoMasVendidos extends Component{
         date.setUTCHours(0, 0, 0, 0);
 
         let datos = await this.props.getDatos(date);
-        console.log('datos', datos)
 
         if(datos){
             if(datos.productos) productos = datos.productos;
@@ -74,8 +73,8 @@ class TopCincoMasVendidos extends Component{
         let tokenValido = await this.props.verificarToken();
 
         if(!tokenValido){
-            alert('No ah iniciado sesion.');
-            history.goBack();
+            this.props.enqueueSnackbar('No ah iniciado sesion.', { variant: 'error'});
+            setTimeout(() => history.goBack(), 2000);
         }
     }
 
