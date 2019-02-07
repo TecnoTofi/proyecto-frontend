@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import UploadImage from '../Helpers/UploadImage';
+// import UploadImage from '../Helpers/UploadImage';
 import Validator from 'validator';
 import Select from '../Helpers/SelectForm';
 import CardMedia from '@material-ui/core/CardMedia';

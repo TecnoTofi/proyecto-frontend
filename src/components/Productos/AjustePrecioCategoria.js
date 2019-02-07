@@ -28,6 +28,7 @@ const styles = theme => ({
 class AjustePrecioCategoria extends React.Component {
 
     state = {
+        open: false,
         difference: 0,
         category: 0,
         type: '',
