@@ -275,7 +275,7 @@ class App extends Component {
       if(!token) return;
       let { status, message, errores } = await ProductFunctions.registroProducto(url, token, request);
       if(status === 201) this.props.enqueueSnackbar('Producto creado exitosamente.', { variant: 'success' });
-      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
       else if (errores){
         for(let e of errores){
           this.props.enqueueSnackbar(e, { variant: 'error' });
@@ -297,7 +297,7 @@ class App extends Component {
       if(!token) return;
       let { status, message, errores } = await ProductFunctions.asociarProducto(url, token, request);
       if(status === 201) this.props.enqueueSnackbar('Producto asociado correctamente.', { variant: 'success' });
-      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
       else if (errores){
         for(let e of errores){
           this.props.enqueueSnackbar(e, { variant: 'error' });
@@ -340,7 +340,7 @@ class App extends Component {
       if(!token) return;
       let { status, message, errores, producto } =  await ProductFunctions.modificarProducto(url, token, request, productId, this.state.loggedUser.userCompanyId);
       if(status === 200) this.props.enqueueSnackbar('Producto modificado exitosamente.', { variant: 'success' });
-      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
       else if (errores){
         for(let e of errores){
           this.props.enqueueSnackbar(e, { variant: 'error' });
@@ -362,7 +362,7 @@ class App extends Component {
       if(!token) return;
       let { status, message, errores } = await ProductFunctions.eliminarProducto(url, token, id);
       if(status === 200) this.props.enqueueSnackbar('Producto eliminado correctamente.', { variant: 'success' });
-      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
       else if (errores){
         for(let e of errores){
           this.props.enqueueSnackbar(e, { variant: 'error' });
@@ -384,7 +384,7 @@ class App extends Component {
       if(!token) return;
       let { status, message, errores } = await ProductFunctions.restaurarProducto(url, token, id);
       if(status === 200) this.props.enqueueSnackbar('Producto restaurado correctamente.', { variant: 'success' });
-      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
       else if (errores){
         for(let e of errores){
           this.props.enqueueSnackbar(e, { variant: 'error' });
@@ -406,7 +406,7 @@ class App extends Component {
       if(!token) return;
       let { status, message, errores } = await PackageFunctions.crearPaquete(url, token, request);
       if(status === 201) this.props.enqueueSnackbar('Paquete creado exitosamente.', { variant: 'success' });
-      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message)this.props.enqueueSnackbar(message, { variant: 'error' });
       else if (errores){
         for(let e of errores){
           this.props.enqueueSnackbar(e, { variant: 'error' });
@@ -442,7 +442,7 @@ class App extends Component {
     else{
       let token = cookies.get('access_token'); 
       if(!token) return;
-      let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
+      let { status, message }= await PackageFunctions.eliminarPaquete(url, token, id);
       if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
       else this.props.enqueueSnackbar(message, { variant: 'error' });
       return status;
