@@ -23,6 +23,9 @@ const styles = theme => ({
     group: {
       margin: `${theme.spacing.unit}px 0`,
     },
+    margen: {
+        margin: theme.spacing.unit,
+    }
 });
 
 class AjustePrecioCategoria extends React.Component {
@@ -133,7 +136,7 @@ class AjustePrecioCategoria extends React.Component {
         let { classes } = this.props;
         return(
             <div>
-                <Button onClick={this.handleClickOpen} variant='contained' color='primary'>
+                <Button onClick={this.handleClickOpen} variant='contained' color='primary' className={classes.margen}>
                     Ajustar precios
                 </Button>
                 <Dialog

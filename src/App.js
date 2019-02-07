@@ -161,6 +161,14 @@ class App extends Component {
     return await PackageFunctions.getPackagesByCompany(url, id);
   }
 
+  getAllCompanyProductsByCompany = async (id) => {
+    return await ProductFunctions.getAllCompanyProductsByCompany(url, id);
+  }
+
+  getAllPackagesByCompany = async (id) => {
+    return await PackageFunctions.getAllPackagesByCompany(url, id);
+  }
+
   signup = async (request) => {
     let { status, message } = await AuthFunctions.signup(url, request);
     if(status === 201) this.props.enqueueSnackbar('Registro exitoso', { variant: 'success' });
@@ -365,6 +373,28 @@ class App extends Component {
     }
   }
 
+  restaurarProducto = async (id) =>{
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token');
+      if(!token) return;
+      let { status, message, errores } = await ProductFunctions.restaurarProducto(url, token, id);
+      if(status === 200) this.props.enqueueSnackbar('Producto restaurado correctamente.', { variant: 'success' });
+      else if(message ) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return status;
+    }
+  }
+
   crearPaquete = async (request) =>{
     let tokenValido = await this.verificarToken();
 
@@ -414,6 +444,22 @@ class App extends Component {
       if(!token) return;
       let { status, message } = await PackageFunctions.eliminarPaquete(url, token, id);
       if(status === 200) this.props.enqueueSnackbar('Paquete eliminado correctamente.', { variant: 'success' });
+      else this.props.enqueueSnackbar(message, { variant: 'error' });
+      return status;
+    }
+  }
+
+  restaurarPaquete = async (id) =>{
+    let tokenValido = await this.verificarToken();
+
+    if(!tokenValido){
+      this.props.enqueueSnackbar('Token invalido, vuelva a iniciar sesion.', { variant: 'error' });
+    }
+    else{
+      let token = cookies.get('access_token'); 
+      if(!token) return;
+      let { status, message } = await PackageFunctions.restaurarPaquete(url, token, id);
+      if(status === 200) this.props.enqueueSnackbar('Paquete restaurado correctamente.', { variant: 'success' });
       else this.props.enqueueSnackbar(message, { variant: 'error' });
       return status;
     }
@@ -640,14 +686,16 @@ class App extends Component {
 
   linkMisProductos = () => (
     <MisProductos
-      getProductos={this.getProductsByCompany}
-      getPaquetes={this.getPackagesByCompany}
+      getAllCompanyProducts={this.getAllCompanyProductsByCompany}
+      getAllPackages={this.getAllPackagesByCompany}
       company={this.state.loggedUser.userCompanyId}
       getCategories={this.getCategories}
       modificarProducto={this.modificarProducto}
       eliminarProducto={this.eliminarProducto}
+      restaurarProducto={this.restaurarProducto}
       modificarPaquete={this.modificarPaquete}
       eliminarPaquete={this.eliminarPaquete}
+      restaurarPaquete={this.restaurarPaquete}
       ajustarPrecioCategoria={this.ajustarPrecioCategoria}
       enqueueSnackbar={this.props.enqueueSnackbar}
       flag={'productos'}

@@ -92,6 +92,31 @@ const getNotAssociated = async(url, id) => {
     return productos;
 }
 
+const getAllCompanyProductsByCompany = async (url, id) => {
+    let productos = await fetch(`${url}/api/product/company/${id}/all`)
+                            .then(response => (
+                                response.json()
+                            ))
+                            .then(data => {
+                                if(data){
+                                    let response = data.map(prod => {
+                                        prod.imageUrl = `${url}/${prod.imagePath}`;
+                                        prod.esPackage = false;
+                                        return prod;
+                                    });
+                                    return response;
+                                }
+                                else{
+                                    return null;
+                                }                                
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                return [];
+                            });
+    return productos;
+};
+
 const registroProducto = async (url, token, request) => {
     let response = await axios({
         method: 'post',
@@ -162,6 +187,23 @@ const eliminarProducto = async (url, token, id) =>{
     return response;
 };
 
+const restaurarProducto = async (url, token, id) =>{
+    let response = await axios({
+        method: 'put',
+        url: `${url}/api/product/company/${id}/restore`,
+        headers: { 'Content-Type': 'application/json', token: token }
+    })
+    .then(res => {
+        return { status: res.status, message: res.data.message };
+    })
+    .catch(err => {
+        if(err.response.data.message) return {status: err.response.status, message: err.response.data.message};
+        return {status: err.response.status, errores: err.response.data};
+    });
+
+    return response;
+};
+
 const registroProductosBulk = async (url, token, request) => {
     let response = await axios({
         method: 'post',
@@ -212,5 +254,7 @@ export default {
     getCompanyProductsByProduct,
     getNotAssociated,
     registroProductosBulk,
-    ajustarPrecioCategoria
+    ajustarPrecioCategoria,
+    getAllCompanyProductsByCompany,
+    restaurarProducto
 }

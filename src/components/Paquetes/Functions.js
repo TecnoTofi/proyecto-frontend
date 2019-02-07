@@ -63,6 +63,30 @@ const getPackagesByCompany = async (url, id) => {
     return paquetes;
 };
 
+const getAllPackagesByCompany = async (url, id) => {
+  let paquetes = await fetch(`${url}/api/package/company/${id}/all`)
+                        .then(res => (
+                          res.json()
+                        ))
+                        .then(data => {
+                          let response = data.map(pack => {
+                                      pack.imageUrl = `${url}/${pack.imagePath}`;
+                                      pack.esPackage = true;
+                                      pack.products = pack.products.map(p => {
+                                        p.imageUrl = `${url}/${p.imagePath}`;
+                                        return p;
+                                      });
+                                      return pack;
+                                    });
+                          return response;
+                        })
+                        .catch(err => {
+                          console.log(err);
+                          return [];
+                        });
+  return paquetes;
+};
+
 const crearPaquete = async (url, token, request) =>{
   let response = await axios({
     method: 'post',
@@ -124,6 +148,23 @@ const eliminarPaquete = async (url, token, id) =>{
   return { status, message };
 };
 
+const restaurarPaquete = async (url, token, id) =>{
+  let response = await axios({
+      method: 'put',
+      url: `${url}/api/package/${id}/restore`,
+      headers: { 'Content-Type': 'application/json', token: token }
+  })
+  .then(res => {
+      return { status: res.status, message: res.data.message };
+  })
+  .catch(err => {
+      if(err.response.data.message) return {status: err.response.status, message: err.response.data.message};
+      return {status: err.response.status, errores: err.response.data};
+  });
+
+  return response;
+};
+
 export default {
     getAllPackages,
     getPackageById,
@@ -131,4 +172,6 @@ export default {
     crearPaquete,
     modificarPaquete,
     eliminarPaquete,
+    getAllPackagesByCompany,
+    restaurarPaquete
 }

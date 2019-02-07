@@ -11,11 +11,13 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
-import Alert from './AlertDialog';
+import AlertEliminar from './AlertEliminar';
+import AlertRestaurar from './AlertRestaurar';
 import Avatar from '@material-ui/core/Avatar';
 import ModificarProducto from './ModificarProducto'
 import ModificarPaquete from '../Paquetes/ModificarPaquete';
 import AjustePrecioCategoria from './AjustePrecioCategoria';
+import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import SelectMultiple from '../Helpers/SelectMultiple';
 import BackIcon from '@material-ui/icons/ArrowBack';
@@ -55,6 +57,7 @@ const rows = [
   { id: 'stock', numeric: true, disablePadding: false, label: 'Stock' },
   { id: 'price', numeric: true, disablePadding: false, label: 'Precio' },
   { id: 'tipo', numeric: false, disablePadding: false, label: 'Tipo' },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
   { id: 'acciones', numeric: false, disablePadding: false, label: 'Acciones' },
 ];
 
@@ -160,6 +163,8 @@ class EnhancedTable extends React.Component {
     selectedCategory: [],
     textoCarga: 'Cargando productos...',
     cargaTerminada: false,
+    cantidad: 0,
+    verDeleted: false,
   };
 
     async componentWillMount(){
@@ -167,15 +172,14 @@ class EnhancedTable extends React.Component {
       this.verificarLogin();
 
       let categories = await this.props.getCategories(this.props.getCategories);
-      let paquetes = await this.props.getPaquetes(this.props.company);
-      let productos = await this.props.getProductos(this.props.company);
+      let paquetes = await this.props.getAllPackages(this.props.company);
+      let productos = await this.props.getAllCompanyProducts(this.props.company);
 
       let listado = productos.concat(paquetes);
-
       let textoCarga = '', cargaTerminada = false;
       if(listado.length === 0){
-          cargaTerminada = true;
-          textoCarga = 'Aun no tiene productos registrados.';
+        cargaTerminada = true;
+        textoCarga = 'Aun no tiene productos registrados.';
       }
       
       this.setState({
@@ -183,8 +187,9 @@ class EnhancedTable extends React.Component {
           products: productos,
           categories,
           textoCarga,
-          cargaTerminada
-      });
+          cargaTerminada,
+          cantidad: listado.length
+      }, () => this.encontrarCantidad());
     }
 
     verificarLogin = async () => {
@@ -194,6 +199,15 @@ class EnhancedTable extends React.Component {
         this.props.enqueueSnackbar('No ah iniciado sesion.', { variant: 'error'});
         setTimeout(() => history.goBack(), 2000);
       }
+    }
+
+    encontrarCantidad = () => {
+      let cantidad = this.state.productos.reduce((i, p) => {
+        if(p.deleted && this.state.verDeleted) i++;
+        else if(!p.deleted) i++;
+        return i;
+      }, 0);
+      this.setState({cantidad});
     }
 
   handleRequestSort = (event, property) => {
@@ -262,11 +276,48 @@ class EnhancedTable extends React.Component {
         }
     }
 
+    handleRestaurar = async (id, esPackage) =>{
+      let listado = [];
+      if(esPackage) {
+          let status = await this.props.restaurarPaquete(id);
+          if(status === 200){
+              listado = this.state.productos.map(prod => {
+                  if(!prod.esPackage) return prod;
+                  else if(prod.id === id){
+                    prod.deleted = null;
+                    return prod
+                  }
+                  else return prod;
+              });
+              console.log('listado', listado)
+              this.setState({productos: listado});
+          }
+      }
+      else{
+          let status = await this.props.restaurarProducto(id);
+          if(status === 200){
+              listado = this.state.productos.map(prod => {
+                  if(prod.esPackage) return prod;
+                  else if(prod.id === id){
+                    prod.deleted = null;
+                    return prod;
+                  }
+                  else return prod;
+              });
+              this.setState({productos: listado});
+          }
+      }
+  }
+
     handleEdit = (product, pos) => {
         let listado = this.state.productos;
         listado[pos] = product;
         this.setState({ productos: listado });
     }
+
+    handleCheckBoxChange = name => event => {
+      this.setState({ [name]: event.target.checked, verDeleted: !this.state.verDeleted }, () => this.encontrarCantidad());
+    };
 
     volverAtras = () => {
       history.goBack();
@@ -309,7 +360,7 @@ class EnhancedTable extends React.Component {
                 </Typography>
                 <CircularProgress className={classes.progress} />
                 {this.state.cargaTerminada ? (
-                    <Button onClick={this.volverAtras}>
+                    <Button onClick={this.volverAtras} className={classes.texto}>
                         <BackIcon />
                         Volver
                     </Button>
@@ -335,7 +386,18 @@ class EnhancedTable extends React.Component {
                         />
                         </div>
                         <div>
-                        <AjustePrecioCategoria categories={this.state.categories} ajustarPrecioCategoria={this.props.ajustarPrecioCategoria} />
+                          <AjustePrecioCategoria categories={this.state.categories} ajustarPrecioCategoria={this.props.ajustarPrecioCategoria} />
+                        </div>
+                        <div>
+                          <Typography variant='subheading' color='textSecondary'>
+                          Ver descontinuados
+                          <Checkbox
+                            checked={this.state.checkedB}
+                            onChange={this.handleCheckBoxChange(true)}
+                            value="verDeleted"
+                            color="primary"
+                          />
+                          </Typography>
                         </div>
                     </div>
                 <Paper className={classes.root}>
@@ -347,7 +409,7 @@ class EnhancedTable extends React.Component {
                         orderBy={orderBy}
                         onSelectAllClick={this.handleSelectAllClick}
                         onRequestSort={this.handleRequestSort}
-                        rowCount={filteredList.length}
+                        rowCount={this.state.cantidad}
                         />
                         <TableBody>
                         {stableSort(filteredList, getSorting(order, orderBy))
@@ -355,6 +417,9 @@ class EnhancedTable extends React.Component {
                             .map((n, indice) => {
                             const isSelected = this.isSelected(n.id);
                             return (
+                              n.deleted && !this.state.verDeleted ? (
+                                null
+                              ) : (
                                 <TableRow
                                 hover
                                 role="checkbox"
@@ -375,17 +440,25 @@ class EnhancedTable extends React.Component {
                                 <TableCell align="right"><Typography variant='subtitle1'>{n.stock}</Typography></TableCell>
                                 <TableCell align="right"><Typography variant='subtitle1'>$ {n.price}</Typography></TableCell>
                                 <TableCell align="right"><Typography variant='subtitle1'>{n.esPackage ? 'Paquete' : 'Producto'}</Typography></TableCell>
+                                <TableCell align="right"><Typography variant='subtitle1'>{n.deleted ? 'Descontinuado' : 'Activo'}</Typography></TableCell>
                                 <TableCell>
                                   <div className={classes.acciones}>
-                                    {!n.esPackage ?
-                                        <ModificarProducto
-                                            product={n}
-                                            categories={this.state.categories}
-                                            modificar={this.props.modificarProducto}
-                                            actualizarLista={this.handleEdit}
-                                            posicion={indice}
-                                        />
+                                    {n.deleted ? (
+                                      <AlertRestaurar productId={n.id} esPackage={n.esPackage} restaurar={this.handleRestaurar} />
+                                    ) : (
+                                      <Fragment>
+                                        {!n.esPackage ?
+                                        (
+                                          <ModificarProducto
+                                              product={n}
+                                              categories={this.state.categories}
+                                              modificar={this.props.modificarProducto}
+                                              actualizarLista={this.handleEdit}
+                                              posicion={indice}
+                                          />
+                                        )
                                         :
+                                        (
                                         <ModificarPaquete
                                             products={this.state.products}
                                             categories={this.state.categories}
@@ -395,11 +468,14 @@ class EnhancedTable extends React.Component {
                                             package={n}
                                             enqueueSnackbar={this.props.enqueueSnackbar}
                                         /> 
-                                    }
-                                    <Alert productId={n.id} esPackage={n.esPackage} eliminar={this.handleDelete} />
+                                        )}
+                                        <AlertEliminar productId={n.id} esPackage={n.esPackage} eliminar={this.handleDelete} />
+                                      </Fragment>
+                                    )}
                                   </div>
                                 </TableCell>
                                 </TableRow>
+                              )
                             );
                             })}
                         {emptyRows > 0 && (
@@ -411,19 +487,19 @@ class EnhancedTable extends React.Component {
                     </Table>
                     </div>
                     <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={filteredList.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    backIconButtonProps={{
-                        'aria-label': 'Previous Page',
-                    }}
-                    nextIconButtonProps={{
-                        'aria-label': 'Next Page',
-                    }}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={this.state.cantidad}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      backIconButtonProps={{
+                          'aria-label': 'Previous Page',
+                      }}
+                      nextIconButtonProps={{
+                          'aria-label': 'Next Page',
+                      }}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
                 </Paper>
                 </Fragment>
