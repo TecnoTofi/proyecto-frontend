@@ -66,7 +66,6 @@ class ReporteCompras extends Component{
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
                         </Typography>
-                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <NavLink to='/products'>
                                 <Button>
@@ -74,7 +73,7 @@ class ReporteCompras extends Component{
                                     <ForwardIcon />
                                 </Button>
                             </NavLink>
-                        ) : null}
+                        ) : <CircularProgress className={classes.progress} />}
                     </div>
                 ) : (
                     <Fragment>

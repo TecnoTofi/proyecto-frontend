@@ -69,13 +69,12 @@ class ReporteVentas extends Component{
                         <Typography variant='h6' className={classes.texto}>
                             {this.state.textoCarga}
                         </Typography>
-                        <CircularProgress className={classes.progress} />
                         {this.state.cargaTerminada ? (
                             <Button onClick={this.volverAtras}>
                                 <BackIcon />
                                 Volver
                             </Button>
-                        ) : null}
+                        ) : <CircularProgress className={classes.progress} />}
                     </div>
                 ) : (
                     <Fragment>
