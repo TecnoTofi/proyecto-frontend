@@ -223,7 +223,7 @@ class SignupForm extends Component{
 
         if(!this.state.companyPhone){
             isError = true;
-            errors.companyPhoneError='Debe ingresar un telefo de la empresa';
+            errors.companyPhoneError='Debe ingresar un telefono de la empresa';
         }
         else if(!Validator.isNumeric(this.state.companyPhone)){
             isError = true;
@@ -238,7 +238,7 @@ class SignupForm extends Component{
             isError = true;
             errors.companyFirstStreetError='Debe ingresar la direccion de la empresa';
         }
-        else if(!Validator.isLength(this.state.userSecondStreet, {min: 3, max: 30})){
+        else if(!Validator.isLength(this.state.companyFirstStreet, {min: 3, max: 30})){
             isError = true;
             errors.companyFirstStreetError='Debe tener entre 3 y 30 caracteres';
         }
