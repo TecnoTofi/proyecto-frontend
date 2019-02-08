@@ -14,6 +14,7 @@ import UserIcon from '@material-ui/icons/AccountCircle';
 import StoresIcon from '@material-ui/icons/Store';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ProductsIcon from '@material-ui/icons/Fastfood';
+import MyProductsIcon from '@material-ui/icons/List';
 import LogoutIcon from '@material-ui/icons/Close';
 // import WalletIcon from '@material-ui/icons/CreditCard';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -121,7 +122,7 @@ class Drawer extends React.Component {
               <Divider />
               <NavLink to='/misProductos' className={classes.link}>
                 <ListItem button >
-                    <ListItemIcon><ProductsIcon /></ListItemIcon>
+                    <ListItemIcon><MyProductsIcon /></ListItemIcon>
                     <ListItemText primary='Mis productos' />
                 </ListItem>
                 </NavLink>

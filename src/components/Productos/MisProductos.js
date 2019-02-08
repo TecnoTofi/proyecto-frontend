@@ -289,7 +289,6 @@ class EnhancedTable extends React.Component {
                   }
                   else return prod;
               });
-              console.log('listado', listado)
               this.setState({productos: listado});
           }
       }

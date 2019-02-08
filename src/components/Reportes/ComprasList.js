@@ -9,6 +9,7 @@ import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+// import { CSVLink } from "react-csv";
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -18,6 +19,31 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3,
     },
 });
+
+// const csvData = [
+//     ["firstname", "lastname", "email"],
+//     ["Ahmed", "Tomi", "ah@smthing.co.com"],
+//     ["Raed", "Labes", "rl@smthing.co.com"],
+//     ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+// ];
+
+// const users = [
+//     {firtstname: 'Ahmed', lastname: 'Tomi' , email: 'ah@smthing.co.com'},
+//     {firtstname: 'Raed', lastname: 'Labes' , email: 'rl@smthing.co.com'},
+//     {firstname: 'Yezzi', lastname: 'Min l3b', email: 'ymin@cocococo.com'}
+// ];
+
+// const headers = [
+//     { label: 'ID Pedido', key: 'id' },
+//     { label: 'Fecha', key: 'fecha' },
+//     { label: 'Valor Voucher', key: 'voucherValue' },
+//     { label: 'Tipo Voucher', key: 'voucherType' },
+//     { label: 'Total', key: 'total' },
+//     { label: 'Codigo', key: 'code' },
+//     { label: 'Nombre', key: 'name' },
+//     { label: 'Precio', key: 'price' },
+//     { label: 'Cantidad', key: 'cantidad' },
+// ];
 
 class ReporteCompras extends Component{
 
@@ -33,7 +59,7 @@ class ReporteCompras extends Component{
         this.verificarLogin();
 
         let pedidos = await this.props.getPedidos();
-
+        console.log('pedidos', pedidos)
         let textoCarga = '', cargaTerminada = false;
         if(pedidos.length === 0){
             cargaTerminada = true;
@@ -86,6 +112,7 @@ class ReporteCompras extends Component{
                                 onClick={this.onClick}
                             >
                             </Export>
+                            {/* <CSVLink data={users} headers={headers}>Download me</CSVLink>; */}
                     </Fragment>
                 )}
             </Fragment>

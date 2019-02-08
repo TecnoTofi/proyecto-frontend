@@ -20,7 +20,7 @@ class AlertRestaurar extends React.Component {
     this.setState({ open: false });
   };
 
-  handleDelete = () =>{
+  handleRestaurar = () =>{
     this.props.restaurar(this.props.productId, this.props.esPackage);
     this.handleClose();
   };
@@ -48,7 +48,7 @@ class AlertRestaurar extends React.Component {
             <Button onClick={this.handleClose} color="primary" variant="contained" autoFocus>
               Cancelar
             </Button>
-            <Button onClick={this.handleDelete}
+            <Button onClick={this.handleRestaurar}
             color="secondary"  variant="contained">
               Aceptar
             </Button>
