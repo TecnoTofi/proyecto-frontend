@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import { Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { CSVLink } from "react-csv";
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -17,6 +18,25 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3,
     },
 });
+
+const headers = [
+    { label: 'ID Transaccion', key: 'id' },
+    { label: 'Fecha', key: 'fecha' },
+    { label: 'Comprador', key: 'buyer' },
+    { label: 'Total', key: 'total' },
+    { label: 'Tipo producto', key: 'productType' },
+    { label: 'Codigo', key: 'code' },
+    { label: 'Nombre', key: 'name' },
+    { label: 'Precio', key: 'price' },
+    { label: 'Cantidad', key: 'cantidad' },
+];
+
+const headersTotales = [
+    { label: 'ID Transaccion', key: 'id' },
+    { label: 'Fecha', key: 'fecha' },
+    { label: 'Comprador', key: 'buyer' },
+    { label: 'Total', key: 'total' },
+];
 
 class ReporteVentas extends Component{
 
@@ -56,6 +76,44 @@ class ReporteVentas extends Component{
         }
     }
 
+    armarExport = () => {
+        let exportData = [];
+
+        for(let transaction of this.state.transacciones){
+            let objeto = {
+                id: transaction.id,
+                fecha: transaction.timestamp,
+                buyer: transaction.buyerName,
+                total: transaction.amount,
+            };
+            for(let producto of transaction.products){
+                let insert = {
+                    ...objeto,
+                    productType: 'Producto',
+                    code: producto.code,
+                    name: producto.name,
+                    price: producto.price,
+                    cantidad: producto.quantity
+                };
+                exportData.push(insert);
+            }
+
+            for(let paquete of transaction.packages){
+                let insert = {
+                    ...objeto,
+                    productType: 'Paquete',
+                    code: paquete.code,
+                    name: paquete.name,
+                    price: paquete.price,
+                    cantidad: paquete.quantity
+                };
+                exportData.push(insert);
+            }
+        }
+        
+        return exportData;
+    }
+
     volverAtras = () => {
         history.goBack();
     }
@@ -88,6 +146,8 @@ class ReporteVentas extends Component{
                             onClick={this.onClick}
                         > 
                         </Export>
+                        <CSVLink data={this.armarExport()} headers={headers}>Exportar ventas</CSVLink>;
+                        <CSVLink data={this.armarExport()} headers={headersTotales}>Exportar totales</CSVLink>;
                     </Fragment>
                 )}
             </Fragment>

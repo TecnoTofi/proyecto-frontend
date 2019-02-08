@@ -9,7 +9,7 @@ import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import { CSVLink } from "react-csv";
+import { CSVLink } from "react-csv";
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -18,32 +18,37 @@ const styles = theme => ({
         textAlign: 'center',
         marginTop: theme.spacing.unit * 3,
     },
+    link: {
+        color: 'inherit',
+        textDecoration: 'none'
+    },
+    margen: {
+        marginLeft: theme.spacing.unit
+    },
 });
 
-// const csvData = [
-//     ["firstname", "lastname", "email"],
-//     ["Ahmed", "Tomi", "ah@smthing.co.com"],
-//     ["Raed", "Labes", "rl@smthing.co.com"],
-//     ["Yezzi", "Min l3b", "ymin@cocococo.com"]
-// ];
+const headers = [
+    { label: 'ID Pedido', key: 'id' },
+    { label: 'Fecha', key: 'fecha' },
+    { label: 'Valor Voucher', key: 'voucherValue' },
+    { label: 'Tipo Voucher', key: 'voucherType' },
+    { label: 'Total', key: 'total' },
+    { label: 'Vendedor', key: 'sellerName' },
+    { label: 'Tipo producto', key: 'productType' },
+    { label: 'Codigo', key: 'code' },
+    { label: 'Nombre', key: 'name' },
+    { label: 'Precio', key: 'price' },
+    { label: 'Cantidad', key: 'cantidad' },
+];
 
-// const users = [
-//     {firtstname: 'Ahmed', lastname: 'Tomi' , email: 'ah@smthing.co.com'},
-//     {firtstname: 'Raed', lastname: 'Labes' , email: 'rl@smthing.co.com'},
-//     {firstname: 'Yezzi', lastname: 'Min l3b', email: 'ymin@cocococo.com'}
-// ];
-
-// const headers = [
-//     { label: 'ID Pedido', key: 'id' },
-//     { label: 'Fecha', key: 'fecha' },
-//     { label: 'Valor Voucher', key: 'voucherValue' },
-//     { label: 'Tipo Voucher', key: 'voucherType' },
-//     { label: 'Total', key: 'total' },
-//     { label: 'Codigo', key: 'code' },
-//     { label: 'Nombre', key: 'name' },
-//     { label: 'Precio', key: 'price' },
-//     { label: 'Cantidad', key: 'cantidad' },
-// ];
+const headersTotales = [
+    { label: 'ID Pedido', key: 'id' },
+    { label: 'Fecha', key: 'fecha' },
+    { label: 'Valor Voucher', key: 'voucherValue' },
+    { label: 'Tipo Voucher', key: 'voucherType' },
+    { label: 'Total', key: 'total' },
+    { label: 'Cantidad de productos', key: 'cantidadProductos' },
+];
 
 class ReporteCompras extends Component{
 
@@ -59,7 +64,7 @@ class ReporteCompras extends Component{
         this.verificarLogin();
 
         let pedidos = await this.props.getPedidos();
-        console.log('pedidos', pedidos)
+
         let textoCarga = '', cargaTerminada = false;
         if(pedidos.length === 0){
             cargaTerminada = true;
@@ -82,6 +87,78 @@ class ReporteCompras extends Component{
         }
     }
 
+    armarExportCompras = () => {
+        let exportData = [];
+
+        for(let pedido of this.state.pedidos){
+            let objeto = {
+                id: pedido.id,
+                fecha: pedido.timestamp,
+                voucherValue: pedido.voucher ? pedido.voucher.value : null,
+                voucherType: pedido.voucher ? pedido.voucher.type : null,
+                total: pedido.amount,
+            };
+            for(let transaction of pedido.transactions){
+                objeto.sellerName = transaction.sellerName;
+
+                for(let producto of transaction.products){
+                    let insert = {
+                        ...objeto,
+                        productType: 'Producto',
+                        code: producto.code,
+                        name: producto.name,
+                        price: producto.price,
+                        cantidad: producto.quantity
+                    };
+                    exportData.push(insert);
+                }
+
+                for(let paquete of transaction.packages){
+                    let insert = {
+                        ...objeto,
+                        productType: 'Paquete',
+                        code: paquete.code,
+                        name: paquete.name,
+                        price: paquete.price,
+                        cantidad: paquete.quantity
+                    };
+                    exportData.push(insert);
+                }
+            }
+        }
+        
+        return exportData;
+    }
+
+    armarExportTotales = () => {
+        let exportData = [];
+
+        for(let pedido of this.state.pedidos){
+            let objeto = {
+                id: pedido.id,
+                fecha: pedido.timestamp,
+                voucherValue: pedido.voucher ? pedido.voucher.value : null,
+                voucherType: pedido.voucher ? pedido.voucher.type : null,
+                total: pedido.amount,
+            };
+            for(let transaction of pedido.transactions){
+                let cantidadProductos = 0;
+
+                for(let producto of transaction.products){
+                    cantidadProductos += producto.quantity;
+                }
+
+                for(let paquete of transaction.packages){
+                    cantidadProductos += paquete.quantity;
+                }
+                objeto.cantidadProductos = cantidadProductos;
+            }
+            exportData.push(objeto);
+        }
+
+        return exportData;
+    }
+
     //Renderizar data
     render(){
         let { classes } = this.props;
@@ -96,7 +173,7 @@ class ReporteCompras extends Component{
                             <NavLink to='/products'>
                                 <Button>
                                     Productos
-                                    <ForwardIcon />
+                                    <ForwardIcon /> 
                                 </Button>
                             </NavLink>
                         ) : <CircularProgress className={classes.progress} />}
@@ -106,13 +183,16 @@ class ReporteCompras extends Component{
                         {this.state.pedidos.map(pedido => (
                             <Item key={pedido.id} pedido={pedido} />
                         ))}
-                        <Export
+                        {/* <Export
                                 bandera = {"compras"}
                                 pedidos = {this.state.pedidos} 
                                 onClick={this.onClick}
                             >
-                            </Export>
-                            {/* <CSVLink data={users} headers={headers}>Download me</CSVLink>; */}
+                            </Export> */}
+                            {/* <Button variant='contained' color='inherit' className={classes.margen}> */}
+                                <CSVLink data={this.armarExportCompras()} headers={headers}>Exportar compras</CSVLink>
+                            {/* </Button> */}
+                                <CSVLink data={this.armarExportTotales()} headers={headersTotales}>Exportar totales</CSVLink>
                     </Fragment>
                 )}
             </Fragment>
