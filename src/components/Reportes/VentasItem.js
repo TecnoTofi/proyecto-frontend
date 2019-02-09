@@ -42,7 +42,7 @@ const ReporteVentasItem = (props) => {
     return(
         <div className={classes.root}>
             <Typography variant='h5'>
-                Realizada el - {formatDate(new Date(props.transaction.timestamp))}
+                Transaccion {props.transaction.id} - Realizada el: {formatDate(new Date(props.transaction.timestamp))}
             </Typography>
             <Typography variant='h5'>
                 Total - $ {props.transaction.amount}

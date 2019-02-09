@@ -3,9 +3,11 @@ import 'typeface-roboto';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Item from './VentasItem';
-import Export from '../Helpers/Export'
+// import Export from '../Helpers/Export';
 import Typography from '@material-ui/core/Typography';
 import BackIcon from '@material-ui/icons/ArrowBack';
+import TextField from '@material-ui/core/TextField';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
 import { Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { CSVLink } from "react-csv";
@@ -17,9 +19,33 @@ const styles = theme => ({
         textAlign: 'center',
         marginTop: theme.spacing.unit * 3,
     },
+    link: {
+        color: 'inherit',
+        textDecoration: 'none',
+        marginLeft: theme.spacing.unit * 2
+    },
+    margen: {
+        marginLeft: theme.spacing.unit
+    },
+    margenDiv: {
+        marginBottom: theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit * 2
+    },
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        width: 200,
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    }
 });
 
-const headers = [
+const headersVentas = [
     { label: 'ID Transaccion', key: 'id' },
     { label: 'Fecha', key: 'fecha' },
     { label: 'Comprador', key: 'buyer' },
@@ -36,14 +62,20 @@ const headersTotales = [
     { label: 'Fecha', key: 'fecha' },
     { label: 'Comprador', key: 'buyer' },
     { label: 'Total', key: 'total' },
+    { label: 'Cantidad de productos', key: 'cantidadProductos' },
 ];
 
 class ReporteVentas extends Component{
 
     state = {
         transacciones: [],
+        transaccionesFiltrables: [],
         textoCarga: 'Cargando ventas...',
         cargaTerminada: false,
+        dateFrom: '',
+        dateTo: '',
+        defaultFrom: '',
+        defaultTo: ''
     }
 
     //Recibir data
@@ -62,6 +94,7 @@ class ReporteVentas extends Component{
 
         if(transacciones) this.setState({
             transacciones,
+            transaccionesFiltrables: transacciones,
             textoCarga,
             cargaTerminada
         });
@@ -76,10 +109,10 @@ class ReporteVentas extends Component{
         }
     }
 
-    armarExport = () => {
+    armarExportVentas = () => {
         let exportData = [];
 
-        for(let transaction of this.state.transacciones){
+        for(let transaction of this.state.transaccionesFiltrables){
             let objeto = {
                 id: transaction.id,
                 fecha: transaction.timestamp,
@@ -114,6 +147,90 @@ class ReporteVentas extends Component{
         return exportData;
     }
 
+    armarExportTotales = () => {
+        let exportData = [];
+
+        for(let transaction of this.state.transaccionesFiltrables){
+            let objeto = {
+                id: transaction.id,
+                fecha: transaction.timestamp,
+                buyer: transaction.buyerName,
+                total: transaction.amount,
+            };
+            
+            let cantidadProductos = 0;
+
+            for(let producto of transaction.products){
+                cantidadProductos += producto.quantity;
+            }
+
+            for(let paquete of transaction.packages){
+                cantidadProductos += paquete.quantity;
+            }
+            objeto.cantidadProductos = cantidadProductos;
+            exportData.push(objeto);
+        }
+        
+        return exportData;
+    }
+
+    onPickerChange = (e) => {
+        let date, valido = true, defaultFrom = this.state.defaultFrom, defaultTo = this.state.defaultTo;
+        date = new Date(e.target.value);
+        
+        if(e.target.id === 'dateFrom'){
+            date.setUTCHours(0, 0, 0, 0);
+            
+            if(this.state.dateTo && this.state.dateTo < date){
+                this.props.enqueueSnackbar('Fecha desde no puede ser mayor a fecha hasta.', { variant: 'error'});
+                valido = false;
+            }
+        }
+        else{
+            date.setUTCHours(23, 59, 59, 999);
+
+            if(this.state.dateFrom && this.state.dateFrom > date){
+                this.props.enqueueSnackbar('Fecha hasta no puede ser menor a fecha desde.', { variant: 'error'});
+                valido = false;
+            }
+        }
+
+        let dia = date.getUTCDate();
+        if(dia < 10) dia = '0' + dia;
+        let mes = date.getUTCMonth() + 1;
+        if(mes < 10) mes = '0' + mes;
+        let anio = date.getUTCFullYear();
+        let fecha = `${anio}-${mes}-${dia}`;
+        if(e.target.id === 'dateFrom') defaultFrom = fecha;
+        else defaultTo = fecha;
+
+        if(valido) this.setState({ [e.target.id]: date, defaultFrom, defaultTo}, () => this.filtrarPedidos());
+        else{
+            if(e.target.id === 'dateFrom') this.setState({ defaultFrom: '' }, () => this.filtrarPedidos());
+            else this.setState({ defaultTo: '' }, () => this.filtrarPedidos());
+        }
+    }
+
+    filtrarPedidos = () => {
+        let transacciones = this.state.transacciones;
+        
+        if(transacciones.length !== 0){
+            if(this.state.dateFrom){
+                transacciones = transacciones.filter(t => {
+                    return new Date(t.timestamp) >= this.state.dateFrom;
+                });
+            }
+
+            if(this.state.dateTo){
+                transacciones = transacciones.filter(t => {
+                    return new Date(t.timestamp) <= this.state.dateTo;
+                });
+            }
+        }
+
+        this.setState({ transaccionesFiltrables: transacciones });
+    }
+
     volverAtras = () => {
         history.goBack();
     }
@@ -137,17 +254,56 @@ class ReporteVentas extends Component{
                     </div>
                 ) : (
                     <Fragment>
-                        {this.state.transacciones.map(transaction => (
+                        <Typography variant='h6' className={classes.texto}>
+                            Historial de ventas
+                        </Typography>
+                        <TextField
+                            id="dateFrom"
+                            label="Desde"
+                            type="date"
+                            value={this.state.defaultFrom}
+                            className={classes.textField}
+                            InputLabelProps={{shrink: true}}
+                            onChange={this.onPickerChange}
+                        />
+                        <TextField
+                            id="dateTo"
+                            label="Hasta"
+                            type="date"
+                            value={this.state.defaultTo}
+                            className={classes.textField}
+                            InputLabelProps={{shrink: true}}
+                            onChange={this.onPickerChange}
+                        />
+                        {this.state.transaccionesFiltrables.map(transaction => (
                             <Item key={transaction.id} transaction={transaction} />
                         ))}
-                        <Export
+                        {/* <Export
                             bandera = {"ventas"}
                             ventas = {this.state.transacciones} 
                             onClick={this.onClick}
                         > 
-                        </Export>
-                        <CSVLink data={this.armarExport()} headers={headers}>Exportar ventas</CSVLink>;
-                        <CSVLink data={this.armarExport()} headers={headersTotales}>Exportar totales</CSVLink>;
+                        </Export> */}
+                        {this.state.transaccionesFiltrables.length !== 0 ? (
+                            <div className={classes.margenDiv}>
+                                <CSVLink data={this.armarExportVentas()} headers={headersVentas} >
+                                    <Button color='primary' variant='contained' className={classes.leftIcon}>
+                                        <DownloadIcon color='inherit' className={classes.leftIcon} />
+                                        Exportar ventas
+                                    </Button>
+                                </CSVLink>
+                                <CSVLink data={this.armarExportTotales()} headers={headersTotales} >
+                                    <Button color='primary' variant='contained' className={classes.leftIcon}>
+                                        <DownloadIcon color='inherit' className={classes.leftIcon} />
+                                        Exportar totales
+                                    </Button>
+                                </CSVLink>
+                            </div>
+                        ) : (
+                            <Typography variant='h6' className={classes.texto}>
+                                No hay ventas para este rango de fecha.
+                            </Typography>
+                        )}
                     </Fragment>
                 )}
             </Fragment>
