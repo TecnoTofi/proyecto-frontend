@@ -251,7 +251,7 @@ const styles = theme => ({
             isError = true;
             errors.companyFirstStreetError='Debe ingresar la direccion de la empresa';
         }
-        else if(!Validator.isLength(this.state.userSecondStreet, {min: 3, max: 30})){
+        else if(!Validator.isLength(this.state.companyFirstStreet, {min: 3, max: 30})){
             isError = true;
             errors.companyFirstStreetError='Debe tener entre 3 y 30 caracteres';
         }

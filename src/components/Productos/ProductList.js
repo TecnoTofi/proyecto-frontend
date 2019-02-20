@@ -62,7 +62,7 @@ class List extends Component{
         let textoCarga = '', cargaTerminada = false;
         if(listado.length === 0){
             cargaTerminada = true;
-            textoCarga = 'Esta compañia aun no tiene productos a la venta.';
+            textoCarga = 'Aun no hay productos a la venta.';
         }
 
         await this.setState({
@@ -99,7 +99,7 @@ class List extends Component{
 
     render(){
         const { classes } = this.props;
-
+        
         let filteredList = this.state.listado.filter((item) => {
             return item.name.toLowerCase().indexOf(this.state.searchName.toLowerCase()) !== -1;
         });
@@ -136,38 +136,44 @@ class List extends Component{
                         ) : <CircularProgress className={classes.progress} />}
                     </div>
                 ) : (
-                    filteredList ? (
-                        <Fragment>
-                            <div className={classes.container}>
-                                <TextField
-                                    className={classes.textField}
-                                    name='searchName'
-                                    placeholder='Nombre producto'
-                                    onChange={this.onSearchNameChange}
-                                />
-                                <SelectMultiple
-                                    flagType='productos'
-                                    flagForm={false}
-                                    content={this.state.categorias}
-                                    onChange={this.handleSelectCategories}
-                                />
+                    <Fragment>
+                        <div className={classes.container}>
+                            <TextField
+                                className={classes.textField}
+                                name='searchName'
+                                placeholder='Nombre producto'
+                                onChange={this.onSearchNameChange}
+                            />
+                            <SelectMultiple
+                                flagType='productos'
+                                flagForm={false}
+                                content={this.state.categorias}
+                                onChange={this.handleSelectCategories}
+                            />
+                        </div>
+                        {filteredList.length > 0 ? (
+                        <Grid container spacing={24} style={{padding: 24}}>
+                            {filteredList.map(item => (
+                                <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
+                                    <Item
+                                    item={item}
+                                    flag={this.props.flag}
+                                    onCompanyClick={this.props.onCompanyClick}
+                                    flagCart={this.props.flagCart}
+                                    agregarAlCarrito={this.props.agregarAlCarrito}
+                                    cambiarVentana={this.props.cambiarVentana}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                        ) : (
+                            <div className={classes.texto}>
+                                <Typography variant='h6' className={classes.texto}>
+                                    No hay productos que cumplan esos criterios
+                                </Typography>
                             </div>
-                            <Grid container spacing={24} style={{padding: 24}}>
-                                {filteredList.map(item => (
-                                    <Grid item key={item.id} xs={12} sm={6} lg={4} xl={3}>
-                                        <Item
-                                        item={item}
-                                        flag={this.props.flag}
-                                        onCompanyClick={this.props.onCompanyClick}
-                                        flagCart={this.props.flagCart}
-                                        agregarAlCarrito={this.props.agregarAlCarrito}
-                                        cambiarVentana={this.props.cambiarVentana}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Fragment>
-                    ) : `No hay productos que cumplan esos criterios` 
+                        )}
+                    </Fragment>
                 )}
             </Fragment>
         );

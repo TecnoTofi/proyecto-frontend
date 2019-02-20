@@ -30,7 +30,8 @@ const styles = theme => ({
     },
     margenDiv: {
         marginBottom: theme.spacing.unit * 2,
-        marginLeft: theme.spacing.unit * 2
+        marginLeft: theme.spacing.unit * 2,
+        textAlign: 'right'
     },
     container: {
         display: 'flex',
@@ -92,7 +93,7 @@ class ReporteCompras extends Component{
         let textoCarga = '', cargaTerminada = false;
         if(pedidos.length === 0){
             cargaTerminada = true;
-            textoCarga = 'Aun no ah realizado compras.';
+            textoCarga = 'Aun no ha realizado compras.';
         }
 
         if(pedidos) this.setState({
@@ -186,7 +187,9 @@ class ReporteCompras extends Component{
 
     onPickerChange = (e) => {
         let date, valido = true, defaultFrom = this.state.defaultFrom, defaultTo = this.state.defaultTo;
-        date = new Date(e.target.value);
+        if(!e.target.value && e.target.id === 'dateFrom') date = new Date(this.state.pedidos[0].timestamp);
+        else if(!e.target.value && e.target.id === 'dateTo') date = new Date(this.state.pedidos[this.state.pedidos.length-1].timestamp);
+        else date = new Date(e.target.value);
         
         if(e.target.id === 'dateFrom'){
             date.setUTCHours(0, 0, 0, 0);
@@ -284,15 +287,6 @@ class ReporteCompras extends Component{
                             InputLabelProps={{shrink: true}}
                             onChange={this.onPickerChange}
                         />
-                        {this.state.pedidosFiltrables.map(pedido => (
-                            <Item key={pedido.id} pedido={pedido} />
-                        ))}
-                        {/* <Export
-                                bandera = {"compras"}
-                                pedidos = {this.state.pedidos} 
-                                onClick={this.onClick}
-                            >
-                            </Export> */}
                         {this.state.pedidosFiltrables.length !== 0 ? (
                             <div className={classes.margenDiv}>
                                 <CSVLink data={this.armarExportCompras()} headers={headersCompras}>
@@ -313,6 +307,15 @@ class ReporteCompras extends Component{
                                 No hay compras para este rango de fecha.
                             </Typography>
                         )}
+                        {this.state.pedidosFiltrables.map(pedido => (
+                            <Item key={pedido.id} pedido={pedido} />
+                        ))}
+                        {/* <Export
+                                bandera = {"compras"}
+                                pedidos = {this.state.pedidos} 
+                                onClick={this.onClick}
+                            >
+                            </Export> */}
                     </Fragment>
                 )}
             </Fragment>

@@ -79,7 +79,7 @@ const signup = async (url, request) => {
         else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
     })
     .catch(err => {
-        console.log(`Error al realizar registro ${err}`);
+        if(err.response.data.message) return {status: err.response.status, errores: err.response.data.message};
         return {status: err.response.status, errores: err.response.data};
     });
 

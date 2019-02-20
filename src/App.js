@@ -170,9 +170,15 @@ class App extends Component {
   }
 
   signup = async (request) => {
-    let { status, message } = await AuthFunctions.signup(url, request);
+    let { status, message, errores } = await AuthFunctions.signup(url, request);
     if(status === 201) this.props.enqueueSnackbar('Registro exitoso', { variant: 'success' });
-    else  this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
+    else if (errores){
+      for(let e of errores){
+        this.props.enqueueSnackbar(e, { variant: 'error' });
+      }
+    }
+    else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
     return status;
   }
 
@@ -185,14 +191,21 @@ class App extends Component {
     else{
       let token = cookies.get('access_token');
       if(!token) return;
-      let { status, message } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
+      let { status, message, errores } = await UserFunctions.modificarPerfil(url, token, this.state.loggedUser.userId, this.state.loggedUser.userCompanyId, request);
       if(status === 200){
         this.props.enqueueSnackbar('Modificacion exitosa.', { variant: 'success' });
         setTimeout(() => {
           history.goBack();
         }, 5000)
       }
-      else  this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if(message) this.props.enqueueSnackbar(message, { variant: 'error' });
+      else if (errores){
+        for(let e of errores){
+          this.props.enqueueSnackbar(e, { variant: 'error' });
+        }
+      }
+      else this.props.enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+      return status;
     }
   }
 

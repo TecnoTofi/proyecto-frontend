@@ -26,8 +26,9 @@ const modificarPerfil = async (url, token, userId, companyId, request) => {
         else return{status: 500, message: 'Ocurrio un error al procesar la solicitud'};
     })
     .catch(err => {
-        console.log(`Error al modificar el perfil ${err}`);
-        return {status: err.response.status, message: err.response.data.message[0]};
+        console.log('entro a catch', err.response)
+        if(err.response.data.message) return {status: err.response.status, errores: err.response.data.message};
+        return {status: err.response.status, errores: err.response.data};
     });
 
     return response;

@@ -29,7 +29,8 @@ const styles = theme => ({
     },
     margenDiv: {
         marginBottom: theme.spacing.unit * 2,
-        marginLeft: theme.spacing.unit * 2
+        marginLeft: theme.spacing.unit * 2,
+        textAlign: 'right'
     },
     container: {
         display: 'flex',
@@ -89,7 +90,7 @@ class ReporteVentas extends Component{
         let textoCarga = '', cargaTerminada = false;
         if(transacciones.length === 0){
             cargaTerminada = true;
-            textoCarga = 'Aun no ah realizado ventas.';
+            textoCarga = 'Aun no ha realizado ventas.';
         }
 
         if(transacciones) this.setState({
@@ -176,7 +177,9 @@ class ReporteVentas extends Component{
 
     onPickerChange = (e) => {
         let date, valido = true, defaultFrom = this.state.defaultFrom, defaultTo = this.state.defaultTo;
-        date = new Date(e.target.value);
+        if(!e.target.value && e.target.id === 'dateFrom') date = new Date(this.state.transacciones[0].timestamp);
+        else if(!e.target.value && e.target.id === 'dateTo') date = new Date(this.state.transacciones[this.state.transacciones.length-1].timestamp);
+        else date = new Date(e.target.value);
         
         if(e.target.id === 'dateFrom'){
             date.setUTCHours(0, 0, 0, 0);
@@ -275,15 +278,6 @@ class ReporteVentas extends Component{
                             InputLabelProps={{shrink: true}}
                             onChange={this.onPickerChange}
                         />
-                        {this.state.transaccionesFiltrables.map(transaction => (
-                            <Item key={transaction.id} transaction={transaction} />
-                        ))}
-                        {/* <Export
-                            bandera = {"ventas"}
-                            ventas = {this.state.transacciones} 
-                            onClick={this.onClick}
-                        > 
-                        </Export> */}
                         {this.state.transaccionesFiltrables.length !== 0 ? (
                             <div className={classes.margenDiv}>
                                 <CSVLink data={this.armarExportVentas()} headers={headersVentas} >
@@ -304,6 +298,15 @@ class ReporteVentas extends Component{
                                 No hay ventas para este rango de fecha.
                             </Typography>
                         )}
+                        {this.state.transaccionesFiltrables.map(transaction => (
+                            <Item key={transaction.id} transaction={transaction} />
+                        ))}
+                        {/* <Export
+                            bandera = {"ventas"}
+                            ventas = {this.state.transacciones} 
+                            onClick={this.onClick}
+                        > 
+                        </Export> */}
                     </Fragment>
                 )}
             </Fragment>
